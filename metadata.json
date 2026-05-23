@@ -1,0 +1,8 @@
+{
+  "name": "Cerebro 2.0",
+  "description": "Herramienta de gestión de proyectos a nivel nacional para equipos de Ventas y Proyectistas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

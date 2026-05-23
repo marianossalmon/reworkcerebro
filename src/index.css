@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+
+  --color-bg: #0a0a0a;
+  --color-bg2: #0d0d0d;
+  --color-bg3: #0f0f0f;
+  --color-bg4: rgba(255, 255, 255, 0.05); /* white/5 */
+  --color-bg5: rgba(255, 255, 255, 0.1);  /* white/10 */
+  --color-border: rgba(255, 255, 255, 0.05);
+  --color-border2: rgba(255, 255, 255, 0.1);
+  --color-text-main: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.6);
+  --color-text-dim: rgba(255, 255, 255, 0.4);
+  --color-text-faint: rgba(255, 255, 255, 0.2);
+  
+  --color-teal-400: #10b981;
+  --color-teal-500: #10b981;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-main);
+  @apply font-sans text-[13px] antialiased leading-relaxed;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-bg5);
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}

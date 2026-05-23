@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEREBRO 2.0 — Plataforma Unificada</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & TOKENS - SOPHISTICATED DARK PREMIUM THEME
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Palette - Sophisticated Dark */
+  --bg:             #0d1117;
+  --surface:        #161b22;
+  --surface-2:      #1c2128;
+  --surface-hover:  #21262d;
+  --border:         rgba(255, 255, 255, 0.08);
+  --border-light:   rgba(255, 255, 255, 0.15);
+  
+  --text-primary:   #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-muted:     #6e7681;
+
+  /* Brand / Accents */
+  --blue:           #58a6ff;
+  --blue-light:     rgba(88, 166, 255, 0.1);
+  
+  /* Semantic / Traffic Lights (Muted backgrounds, luminous borders/text) */
+  --green:          #3fb950;
+  --amber:          #d29922;
+  --red:            #f85149;
+
+  /* Hunter CRM */
+  --hunter:         #f97316;
+
+  /* Layout */
+  --header-h:       72px;
+  --sidebar-w:      280px;
+  --right-w:        380px;
+  --radius:         8px;
+  --radius-lg:      16px;
+  --radius-xl:      24px;
+  --shadow-sm:      0 2px 8px rgba(0,0,0,0.4);
+  --shadow-md:      0 12px 32px rgba(0,0,0,0.6);
+  --shadow-premium: inset 0 1px 0 rgba(255,255,255,0.05), 0 8px 24px rgba(0,0,0,0.8);
+  --transition:     0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Typography */
+  --font-ui:        'IBM Plex Sans', system-ui, sans-serif;
+  --font-display:   'Playfair Display', serif;
+  --font-mono:      'IBM Plex Mono', monospace;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  font-size: 15px; 
+  color: var(--text-primary);
+  background: var(--bg);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
+.display-title {
+  font-family: var(--font-display);
+  font-size: 44px;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  color: #fff;
+  line-height: 1.1;
+}
+.subtitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+}
+
+.text-green { color: var(--green); }
+.text-amber { color: var(--amber); }
+.text-red { color: var(--red); }
+.text-blue { color: var(--blue); }
+.text-hunter { color: var(--hunter); }
+
+/* ============================================================
+   COMPONENTS - PREMIUM FEEL
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600; /* IBM Plex looks better at 600 than 700 here */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.badge.green { color: var(--green); border-color: rgba(63, 185, 80, 0.3); background: rgba(63, 185, 80, 0.05); }
+.badge.amber { color: var(--amber); border-color: rgba(210, 153, 34, 0.3); background: rgba(210, 153, 34, 0.05); }
+.badge.red { color: var(--red); border-color: rgba(248, 81, 73, 0.3); background: rgba(248, 81, 73, 0.05); }
+.badge.blue { color: var(--blue); border-color: rgba(88, 166, 255, 0.3); background: rgba(88, 166, 255, 0.05); }
+.badge.hunter { color: var(--hunter); border-color: rgba(249, 115, 22, 0.3); background: rgba(249, 115, 22, 0.05); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+}
+.card.p-0 { padding: 0; overflow: hidden; }
+
+/* Buttons High-End */
+.btn-outline {
+  background: transparent; 
+  border: 1px solid var(--border-light); 
+  color: var(--text-primary);
+  padding: 14px 28px; 
+  border-radius: var(--radius); 
+  font-size: 13px; 
+  font-weight: 600; 
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer; 
+  transition: all var(--transition);
+  font-family: var(--font-ui); 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 10px; 
+  justify-content: center;
+}
+.btn-outline:hover { 
+  background: var(--surface-hover); 
+  border-color: rgba(255,255,255,0.3); 
+}
+
+.btn-solid {
+  background: linear-gradient(180deg, #2b323b 0%, #161b22 100%); 
+  color: #fff; 
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: var(--shadow-premium);
+  padding: 14px 28px; 
+  border-radius: var(--radius); 
+  font-size: 13px; 
+  font-weight: 600; 
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer; 
+  transition: all var(--transition);
+  font-family: var(--font-ui); 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 10px; 
+  justify-content: center;
+}
+.btn-solid:hover { 
+  background: linear-gradient(180deg, #353d47 0%, #21262d 100%); 
+  border-color: rgba(255,255,255,0.25);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 12px 32px rgba(0,0,0,0.9);
+  transform: translateY(-1px); 
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+#header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--header-h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  gap: 40px;
+  z-index: 1000;
+}
+
+.brand { display: flex; align-items: center; gap: 16px; }
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-style: italic;
+  font-weight: 700;
+  color: #fff;
+}
+
+.header-spacer { flex: 1; }
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-left: 32px;
+  border-left: 1px solid var(--border);
+}
+.user-info { text-align: right; }
+.user-name { font-size: 13px; font-weight: 600; color: var(--text-primary); text-transform: uppercase; letter-spacing: 0.5px; }
+.user-role { font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); }
+.avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--surface-hover);
+  border: 1px solid var(--border-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 600; font-family: var(--font-mono);
+}
+
+/* ============================================================
+   APP LAYOUT & SPA ROUTING
+   ============================================================ */
+#app-container {
+  position: fixed;
+  top: var(--header-h);
+  left: 0; right: 0; bottom: 0;
+}
+.role-container {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+.role-container.active {
+  display: flex;
+  animation: fadeIn 0.4s ease;
+}
+
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 40px 0;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 40px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all var(--transition);
+  border-left: 3px solid transparent;
+  cursor: pointer;
+}
+.nav-item:hover { color: var(--text-primary); }
+.nav-item.active {
+  color: var(--text-primary);
+  border-left-color: #fff;
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+}
+
+.main-view-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* SPA Screens */
+.spa-screen {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: translateY(20px);
+}
+.spa-screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+  position: relative; 
+}
+
+.content-header {
+  padding: 48px 56px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex-shrink: 0;
+}
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px 56px;
+}
+
+/* ============================================================
+   SCREEN 1: DASHBOARD (HOME)
+   ============================================================ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-bottom: 48px;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+.data-table th {
+  padding: 24px 32px;
+  background: var(--surface-2);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: 28px 32px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface-hover); }
+
+/* ============================================================
+   SCREEN 2: FORM & CANVAS
+   ============================================================ */
+#form-layout {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+.form-central {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: all 0.5s ease;
+}
+
+/* Tabs inside Form */
+.tabs-nav {
+  display: flex;
+  gap: 48px;
+  border-bottom: 1px solid var(--border);
+}
+.tab-link {
+  padding: 20px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all var(--transition);
+}
+.tab-link:hover { color: var(--text-primary); }
+.tab-link.active {
+  color: var(--text-primary);
+  border-bottom-color: #fff;
+}
+
+.tab-pane { display: none; flex-direction: column; gap: 48px; }
+.tab-pane.active { display: flex; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Forms Structure */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+.form-group { display: flex; flex-direction: column; gap: 12px; }
+.form-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+}
+.form-input, .form-textarea, .form-select {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  padding: 16px 24px;
+  transition: all var(--transition);
+  outline: none;
+  appearance: none;
+}
+.form-select {
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.41 0.589966L6 5.16997L10.59 0.589966L12 1.99997L6 7.99997L0 1.99997L1.41 0.589966Z" fill="%238b949e"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 24px center;
+}
+.form-input:focus, .form-textarea:focus, .form-select:focus { border-color: rgba(255,255,255,0.4); box-shadow: 0 0 0 1px rgba(255,255,255,0.1); }
+.form-input[readonly] { background: var(--surface-2); color: var(--text-muted); cursor: not-allowed; border-color: transparent; }
+.form-input.hunter-input { font-family: var(--font-mono); color: var(--hunter); border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.05); }
+
+/* Magnitude Display */
+.magnitude-box {
+  display: flex;
+  align-items: center;
+  padding: 32px 40px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  gap: 32px;
+  transition: all 0.3s ease;
+}
+.magnitude-title { font-size: 24px; font-weight: 600; color: var(--text-primary); font-family: var(--font-display); font-style: italic; letter-spacing: 0.5px;}
+.magnitude-desc { font-size: 14px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
+
+/* Dynamic state assignment via JS */
+.mag-alert-micro { border-left: 4px solid var(--green); }
+.mag-alert-medio { border-left: 4px solid var(--amber); }
+.mag-alert-macro { border-left: 4px solid var(--red); }
+.mag-alert-micro .magnitude-title { color: var(--green); }
+.mag-alert-medio .magnitude-title { color: var(--amber); }
+.mag-alert-macro .magnitude-title { color: var(--red); }
+
+/* Form Footer */
+.form-footer {
+  padding: 24px 56px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   VAULT (LEFT PANEL)
+   ============================================================ */
+.vault-panel {
+  width: var(--right-w);
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+.vault-panel.collapsed {
+  margin-left: calc(var(--right-w) * -1); /* Pulls it off screen cleanly */
+  opacity: 0;
+  pointer-events: none;
+}
+.vault-panel-header {
+  padding: 40px;
+  border-bottom: 1px solid var(--border);
+}
+.vault-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+.vault-folder { margin-bottom: 8px; }
+.vault-header {
+  font-size: 11px; font-weight: 600; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 16px; display: flex; align-items: center; gap: 12px;
+}
+.vault-file {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 12px;
+  transition: all var(--transition);
+}
+.vault-file:hover { border-color: rgba(255,255,255,0.2); background: var(--surface-hover); }
+.file-name { font-size: 13px; font-weight: 500; font-family: var(--font-ui); color: var(--text-primary); text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+.file-meta { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 4px; }
+.btn-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-secondary); font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all var(--transition);
+}
+.btn-icon:hover { color: var(--text-primary); border-color: var(--text-secondary); }
+
+/* ============================================================
+   CANVAS TOOLS
+   ============================================================ */
+.briefing-workspace {
+  display: flex;
+  gap: 32px;
+  height: 65vh; /* Responsive height */
+  min-height: 600px;
+}
+.tool-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 80px;
+  flex-shrink: 0;
+}
+.tool-btn {
+  width: 100%; aspect-ratio: 1;
+  border-radius: var(--radius-lg);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  color: var(--text-secondary);
+}
+.tool-btn:hover { border-color: rgba(255,255,255,0.3); color: #fff; }
+.tool-btn.active { background: #fff; border-color: #fff; color: #000; box-shadow: 0 4px 12px rgba(255,255,255,0.2); }
+.tool-icon { font-size: 24px; }
+.tool-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 8px; }
+
+.canvas-wrapper {
+  flex: 1;
+  position: relative;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.8);
+  display: flex;
+  /* Pattern Background toggled via JS */
+  background-image: none;
+}
+
+/* Base grid pattern */
+.canvas-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background: 
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), 
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); 
+  background-size: 40px 40px;
+  z-index: 1;
+}
+.canvas-bg-image {
+  position: absolute; inset: 0; 
+  width: 100%; height: 100%; object-fit: contain; opacity: 0.8;
+  z-index: 2; pointer-events: none; display: none;
+}
+
+/* Layering */
+#canvas-svg-layer { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
+#walls-group polyline { stroke: var(--blue); stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+#current-wall { stroke: var(--blue); stroke-width: 4; fill: none; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 8 8; }
+
+#pins-layer { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 4; cursor: crosshair; }
+
+/* Interactive Elements */
+.blueprint-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.blueprint-pin:hover { transform: translate(-50%, -50%) scale(1.15); z-index: 10; }
+.pin-circle {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid #fff;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.8);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+}
+.pin-users {
+  position: absolute;
+  top: -6px; right: -6px;
+  background: #fff;
+  color: #000;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.canvas-floating-text {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: rgba(22, 27, 34, 0.85);
+  backdrop-filter: blur(4px);
+  border: 1px solid var(--border-light);
+  color: var(--amber);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  outline: none;
+  min-width: 120px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  resize: both;
+  overflow: hidden;
+  z-index: 5;
+}
+.canvas-floating-text:focus { border-color: var(--amber); }
+
+/* ============================================================
+   TOASTS
+   ============================================================ */
+#toast-container {
+  position: fixed;
+  bottom: 40px; right: 40px;
+  display: flex; flex-direction: column; gap: 16px;
+  z-index: 9999; pointer-events: none;
+}
+.toast {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  padding: 20px 24px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-premium);
+  color: var(--text-primary);
+  font-size: 14px; font-weight: 500;
+  display: flex; align-items: flex-start; gap: 16px;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: auto;
+  min-width: 320px;
+}
+.toast-icon { font-size: 20px; margin-top: 2px; }
+.toast-content { flex: 1; }
+.toast-title { font-weight: 600; margin-bottom: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); }
+.toast-desc { font-size: 14px; line-height: 1.5; font-family: var(--font-ui); }
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeOut {
+  to { opacity: 0; transform: scale(0.95); }
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER UNIFICADO -->
+<header id="header">
+  <div class="brand">
+    <div class="brand-name">Cerebro <span style="font-style:normal; font-family:var(--font-ui); font-weight:300; opacity:0.3; margin:0 12px;">/</span> V2.0</div>
+  </div>
+  <div class="header-spacer"></div>
+  <div style="display:flex; align-items:center; gap: 16px; margin-right: 16px;">
+    <div style="font-size: 11px; font-weight: 600; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase;">Entorno:</div>
+    <select class="form-select" id="role-selector" style="width: 260px; padding: 10px 16px; background-color: var(--surface-2); border-color: rgba(255,255,255,0.1);" onchange="switchRoleWorkspace(this.value)">
+      <option value="ventas">Ventas (Captura & Canvas)</option>
+      <option value="master">Dirección (Master Dashboard)</option>
+      <option value="proyectista">Proyectista (Entorno Técnico)</option>
+    </select>
+  </div>
+  <div class="header-user">
+    <div class="user-info">
+      <div class="user-name" id="ui-user-name">Rogelio Lares</div>
+      <div class="user-role" id="ui-user-role">Asesor Comercial Sr.</div>
+    </div>
+    <div class="avatar" id="ui-user-avatar">RL</div>
+  </div>
+</header>
+
+
+<!-- APP CONTAINER -->
+<main id="app-container">
+
+  <!-- ==============================================
+       ENTORNO: VENTAS
+       ============================================== -->
+  <div id="role-ventas" class="role-container active">
+
+    <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="subtitle" style="padding: 0 40px 24px;">Gestión Ventas</div>
+    <a class="nav-item active" onclick="goToDashboard()">📊 Mis Negocios (Home)</a>
+    <a class="nav-item">📅 Agenda & Visitas</a>
+  </aside>
+
+
+  <!-- CENTRAL VIEW WRAPPER -->
+  <div class="main-view-wrapper">
+    
+    <!-- ==========================================
+         SCREEN 1: DASHBOARD (HOME)
+         ========================================== -->
+    <div id="screen-dashboard" class="spa-screen active">
+      <div class="content-header">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+          <div>
+            <h1 class="display-title">Mis Negocios</h1>
+            <div class="subtitle" style="margin-top: 16px; color: var(--text-muted);">Pipeline Ejecutivo & Gestión Activa</div>
+          </div>
+          <button class="btn-solid" onclick="goToForm(false)">➕ Nueva Solicitud de Diseño</button>
+        </div>
+      </div>
+      
+      <div class="scroll-area">
+        <!-- KPIs -->
+        <div class="kpi-grid">
+          <div class="card p-0" style="padding:40px;">
+            <div class="subtitle">Proyectos Ganados Este Mes</div>
+            <div style="font-size:56px; font-family:var(--font-display); line-height:1; margin-top:24px;">4 <span style="font-size:16px; color:var(--text-secondary); font-family:var(--font-mono); font-weight:400; letter-spacing:1px;">/ META: 6</span></div>
+          </div>
+          <div class="card p-0" style="padding:40px;">
+            <div class="subtitle">Propuestas en Diseño</div>
+            <div style="font-size:56px; font-family:var(--font-display); line-height:1; margin-top:24px; color:var(--amber);">7</div>
+          </div>
+          <div class="card p-0" style="padding:40px;">
+            <div class="subtitle">Monto Pipeline (Hunter)</div>
+            <div style="font-size:48px; font-family:var(--font-mono); line-height:1; margin-top:32px; font-weight:400;">$4.2<span style="font-size:24px; color:var(--text-secondary); font-family:var(--font-ui); font-weight:300;">M MXN</span></div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card p-0">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="padding-left:40px;">Cliente / Proyecto</th>
+                <th>ID Hunter</th>
+                <th>Monto (MXN)</th>
+                <th>Magnitud</th>
+                <th>Proyectista Asignado</th>
+                <th>Etapa Pipeline</th>
+              </tr>
+            </thead>
+            <tbody id="v-table-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================
+         SCREEN 2: FORM / BRIEFING
+         ========================================== -->
+    <div id="screen-form" class="spa-screen">
+      
+      <div id="form-layout">
+        <!-- Bóveda Lado Izquierdo -->
+        <aside class="vault-panel" id="vault-panel-boveda">
+          <div class="vault-panel-header">
+            <h3 style="font-size: 20px;">Bóveda del Proyecto</h3>
+            <div class="subtitle" style="margin-top: 12px; color:var(--text-muted);">Estructura Taxonómica Fija</div>
+          </div>
+          <div class="vault-panel-content" id="vault-container">
+            <!-- Renderizado dinámico vía JS -->
+          </div>
+        </aside>
+
+        <div class="form-central">
+          <div class="content-header" style="padding-bottom: 0;">
+            <h1 class="display-title" style="font-size:36px;">Expediente Técnico</h1>
+            <div class="tabs-nav" style="margin-top:32px;">
+              <a class="tab-link active" id="t-datos" onclick="switchTab('datos')">1. Datos Generales & Alcance</a>
+              <a class="tab-link" id="t-briefing" onclick="switchTab('briefing')">2. Lienzo de Briefing Interactivo</a>
+            </div>
+          </div>
+
+          <div class="scroll-area" style="position:relative;">
+            
+            <!-- Tab 1: Datos Generales -->
+            <div id="pane-datos" class="tab-pane active">
+              
+              <div class="magnitude-box mag-alert-micro" id="mag-box">
+                <div>
+                  <div class="subtitle" id="mag-label" style="color:var(--text-muted); margin-bottom: 8px;">CALIBRACIÓN DEL PROYECTO</div>
+                  <div class="magnitude-title" id="mag-title">Fast-Track Aprobado</div>
+                  <div class="magnitude-desc" id="mag-desc">Monto y metraje dentro de los parámetros para asignación directa exprés (Entrega esperada &lt; 48hrs).</div>
+                </div>
+              </div>
+
+              <!-- General Info -->
+              <div class="card">
+                <div class="subtitle" style="margin-bottom: 32px;">Información Comercial Core</div>
+                <div class="form-grid">
+                  <div class="form-group" style="grid-column: 1 / -1;">
+                    <label class="form-label">Razón Social del Cliente</label>
+                    <input type="text" class="form-input" placeholder="Ej. Corporativo Sigma / Torres del Valle" id="v-cliente" oninput="autoSave()">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">ID Oportunidad Hunter (Autogenerado)</label>
+                    <input type="text" class="form-input hunter-input" id="v-hunterid" value="HNT-0000" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Contacto Responsable en Sitio</label>
+                    <input type="text" class="form-input" placeholder="Nombre completo">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Monto Estimado de Inversión (MXN)</label>
+                    <input type="number" class="form-input" value="0" id="v-monto" oninput="calcMag()">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Superficie Total a Intervenir (m²)</label>
+                    <input type="number" class="form-input" value="0" id="v-m2" oninput="calcMag()">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Consultoría Crítica -->
+              <div class="card">
+                <div class="subtitle" style="margin-bottom: 32px;">Parámetros Técnicos de Consultoría</div>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label class="form-label">Condición Actual del Espacio</label>
+                    <select class="form-select">
+                      <option value="gris">Obra Gris (Desde Cero)</option>
+                      <option value="activo">Remodelación con Personal Activo</option>
+                      <option value="vacio">Espacio Adaptado pero Vacío</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Densidad de Usuarios (Puestos aprox.)</label>
+                    <input type="number" class="form-input" placeholder="Cantidad de sillas" min="1">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Línea de Mobiliario Tentativa</label>
+                    <select class="form-select">
+                      <option value="ascend">Línea Ascend (Ejecutiva Premium)</option>
+                      <option value="bento">Sistema Bento (Colaborativo)</option>
+                      <option value="concord">Concord Modular</option>
+                      <option value="nova">Nova Operativo</option>
+                      <option value="kenza">Kenza (Accesibilidad)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Compromiso de Entrega a Cliente</label>
+                    <input type="date" class="form-input" style="color:var(--text-secondary); font-family:var(--font-mono);">
+                  </div>
+                  <div class="form-group" style="grid-column: 1 / -1;">
+                    <label class="form-label">Restricciones Estructurales / Notas Especiales</label>
+                    <textarea class="form-textarea" rows="3" placeholder="Restricciones de voltaje, plafones, alfombras existentes, etc."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 2: Canvas / Briefing -->
+            <div id="pane-briefing" class="tab-pane">
+              <div class="card" style="padding: 40px; height: 100%; display:flex; flex-direction:column;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 32px;">
+                  <div class="subtitle">Lienzo Vectorial de Mapeo</div>
+                  <span class="badge" style="font-family:var(--font-mono); letter-spacing:0">ESCALA 1:100</span>
+                </div>
+                
+                <div class="briefing-workspace">
+                  <!-- Sidebar de Herramientas -->
+                  <div class="tool-bar">
+                    <div class="tool-btn" onclick="triggerBgUpload()" title="Subir Fondo (PDF/Img)">
+                      <span class="tool-icon">📸</span>
+                      <span class="tool-label">Fondo</span>
+                    </div>
+                    <div style="height: 1px; background: var(--border); margin: 8px 0;"></div>
+                    <div class="tool-btn" onclick="selectTool('wall', this)" title="Trazar Muros perimetrales">
+                      <span class="tool-icon">📏</span>
+                      <span class="tool-label">Muro</span>
+                    </div>
+                    <div class="tool-btn" onclick="selectTool('text', this)" title="Insertar Nota de Texto">
+                      <span class="tool-icon">💬</span>
+                      <span class="tool-label">Nota</span>
+                    </div>
+                    <div style="height: 1px; background: var(--border); margin: 8px 0;"></div>
+                    <div class="tool-btn" onclick="selectTool('privado', this)" title="Asignar: Privados">
+                      <span class="tool-icon">🛋️</span>
+                      <span class="tool-label">Priv</span>
+                    </div>
+                    <div class="tool-btn" onclick="selectTool('operativo', this)" title="Asignar: Área Operativa">
+                      <span class="tool-icon">👥</span>
+                      <span class="tool-label">Oper</span>
+                    </div>
+                    <div class="tool-btn" onclick="selectTool('juntas', this)" title="Asignar: Salas de Juntas">
+                      <span class="tool-icon">🤝</span>
+                      <span class="tool-label">Juntas</span>
+                    </div>
+                    <div style="height: 1px; background: var(--border); margin: 8px 0; border:none; flex:1;"></div>
+                    <div class="tool-btn" onclick="toggleGrid()" title="Mostrar/Ocultar Rejilla">
+                      <span class="tool-icon">🎛️</span>
+                      <span class="tool-label">Grid</span>
+                    </div>
+                    <div class="tool-btn" onclick="exportCanvas()" title="Exportar Vista en PNG">
+                      <span class="tool-icon">💾</span>
+                      <span class="tool-label">Export</span>
+                    </div>
+                    <div class="tool-btn" style="color:var(--red); border-color:rgba(248,81,73,0.3);" onclick="clearCanvas()">
+                      <span class="tool-icon">🗑️</span>
+                      <span class="tool-label">Clear</span>
+                    </div>
+                  </div>
+
+                  <!-- Canvas Responsivo (%) -->
+                  <div class="canvas-wrapper" id="canvas-area" onclick="handleCanvasClick(event)" onmousemove="handleCanvasMove(event)">
+                    <div class="canvas-grid" id="c-grid"></div>
+                    <img id="c-bg-image" class="canvas-bg-image" src="" alt="Fondo levantamiento">
+                    
+                    <!-- SVG Overlay para Muros Vectoriales -->
+                    <svg id="canvas-svg-layer">
+                      <g id="walls-group"></g>
+                      <polyline id="current-wall" points="" />
+                    </svg>
+                    
+                    <!-- Capa de Pines y Texto DOM -->
+                    <div id="pins-layer"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-footer">
+            <button class="btn-outline" onclick="goToDashboard()">⬅️ Cancelar y Volver</button>
+            <div style="display:flex; gap:24px;">
+               <button class="btn-outline" onclick="showToast('info','Borrador Autoguardado', 'Progreso guardado de manera local.')">Guardar Borrador</button>
+               <button class="btn-solid" onclick="submitForm()">🚀 Enviar Solicitud Técnica</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- END: Form Central -->
+      </div>
+
+    </div>
+
+  </div>
+  </div><!-- FIN ROLE VENTAS -->
+
+  <!-- ==============================================
+       ENTORNO: MASTER (DIRECCIÓN)
+       ============================================== -->
+  <div id="role-master" class="role-container">
+    <div class="main-view-wrapper">
+      <div class="content-header">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+          <div>
+            <h1 class="display-title">Dashboard Analítico Ejecutivo</h1>
+            <div class="subtitle" style="margin-top: 16px; color: var(--text-muted);">Centro de Mandos y Métricas de Alto Nivel</div>
+          </div>
+          <div>
+             <select class="form-select" style="padding: 10px 16px;">
+               <option>Región Norte</option>
+               <option>Región Sur</option>
+               <option>Nacional</option>
+             </select>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-area">
+         <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
+           <div class="card p-0" style="padding:32px;">
+             <div class="subtitle">Tiempo de Ciclo Técnico (TCT)</div>
+             <div style="font-size:36px; font-family:var(--font-mono); line-height:1; margin-top:24px; color:var(--text-primary);">2.4</div>
+             <div class="badge green" style="margin-top:16px;">Promedio Óptimo</div>
+           </div>
+           <div class="card p-0" style="padding:32px;">
+             <div class="subtitle">Índice de Retrabajo</div>
+             <div style="font-size:36px; font-family:var(--font-mono); line-height:1; margin-top:24px; color:var(--text-primary);">12%</div>
+             <div class="badge amber" style="margin-top:16px;">De re-diseños técnicos</div>
+           </div>
+           <div class="card p-0" style="padding:32px;">
+             <div class="subtitle">Hit-Rate Financiero</div>
+             <div style="font-size:36px; font-family:var(--font-mono); line-height:1; margin-top:24px; color:var(--text-primary);">68%</div>
+             <div class="badge" style="margin-top:16px; border-color:rgba(255,255,255,0.1)">De proyectos cerrados</div>
+           </div>
+           <div class="card p-0" style="padding:32px;">
+             <div class="subtitle">Estancados en Ventas</div>
+             <div style="font-size:36px; font-family:var(--font-mono); line-height:1; margin-top:24px; color:var(--text-primary);">4</div>
+             <div class="badge red" style="margin-top:16px;">Alertas Críticas</div>
+           </div>
+         </div>
+
+         <!-- Master Table -->
+         <div class="card p-0">
+           <table class="data-table">
+             <thead>
+               <tr>
+                 <th style="padding-left:40px;">Región / Sucursal</th>
+                 <th>ID Hunter</th>
+                 <th>Volumen</th>
+                 <th>Alarma Operativa</th>
+                 <th>Desviación</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr>
+                 <td style="padding-left:40px; font-weight:600;">OXXO Corporativo Monterrey</td>
+                 <td style="font-family:var(--font-mono);">HNT-0391</td>
+                 <td style="font-family:var(--font-mono);">$480,000</td>
+                 <td><span class="badge red">Alerta Tiempos</span></td>
+                 <td style="font-family:var(--font-mono); color:var(--red);">+ 4.2 días</td>
+               </tr>
+               <tr>
+                 <td style="padding-left:40px; font-weight:600;">Sigma Torres del Valle</td>
+                 <td style="font-family:var(--font-mono);">HNT-0418</td>
+                 <td style="font-family:var(--font-mono);">$1,850,000</td>
+                 <td><span class="badge green">Sano</span></td>
+                 <td style="font-family:var(--font-mono); color:var(--text-secondary);">En parámetros</td>
+               </tr>
+             </tbody>
+           </table>
+         </div>
+      </div>
+    </div>
+  </div><!-- FIN ROLE MASTER -->
+
+  <!-- ==============================================
+       ENTORNO: PROYECTISTA (TÉCNICO)
+       ============================================== -->
+  <div id="role-proyectista" class="role-container">
+    <aside class="sidebar" style="width: 320px;">
+      <div class="subtitle" style="padding: 0 40px 24px;">Bandeja Técnica</div>
+      <a class="nav-item active">
+        <div>
+          <div style="font-weight:600; font-size:14px; margin-bottom:4px; color:var(--text-primary);">Corporativo Sigma</div>
+          <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted);">HNT-0418 • Macro</div>
+        </div>
+      </a>
+      <a class="nav-item">
+        <div>
+          <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Regionales OXXO</div>
+          <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted);">HNT-0391 • Medio</div>
+        </div>
+      </a>
+    </aside>
+
+    <div class="main-view-wrapper">
+      <div id="form-layout">
+        <!-- Panel Izquierdo o Central de Trabajo -->
+        <div class="form-central">
+          <div class="content-header" style="padding-bottom: 24px; border-bottom: 1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+              <div>
+                <h1 class="display-title" style="font-size:32px;">Orden de Producción: Sigma</h1>
+                <div style="margin-top:16px; display:flex; gap:8px;">
+                  <span class="badge hunter">HNT-0418</span>
+                  <span class="badge amber">Requiere Trazo</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:16px;">
+                <button class="btn-outline" onclick="showToast('info', 'Notificación enviada', 'El asesor Ventas fue notificado de la duda.')">💬 Solicitar Aclaración</button>
+                <button class="btn-solid" onclick="showToast('success', 'Turno Asignado', 'Has tomado propiedad de este proyecto.')">Aceptar Requerimiento</button>
+              </div>
+            </div>
+          </div>
+          <div class="scroll-area">
+             <div class="card" style="margin-bottom: 32px;">
+                <div class="subtitle" style="margin-bottom:24px;">Detalle de Consultoría de Ventas</div>
+                <div class="form-grid">
+                   <div>
+                     <div class="form-label">Condición del Espacio</div>
+                     <div style="font-weight:500; font-size:15px; margin-top:8px;">Obra Gris (Desde Cero)</div>
+                   </div>
+                   <div>
+                     <div class="form-label">Densidad y Aforo</div>
+                     <div style="font-weight:500; font-size:15px; margin-top:8px;">120 personas aprox.</div>
+                   </div>
+                   <div>
+                     <div class="form-label">Línea Sugerida en Brief</div>
+                     <div style="font-weight:500; font-size:15px; margin-top:8px;">Línea Ascend (Ejecutiva Premium)</div>
+                   </div>
+                   <div>
+                     <div class="form-label">Compromiso Entrega a Cliente</div>
+                     <div style="font-weight:500; font-size:15px; margin-top:8px; font-family:var(--font-mono); color:var(--amber);">2026-05-24</div>
+                   </div>
+                </div>
+             </div>
+
+             <div class="card">
+                <div class="subtitle" style="margin-bottom:24px;">Feed de Comunicación (Log Interno)</div>
+                <div style="display:flex; flex-direction:column; gap:24px;">
+                   <div style="display:flex; gap:16px;">
+                      <div class="avatar" style="width:32px; height:32px; font-size:11px;">RL</div>
+                      <div style="flex:1;">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                          <div style="font-size:13px; font-weight:600;">Rogelio Lares (Ventas)</div>
+                          <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);">Hace 2 hrs</div>
+                        </div>
+                        <div style="font-size:14px; color:var(--text-secondary); background:var(--surface-2); padding:16px; border-radius:var(--radius); border:1px solid var(--border);">
+                          Se adjuntaron fotos del terreno. Hay columnas a la mitad, cuidado con las circulaciones. Dejo pin vectorial en la sala magna.
+                        </div>
+                      </div>
+                   </div>
+                </div>
+                <div style="margin-top:24px; display:flex; gap:16px;">
+                  <input type="text" class="form-input" style="flex:1;" placeholder="Escribir comentario o duda al vendedor...">
+                  <button class="btn-solid">Enviar</button>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- Bóveda Lado Derecho en Proyectista -->
+        <aside class="vault-panel" style="border-left: 1px solid var(--border); border-right:none;">
+          <div class="vault-panel-header">
+            <h3 style="font-size: 20px;">Archivos Técnicos (Producción)</h3>
+            <div class="subtitle" style="margin-top: 12px; color:var(--text-muted);">Versiones finales hacia Planta</div>
+          </div>
+          <div class="vault-panel-content">
+             <div class="vault-folder">
+                <div class="vault-header">📂 / planos_aprobados</div>
+                <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Distribución definitiva validada</div>
+                
+                <div class="vault-file" style="border-color:var(--amber); background:rgba(210,153,34,0.05);">
+                  <div style="font-family:var(--font-mono); font-size:11px; color:var(--amber); font-weight:600;">DWG</div>
+                  <div class="file-info" style="flex:1; min-width:0;">
+                    <div class="file-name">Sigma_PlantaAlta_V1.dwg</div>
+                    <div class="file-meta">Hace 5 mins</div>
+                  </div>
+                  <div class="btn-icon" title="Protocolizar Descarga">⬇</div>
+                  <div class="btn-icon" title="Reemplazar/Eliminar" style="color:var(--red); border-color:var(--border);">🗑</div>
+                </div>
+
+                <div class="vault-file" style="border-color:var(--green); background:rgba(63,185,80,0.05);">
+                  <div style="font-family:var(--font-mono); font-size:11px; color:var(--green); font-weight:600;">PDF</div>
+                  <div class="file-info" style="flex:1; min-width:0;">
+                    <div class="file-name">Sigma_PlantaAlta_Sellado.pdf</div>
+                    <div class="file-meta">Ayer</div>
+                  </div>
+                  <div class="btn-icon" title="Protocolizar Descarga">⬇</div>
+                  <div class="btn-icon" title="Reemplazar/Eliminar" style="color:var(--red); border-color:var(--border);">🗑</div>
+                </div>
+
+                <button class="btn-outline" style="width:100%; margin-top:16px; border-style:dashed; padding:10px; font-size:11px;" onclick="showToast('info', 'Versionado Seguro', 'Se requiere archivo DWG encriptado.')">+ Cargar Nueva Versión para Planta</button>
+             </div>
+          </div>
+          <div style="padding: 24px 40px; background:var(--surface); border-top:1px solid var(--border); display:flex; flex-direction:column; gap:16px;">
+             <button class="btn-solid" style="width:100%;" onclick="showToast('success', 'Validación Técnica Solicitada', 'El proyecto avanza a fase de Autorización.')">Enviar a Validación</button>
+             <button class="btn-outline" style="width:100%;">Marcar como Listo (Local)</button>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </div><!-- FIN ROLE PROYECTISTA -->
+
+</main>
+
+<!-- Hidden Input for File Uploads -->
+<input type="file" id="hidden-file-input" style="display:none;" accept="image/*" onchange="handleFileSelected(event)">
+
+<!-- Toasts -->
+<div id="toast-container"></div>
+
+<!-- ============================================================
+     JAVASCRIPT LÓGICA CORE
+     ============================================================ -->
+<script>
+/* --- ESTADO GLOBAL --- */
+const STATE = {
+  activeTool: null,
+  pins: [], // { x: %, y: %, type, users }
+  texts: [],
+  drawingWall: false,
+  currentWallPoints: [], // stored locally for drawing
+  savedWallsStrings: [], // `<polyline points="...">`
+  vault: [
+    { folder: 'planos_base', label: 'Archivos DWG/PDF', files: [{ name: 'layout_planta_2_v1.pdf', ext: 'PDF', date: 'Hoy' }] },
+    { folder: 'galeria_sitio', label: 'Levantamiento Fotográfico', files: [{ name: 'IMG_8492.JPG', ext: 'JPG', date: 'Ayer' }, { name: 'IMG_8493.JPG', ext: 'JPG', date: 'Ayer' }] },
+    { folder: 'documentacion_soporte', label: 'Minutas y Formatos', files: [] }
+  ]
+};
+
+let vProjects = [
+  { cliente: "Corporativo Sigma / Torres del Valle", id: "HNT-0418", monto: "$1,850,000", magn: "Macro", magnClass: "mag-alert-macro", proyectista: "Karen Tovar", etapa: "En Diseño (Arquitectura)" },
+  { cliente: "Oficinas Regionales OXXO", id: "HNT-0391", monto: "$480,000", magn: "Medio", magnClass: "mag-alert-medio", proyectista: "Sin Asignar", etapa: "Validación Hunter" },
+  { cliente: "Consultorio Especialidades Médicas", id: "HNT-0405", monto: "$85,000", magn: "Micro", magnClass: "mag-alert-micro", proyectista: "Sin Asignar", etapa: "Cotización Exprés" }
+];
+
+const TOOL_ICONS = { privado: '🛋️', operativo: '👥', juntas: '🤝'};
+
+/* --- LOGICA MULTI ROL --- */
+function switchRoleWorkspace(role) {
+  document.querySelectorAll('.role-container').forEach(el => el.classList.remove('active'));
+  const target = document.getElementById('role-' + role);
+  if (target) target.classList.add('active');
+
+  const nameEl = document.getElementById('ui-user-name');
+  const roleEl = document.getElementById('ui-user-role');
+  const avatarEl = document.getElementById('ui-user-avatar');
+  
+  if (role === 'ventas') {
+    nameEl.textContent = 'Rogelio Lares';
+    roleEl.textContent = 'Asesor Comercial Sr.';
+    avatarEl.textContent = 'RL';
+    showToast('info', 'Entorno Intercambiado', 'Entorno Ventas Activo');
+  } else if (role === 'master') {
+    nameEl.textContent = 'Dra. Elena Costa';
+    roleEl.textContent = 'Dirección General';
+    avatarEl.textContent = 'EC';
+    showToast('info', 'Entorno Intercambiado', 'Entorno Dirección Activo');
+  } else if (role === 'proyectista') {
+    nameEl.textContent = 'Karen Tovar';
+    roleEl.textContent = 'Proyectista Técnico';
+    avatarEl.textContent = 'KT';
+    showToast('info', 'Entorno Intercambiado', 'Entorno Técnico Activo');
+  }
+}
+
+/* --- FLUJO SPA NAVEGACIÓN --- */
+function renderTable() {
+  const tbody = document.getElementById('v-table-body');
+  tbody.innerHTML = vProjects.map(p => `
+    <tr>
+      <td style="padding-left:40px;">
+        <div style="font-weight:600; font-size:15px; color:var(--text-primary); margin-bottom:4px;">${p.cliente}</div>
+      </td>
+      <td><span class="badge hunter" style="font-family:var(--font-mono)">${p.id}</span></td>
+      <td style="font-family:var(--font-mono); font-weight:500; font-size:16px;">${p.monto}</td>
+      <td>
+         <div style="display:flex; align-items:center; gap:8px;">
+           <div style="width:8px; height:8px; border-radius:50%; background:var(--${p.magnClass.split('-')[2]})"></div>
+           <span style="font-size:13px; font-weight:600; color:var(--text-secondary)">${p.magn}</span>
+         </div>
+      </td>
+      <td style="font-size:14px;">${p.proyectista}</td>
+      <td><span class="badge" style="border-color:rgba(255,255,255,0.1)">${p.etapa}</span></td>
+    </tr>
+  `).join('');
+}
+
+function goToDashboard() {
+  document.getElementById('screen-form').classList.remove('active');
+  document.getElementById('screen-dashboard').classList.add('active');
+}
+
+function goToForm(isEdit = false) {
+  document.getElementById('screen-dashboard').classList.remove('active');
+  document.getElementById('screen-form').classList.add('active');
+  
+  if(!isEdit) {
+    document.getElementById('v-cliente').value = '';
+    document.getElementById('v-monto').value = '0';
+    document.getElementById('v-m2').value = '0';
+    document.getElementById('v-hunterid').value = 'HNT-' + Math.floor(Math.random()*9000 + 1000);
+    // Reset canvas
+    STATE.pins = [];
+    STATE.savedWallsStrings = [];
+    document.getElementById('walls-group').innerHTML = '';
+    document.getElementById('pins-layer').innerHTML = '';
+    document.getElementById('c-bg-image').style.display = 'none';
+    
+    switchTab('datos');
+    calcMag();
+  }
+}
+
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('t-' + tabId).classList.add('active');
+  document.getElementById('pane-' + tabId).classList.add('active');
+  
+  const vaultPanel = document.getElementById('vault-panel-boveda');
+  if(tabId === 'briefing') {
+    vaultPanel.classList.add('collapsed');
+    renderCanvasElements(); 
+  } else {
+    vaultPanel.classList.remove('collapsed');
+  }
+}
+
+function submitForm() {
+  const cliente = document.getElementById('v-cliente').value || 'Desarrollo Sin Título';
+  const monto = parseFloat(document.getElementById('v-monto').value) || 0;
+  const hId = document.getElementById('v-hunterid').value;
+  
+  const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+  const montoStr = formatter.format(monto);
+
+  const m2 = parseFloat(document.getElementById('v-m2').value) || 0;
+  let magn = "Micro", magnClass = "mag-alert-micro";
+  if(monto > 1000000 || m2 > 500) { magn = "Macro"; magnClass = "mag-alert-macro"; }
+  else if(monto >= 200000 || m2 >= 80) { magn = "Medio"; magnClass = "mag-alert-medio"; }
+
+  vProjects.unshift({
+    cliente,
+    id: hId,
+    monto: montoStr,
+    magn,
+    magnClass,
+    proyectista: "Buscando Disponibilidad...",
+    etapa: "En Cola Técnica"
+  });
+
+  renderTable();
+  goToDashboard();
+  showToast('success', 'Proyecto Despachado', 'Solicitud transferida al departamento técnico para modelado.');
+}
+
+/* --- MAGNITUD ALGORITMO --- */
+function calcMag() {
+  const m = parseFloat(document.getElementById('v-monto').value) || 0;
+  const m2 = parseFloat(document.getElementById('v-m2').value) || 0;
+  const box = document.getElementById('mag-box');
+  const title = document.getElementById('mag-title');
+  const desc = document.getElementById('mag-desc');
+
+  box.className = 'magnitude-box'; // reset
+  
+  if(m > 1000000 || m2 > 500) {
+    box.classList.add('mag-alert-macro');
+    title.textContent = 'Flujo MACRO (Validación Especial)';
+    desc.textContent = 'Volumen crítico. Requiere autorización de Dirección y asignación de Sr. Proyectista.';
+  } else if(m >= 200000 || m2 >= 80) {
+    box.classList.add('mag-alert-medio');
+    title.textContent = 'Flujo MEDIO (Estándar Técnico)';
+    desc.textContent = 'Magnitud ideal. Pasa directo a asignación de pool de proyectistas.';
+  } else {
+    box.classList.add('mag-alert-micro');
+    title.textContent = 'Flujo MICRO (Fast-Track)';
+    desc.textContent = 'Monto y metraje dentro de los parámetros para asignación directa exprés (Entrega esperada < 48hrs).';
+  }
+}
+
+/* --- CANVAS VECTORIAL INTERACTIVO --- */
+function selectTool(id, el) {
+  if(STATE.activeTool === id) {
+    // Deselect
+    STATE.activeTool = null;
+    el.classList.remove('active');
+    document.getElementById('canvas-area').style.cursor = 'default';
+    if(STATE.drawingWall) finishWall();
+  } else {
+    if(STATE.drawingWall) finishWall();
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    STATE.activeTool = id;
+    
+    if(id === 'wall') document.getElementById('canvas-area').style.cursor = 'crosshair';
+    else if(id === 'text') document.getElementById('canvas-area').style.cursor = 'text';
+    else document.getElementById('canvas-area').style.cursor = 'crosshair';
+  }
+}
+
+function handleCanvasClick(e) {
+  if(!STATE.activeTool) return;
+  
+  const wrapper = document.getElementById('canvas-area');
+  const rect = wrapper.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  const xPercent = (x / rect.width) * 100;
+  const yPercent = (y / rect.height) * 100;
+
+  // OUT OF BOUNDS check (margins)
+  if(xPercent < 0 || xPercent > 100 || yPercent < 0 || yPercent > 100) return;
+
+  if (STATE.activeTool === 'wall') {
+    // Vectorial Polyline points
+    STATE.drawingWall = true;
+    STATE.currentWallPoints.push(`${x},${y}`);
+    document.getElementById('current-wall').setAttribute('points', STATE.currentWallPoints.join(' '));
+  } else if (STATE.activeTool === 'text') {
+    spawnTextBox(xPercent, yPercent);
+    selectTool(null, document.querySelector('.tool-btn.active')); // drop tool
+  } else {
+    // Pin logic
+    const usersCount = prompt("¿Aforo estimado (personas) para esta zona?", "4");
+    if(usersCount !== null) {
+      STATE.pins.push({ x: xPercent, y: yPercent, type: STATE.activeTool, users: parseInt(usersCount)||0 });
+      renderCanvasElements();
+      showToast('success', 'Mapeo Registrado', 'Pin vectorial sincronizado.');
+    }
+  }
+}
+
+function handleCanvasMove(e) {
+  if(!STATE.drawingWall) return;
+  const wrapper = document.getElementById('canvas-area');
+  const rect = wrapper.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  
+  let ptsStr = STATE.currentWallPoints.join(' ') + ` ${x},${y}`;
+  document.getElementById('current-wall').setAttribute('points', ptsStr);
+}
+
+// Complete line on double click or pressing esc
+window.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && STATE.drawingWall) finishWall();
+  if(e.key === 'Escape' && STATE.activeTool) {
+    const el = document.querySelector('.tool-btn.active');
+    if(el) selectTool(STATE.activeTool, el); // deactivate
+  }
+});
+document.getElementById('canvas-area').addEventListener('dblclick', (e) => {
+  if(STATE.drawingWall) { e.preventDefault(); e.stopPropagation(); finishWall(); }
+});
+
+function finishWall() {
+  if(STATE.currentWallPoints.length > 1) {
+    const pts = STATE.currentWallPoints.join(' ');
+    const polyStr = `<polyline points="${pts}" />`;
+    STATE.savedWallsStrings.push(polyStr);
+    document.getElementById('walls-group').innerHTML += polyStr;
+  }
+  STATE.currentWallPoints = [];
+  STATE.drawingWall = false;
+  document.getElementById('current-wall').setAttribute('points', '');
+}
+
+function spawnTextBox(xP, yP) {
+  const layer = document.getElementById('pins-layer');
+  const div = document.createElement('div');
+  div.className = 'canvas-floating-text';
+  div.style.left = xP + '%';
+  div.style.top = yP + '%';
+  div.innerHTML = 'Anotación técnica...';
+  // Standard content editable behaviour
+  div.setAttribute('contenteditable', 'true');
+  layer.appendChild(div);
+  
+  setTimeout(() => { div.focus(); document.execCommand('selectAll',false,null); }, 50);
+}
+
+function renderCanvasElements() {
+  // Walls are handled directly in SVG DOM. 
+  // Pins must be rendered dynamically ensuring % constraints remain
+  const layer = document.getElementById('pins-layer');
+  // keep texts, clear pins
+  Array.from(layer.children).forEach(c => {
+    if(c.classList.contains('blueprint-pin')) c.remove();
+  });
+
+  STATE.pins.forEach(pin => {
+    const el = document.createElement('div');
+    el.className = 'blueprint-pin';
+    el.style.left = pin.x + '%';
+    el.style.top = pin.y + '%';
+    el.innerHTML = `
+      <div class="pin-circle">${TOOL_ICONS[pin.type] || '📌'}</div>
+      ${pin.users > 0 ? `<div class="pin-users">${pin.users}</div>` : ''}
+    `;
+    layer.appendChild(el);
+  });
+}
+
+function triggerBgUpload() {
+  document.getElementById('hidden-file-input').click();
+}
+function handleFileSelected(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const url = URL.createObjectURL(file);
+    document.getElementById('c-bg-image').src = url;
+    document.getElementById('c-bg-image').style.display = 'block';
+    showToast('success', 'Fondo Sincronizado', 'La imagen vectorizada está lista como base.');
+  }
+}
+
+function toggleGrid() {
+  const g = document.getElementById('c-grid');
+  g.style.display = g.style.display === 'none' ? 'block' : 'none';
+}
+
+function exportCanvas() {
+  if(STATE.activeTool) selectTool(STATE.activeTool, document.querySelector('.tool-btn.active')); // drop tool
+  showToast('info', 'Motor Rasterizador', 'Generando vista de alta calidad (PNG)...');
+  setTimeout(() => {
+    showToast('success', 'Exportación Exitosa', 'El archivo ha sido guardado en sus descargas locales.');
+  }, 1500);
+}
+
+function clearCanvas() {
+  if(confirm("Atención: Se eliminarán todos los trazos vectoriales, notas y pines. ¿Proceder?")) {
+    STATE.pins = [];
+    STATE.savedWallsStrings = [];
+    document.getElementById('walls-group').innerHTML = '';
+    document.getElementById('pins-layer').innerHTML = '';
+    document.getElementById('c-bg-image').style.display = 'none';
+    showToast('info', 'Lienzo Purgado', 'El entorno ha sido restablecido a ceros.');
+  }
+}
+
+/* --- VAULT (BÓVEDA) RENDERING --- */
+function renderVault() {
+  let html = '';
+  STATE.vault.forEach((folder) => {
+    html += `<div class="vault-folder">
+      <div class="vault-header">📂 / ${folder.folder}</div>
+      <div style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">${folder.label}</div>
+      `;
+    
+    if(folder.files.length === 0) {
+      html += `<div style="font-size:12px; color:var(--text-muted); padding: 16px; border: 1px dashed var(--border-light); border-radius:var(--radius); text-align:center;">Vacio. Arrastre aquí.</div>`;
+    } else {
+      folder.files.forEach(file => {
+        html += `<div class="vault-file" title="${file.name}">
+          <div style="font-family:var(--font-mono); font-size:11px; color:var(--blue); font-weight:600;">${file.ext}</div>
+          <div class="file-info" style="flex:1; min-width:0;">
+            <div class="file-name">${file.name}</div>
+            <div class="file-meta">${file.date}</div>
+          </div>
+          <div class="btn-icon" title="Protocolizar Descarga">⬇</div>
+        </div>`;
+      });
+    }
+    html += `<button class="btn-outline" style="width:100%; margin-top:16px; border-style:dashed; padding:10px; font-size:11px;" onclick="showToast('success', 'Archivo Encriptado', 'Subida al repositorio seguro correcta.')">+ Agregar Archivo</button>`;
+    html += `</div>`;
+  });
+  document.getElementById('vault-container').innerHTML = html;
+}
+
+/* --- TOAST SYSTEM --- */
+function showToast(type, title, text) {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  const icons = { info:'💡', success:'✅', warning:'⚠️', error:'❌' };
+  
+  t.className = 'toast';
+  if(type==='success') t.style.borderLeft = '4px solid var(--green)';
+  if(type==='error') t.style.borderLeft = '4px solid var(--red)';
+  if(type==='info') t.style.borderLeft = '4px solid var(--blue)';
+  
+  t.innerHTML = `
+    <div class="toast-icon">${icons[type]||'💬'}</div>
+    <div class="toast-content">
+      <div class="toast-title">${title}</div>
+      <div class="toast-desc">${text}</div>
+    </div>
+  `;
+  c.appendChild(t);
+  setTimeout(() => {
+    t.style.animation = 'fadeOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+    setTimeout(() => t.remove(), 300);
+  }, 4000);
+}
+
+// Fake autosave
+function autoSave() {
+  if(Math.random() > 0.8) console.log('Autosaving draft...');
+}
+
+// Boot
+window.onload = () => {
+  renderTable();
+  renderVault();
+  // Starts on dashboard by default as per CSS active class, but let's assure:
+  goToDashboard();
+};
+</script>
+</body>
+</html>
