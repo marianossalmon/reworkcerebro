@@ -337,6 +337,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
   vertical-align: middle;
 }
 .data-table tr:last-child td { border-bottom: none; }
+.data-table tr { cursor: pointer; }
 .data-table tr:hover td { background: var(--surface-hover); }
 
 /* ============================================================
@@ -448,19 +449,19 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 }
 
 /* ============================================================
-   VAULT (LEFT PANEL)
+   VAULT (RIGHT PANEL)
    ============================================================ */
 .vault-panel {
   width: var(--right-w);
   background: var(--bg);
-  border-right: 1px solid var(--border);
+  border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  transition: margin-left 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  transition: margin-right 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 .vault-panel.collapsed {
-  margin-left: calc(var(--right-w) * -1); /* Pulls it off screen cleanly */
+  margin-right: calc(var(--right-w) * -1); /* Pulls it off screen cleanly to the right */
   opacity: 0;
   pointer-events: none;
 }
@@ -656,6 +657,367 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
   to { opacity: 0; transform: scale(0.95); }
 }
 
+/* ============================================================
+   PROJECT DETAIL MODAL PREMIUM DARK
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(13, 17, 23, 0.85);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 24px;
+}
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-card {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 1120px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+  transform: translateY(30px) scale(0.98);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+  overflow: hidden;
+}
+.modal-overlay.active .modal-card {
+  transform: translateY(0) scale(1);
+}
+.modal-header {
+  padding: 28px 40px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(22, 27, 34, 0.4);
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-style: italic;
+  font-weight: 700;
+  color: #fff;
+}
+.modal-close {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.modal-close:hover {
+  color: #fff;
+  background: var(--surface-hover);
+  border-color: var(--border-light);
+}
+.modal-body-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px;
+}
+.modal-grid-two-col {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+}
+.modal-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  border-left: 2px solid var(--blue);
+  padding-left: 8px;
+}
+.form-file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+.form-file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+.form-file-item .file-name {
+  color: var(--text-primary);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 250px;
+}
+.form-file-item .file-size {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+.form-file-item .btn-remove {
+  color: var(--red);
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+.form-file-item .btn-remove:hover {
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  .modal-grid-two-col {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ============================================================
+   RESPONSIVO MULTI-PANTALLA & ADAPTARIO PREMIUM
+   ============================================================ */
+@media (max-width: 1024px) {
+  html, body {
+    overflow: auto !important;
+    height: auto !important;
+  }
+  #app-container {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: visible !important;
+  }
+  
+  /* Ajustar espacio del Header */
+  #header {
+    position: relative !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding: 20px !important;
+    gap: 20px !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  #header .header-spacer {
+    display: none !important;
+  }
+  #header .header-user {
+    border-left: none !important;
+    padding-left: 0 !important;
+    justify-content: space-between !important;
+    margin-top: 4px;
+  }
+  #header select {
+    width: 100% !important;
+    margin-right: 0 !important;
+  }
+
+  .role-container {
+    height: auto !important;
+    flex-direction: column !important;
+    display: none;
+  }
+  .role-container.active {
+    display: flex !important;
+  }
+  
+  /* Transformar barra lateral en navbar superior horizontal */
+  .sidebar {
+    width: 100% !important;
+    height: auto !important;
+    flex-direction: row !important;
+    padding: 12px 20px !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    gap: 8px !important;
+    scrollbar-width: none;
+  }
+  .sidebar::-webkit-scrollbar {
+    display: none;
+  }
+  .sidebar .subtitle {
+    display: none !important;
+  }
+  .sidebar .nav-item {
+    padding: 10px 16px !important;
+    border-left: none !important;
+    border-bottom: 2px solid transparent !important;
+    font-size: 13px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+  .sidebar .nav-item.active {
+    border-bottom-color: #fff !important;
+    background: transparent !important;
+  }
+
+  /* Vista Principal */
+  .main-view-wrapper {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .spa-screen {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    transform: none !important;
+    display: none !important;
+  }
+  .spa-screen.active {
+    display: flex !important;
+  }
+
+  /* Form Layout stacking */
+  #form-layout {
+    flex-direction: column !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .form-central {
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .scroll-area {
+    padding: 24px !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .content-header {
+    padding: 32px 24px 0 !important;
+  }
+  
+  /* Panel Bóveda de archivos */
+  .vault-panel {
+    width: 100% !important;
+    height: auto !important;
+    border-left: none !important;
+    border-top: 1px solid var(--border) !important;
+    position: relative !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  .vault-panel.collapsed {
+    display: none !important; /* Esconder del todo en móvil si está contraído */
+  }
+  .vault-panel-header, .vault-panel-content {
+    padding: 24px !important;
+  }
+
+  /* Grillas adaptativas */
+  .kpi-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+    margin-bottom: 24px !important;
+  }
+  .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .card {
+    padding: 24px !important;
+  }
+  .card.p-0 {
+    overflow-x: auto !important;
+  }
+  .data-table {
+    min-width: 600px;
+  }
+  
+  /* Lienzo de Briefing adaptativo */
+  .briefing-workspace {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: auto !important;
+    gap: 16px !important;
+  }
+  .tool-bar {
+    width: 100% !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    height: auto !important;
+  }
+  .tool-btn {
+    width: calc(25% - 6px) !important;
+    max-width: none !important;
+    height: 56px !important;
+  }
+  .tool-icon {
+    font-size: 16px !important;
+  }
+  .tool-label {
+    font-size: 9px !important;
+    margin-top: 2px !important;
+    letter-spacing: 0px !important;
+  }
+  .canvas-wrapper {
+    width: 100% !important;
+    height: 380px !important;
+    min-height: 380px !important;
+  }
+  .magnitude-box {
+    padding: 20px !important;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .form-footer {
+    padding: 20px 24px !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: stretch !important;
+  }
+  .form-footer button, .form-footer div {
+    width: 100% !important;
+  }
+  .form-footer div {
+    flex-direction: column;
+    gap: 12px !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -762,17 +1124,6 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
     <div id="screen-form" class="spa-screen">
       
       <div id="form-layout">
-        <!-- Bóveda Lado Izquierdo -->
-        <aside class="vault-panel" id="vault-panel-boveda">
-          <div class="vault-panel-header">
-            <h3 style="font-size: 20px;">Bóveda del Proyecto</h3>
-            <div class="subtitle" style="margin-top: 12px; color:var(--text-muted);">Estructura Taxonómica Fija</div>
-          </div>
-          <div class="vault-panel-content" id="vault-container">
-            <!-- Renderizado dinámico vía JS -->
-          </div>
-        </aside>
-
         <div class="form-central">
           <div class="content-header" style="padding-bottom: 0;">
             <h1 class="display-title" style="font-size:36px;">Expediente Técnico</h1>
@@ -809,7 +1160,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
                   </div>
                   <div class="form-group">
                     <label class="form-label">Contacto Responsable en Sitio</label>
-                    <input type="text" class="form-input" placeholder="Nombre completo">
+                    <input type="text" class="form-input" placeholder="Nombre completo" id="v-contacto">
                   </div>
                   <div class="form-group">
                     <label class="form-label">Monto Estimado de Inversión (MXN)</label>
@@ -828,7 +1179,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
                 <div class="form-grid">
                   <div class="form-group">
                     <label class="form-label">Condición Actual del Espacio</label>
-                    <select class="form-select">
+                    <select class="form-select" id="v-condicion">
                       <option value="gris">Obra Gris (Desde Cero)</option>
                       <option value="activo">Remodelación con Personal Activo</option>
                       <option value="vacio">Espacio Adaptado pero Vacío</option>
@@ -836,11 +1187,11 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
                   </div>
                   <div class="form-group">
                     <label class="form-label">Densidad de Usuarios (Puestos aprox.)</label>
-                    <input type="number" class="form-input" placeholder="Cantidad de sillas" min="1">
+                    <input type="number" class="form-input" placeholder="Cantidad de sillas" min="1" id="v-densidad">
                   </div>
                   <div class="form-group">
                     <label class="form-label">Línea de Mobiliario Tentativa</label>
-                    <select class="form-select">
+                    <select class="form-select" id="v-linea">
                       <option value="ascend">Línea Ascend (Ejecutiva Premium)</option>
                       <option value="bento">Sistema Bento (Colaborativo)</option>
                       <option value="concord">Concord Modular</option>
@@ -850,11 +1201,11 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
                   </div>
                   <div class="form-group">
                     <label class="form-label">Compromiso de Entrega a Cliente</label>
-                    <input type="date" class="form-input" style="color:var(--text-secondary); font-family:var(--font-mono);">
+                    <input type="date" class="form-input" style="color:var(--text-secondary); font-family:var(--font-mono);" id="v-compromiso">
                   </div>
                   <div class="form-group" style="grid-column: 1 / -1;">
                     <label class="form-label">Restricciones Estructurales / Notas Especiales</label>
-                    <textarea class="form-textarea" rows="3" placeholder="Restricciones de voltaje, plafones, alfombras existentes, etc."></textarea>
+                    <textarea class="form-textarea" rows="3" placeholder="Restricciones de voltaje, plafones, alfombras existentes, etc." id="v-restricciones"></textarea>
                   </div>
                 </div>
               </div>
@@ -940,6 +1291,16 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
             </div>
           </div>
         </div>
+
+        <!-- Bóveda Lado Derecho en Ventas (Briefing) -->
+        <aside class="vault-panel" id="vault-panel-boveda">
+          <div class="vault-panel-header">
+            <h3 style="font-size: 20px;">Assets</h3>
+          </div>
+          <div class="vault-panel-content" id="vault-container">
+            <!-- Renderizado dinámico vía JS -->
+          </div>
+        </aside>
 
         <!-- END: Form Central -->
       </div>
@@ -1165,6 +1526,91 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 <!-- Toasts -->
 <div id="toast-container"></div>
 
+<!-- Project Detail & Modification Request Modal -->
+<div id="project-detail-modal" class="modal-overlay" onclick="closeProjectModal(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-project-title">Expediente del Proyecto</div>
+      <button class="modal-close" onclick="closeProjectModal(event, true)">✕</button>
+    </div>
+    
+    <div class="modal-body-scroll">
+      <div class="modal-grid-two-col">
+        <!-- left side: project data -->
+        <div>
+          <div class="modal-section-title">Información y Códigos del Proyecto</div>
+          <div class="card" style="padding: 24px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">ID Hunter CRM:</span>
+              <span class="badge hunter" id="md-hunter-id" style="font-family: var(--font-mono); font-size: 12px;">HNT-0000</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Volumen / Monto:</span>
+              <span id="md-monto" style="font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--blue);">--</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Flujo Operativo (Magnitud):</span>
+              <span class="badge" id="md-magnitud">--</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Proyectista Asignado:</span>
+              <span id="md-proyectista" style="font-size: 14px; font-weight: 500; color: var(--text-primary);">--</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Etapa Pipeline:</span>
+              <span class="badge" id="md-etapa" style="border-color: rgba(255,255,255,0.1);">--</span>
+            </div>
+          </div>
+          
+          <div class="modal-section-title">Solicitud Original</div>
+          <p id="md-solicitud" style="font-size: 14px; line-height: 1.6; color: var(--text-secondary); background: var(--surface-2); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); margin-bottom: 24px; font-style: italic;">
+            No se especificaron detalles adicionales.
+          </p>
+          
+          <div class="modal-section-title">Documentos Originales / Assets</div>
+          <div id="md-documentos-list" style="display: flex; flex-direction: column; gap: 8px;">
+            <!-- Rendered in JS -->
+          </div>
+        </div>
+        
+        <!-- right side: list additions or solicitar modificacion -->
+        <div style="border-left: 1px solid var(--border); padding-left: 32px;" id="md-modificacion-column">
+          <div class="modal-section-title">Historial de Revisiones / Modificaciones</div>
+          <div id="md-modificaciones-history" style="display:flex; flex-direction:column; gap:16px; margin-bottom: 32px; max-height: 200px; overflow-y: auto;">
+            <!-- list of mods -->
+            <div style="font-size:12px; color:var(--text-muted); text-align:center; padding: 16px 0;">No se han solicitado re-diseños técnicos para este proyecto.</div>
+          </div>
+          
+          <div class="modal-section-title">Solicitar Nueva Modificación</div>
+          <div class="card" style="padding: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(255,255,255,0.01);">
+            <div class="form-group">
+              <label class="form-label" style="font-size:11px; margin-bottom:8px;">Instrucciones para el Ingeniero / Proyectista</label>
+              <textarea class="form-input" id="mod-instrucciones" rows="4" style="height:auto; resize:vertical; padding:12px; font-size:13px;" placeholder="Ej. El cliente solicita expandir 4 escritorios más en la zona central y reducir un panel..."></textarea>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" style="font-size:11px; margin-bottom:4px;">Nuevos Planos o Archivos Adicionales</label>
+              <div style="border: 1px dashed var(--border-light); border-radius: var(--radius); padding: 16px; text-align:center; cursor:pointer; background: var(--surface-2); transition: background 0.2s;" onclick="triggerModFileUpload()" ondragover="event.preventDefault()" ondrop="handleModFileDrop(event)">
+                <div style="font-size: 20px; margin-bottom: 6px;">📂</div>
+                <div style="font-size:12px; font-weight:600; color: var(--text-primary);">Haga click o arrastre para cargar</div>
+                <div style="font-size:11px; color: var(--text-muted); margin-top:2px;">PDF, DWG o JPG nuevo plano</div>
+              </div>
+              <input type="file" id="mod-file-input" style="display:none;" onchange="handleModFileSelected(event)">
+              
+              <!-- dynamic list of selected modification files -->
+              <div class="form-file-list" id="mod-files-preview-list"></div>
+            </div>
+            
+            <button class="btn-solid" style="width: 100%; margin-top: 8px; justify-content:center;" onclick="submitModificationRequest()">
+              🚀 Enviar Solicitud de Cambios
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============================================================
      JAVASCRIPT LÓGICA CORE
      ============================================================ -->
@@ -1185,9 +1631,52 @@ const STATE = {
 };
 
 let vProjects = [
-  { cliente: "Corporativo Sigma / Torres del Valle", id: "HNT-0418", monto: "$1,850,000", magn: "Macro", magnClass: "mag-alert-macro", proyectista: "Karen Tovar", etapa: "En Diseño (Arquitectura)" },
-  { cliente: "Oficinas Regionales OXXO", id: "HNT-0391", monto: "$480,000", magn: "Medio", magnClass: "mag-alert-medio", proyectista: "Sin Asignar", etapa: "Validación Hunter" },
-  { cliente: "Consultorio Especialidades Médicas", id: "HNT-0405", monto: "$85,000", magn: "Micro", magnClass: "mag-alert-micro", proyectista: "Sin Asignar", etapa: "Cotización Exprés" }
+  { 
+    cliente: "Corporativo Sigma / Torres del Valle", 
+    id: "HNT-0418", 
+    monto: "$1,850,000", 
+    magn: "Macro", 
+    magnClass: "mag-alert-macro", 
+    proyectista: "Karen Tovar", 
+    etapa: "En Diseño (Arquitectura)",
+    solicitudOriginal: "Modelado premium para oficinas corporativas de alta densidad de tránsito, integrando la Línea Ascend ejecutiva. Se requiere especial atención en la sala magna con columnas intermedias y aforo de personal operativo de unas 120 personas.",
+    documentosOriginales: [
+      { name: "layout_planta_2_v1.pdf", ext: "PDF" },
+      { name: "IMG_8492.JPG", ext: "JPG" },
+      { name: "IMG_8493.JPG", ext: "JPG" }
+    ],
+    modificaciones: [
+      { instrucciones: "Remodelar sala de juntas norte para ampliar el espacio de desborde y cambiar muro por cancelería de vidrio.", fecha: "Ayer a las 14:32", files: ["req_sala_vidrio_v2.pdf"] }
+    ]
+  },
+  { 
+    cliente: "Oficinas Regionales OXXO", 
+    id: "HNT-0391", 
+    monto: "$480,000", 
+    magn: "Medio", 
+    magnClass: "mag-alert-medio", 
+    proyectista: "Sin Asignar", 
+    etapa: "Validación Hunter",
+    solicitudOriginal: "Reconfiguración modular de espacios operativos de atención presencial para optimización de aforo y flujo de personal.",
+    documentosOriginales: [
+      { name: "esquema_general_oxxo.pdf", ext: "PDF" }
+    ],
+    modificaciones: []
+  },
+  { 
+    cliente: "Consultorio Especialidades Médicas", 
+    id: "HNT-0405", 
+    monto: "$85,000", 
+    magn: "Micro", 
+    magnClass: "mag-alert-micro", 
+    proyectista: "Sin Asignar", 
+    etapa: "Cotización Exprés",
+    solicitudOriginal: "Diseño ergonómico para consultorio y sala de espera de pacientes. Espacio reducido estilo contemporáneo.",
+    documentosOriginales: [
+      { name: "planos_consultoriodermatologia.pdf", ext: "PDF" }
+    ],
+    modificaciones: []
+  }
 ];
 
 const TOOL_ICONS = { privado: '🛋️', operativo: '👥', juntas: '🤝'};
@@ -1224,7 +1713,7 @@ function switchRoleWorkspace(role) {
 function renderTable() {
   const tbody = document.getElementById('v-table-body');
   tbody.innerHTML = vProjects.map(p => `
-    <tr>
+    <tr onclick="openProjectDetails('${p.id}')">
       <td style="padding-left:40px;">
         <div style="font-weight:600; font-size:15px; color:var(--text-primary); margin-bottom:4px;">${p.cliente}</div>
       </td>
@@ -1296,19 +1785,229 @@ function submitForm() {
   if(monto > 1000000 || m2 > 500) { magn = "Macro"; magnClass = "mag-alert-macro"; }
   else if(monto >= 200000 || m2 >= 80) { magn = "Medio"; magnClass = "mag-alert-medio"; }
 
+  // Extract other technical & commercial inputs for original request
+  const contacto = document.getElementById('v-contacto').value || 'Sin asignar';
+  const condicionVal = document.getElementById('v-condicion').value;
+  const condicionLabel = condicionVal === 'gris' ? 'Obra Gris (Desde Cero)' : condicionVal === 'activo' ? 'Remodelación con Personal Activo' : 'Espacio Adaptado pero Vacío';
+  const densidad = document.getElementById('v-densidad').value || 'Mapeo modular estático';
+  const lineSelect = document.getElementById('v-linea');
+  const linea = lineSelect.options[lineSelect.selectedIndex].text;
+  const compromiso = document.getElementById('v-compromiso').value || 'Por definir';
+  const restricciones = document.getElementById('v-restricciones').value || 'Sin observaciones mecánicas o eléctricas de relevancia.';
+
+  const solicitudOriginalVal = `Responsable en obra: ${contacto}. Condición del espacio: ${condicionLabel}. Densidad: aprox. ${densidad} puestos. Línea decorativa sugerida: ${linea}. Fecha requerida: ${compromiso}. Observaciones y restricciones estructurales: ${restricciones}`;
+
+  // Read current draft vault files as original documents for realism
+  const docOriginales = [];
+  STATE.vault.forEach(folder => {
+    folder.files.forEach(f => {
+      docOriginales.push({ name: f.name, ext: f.ext });
+    });
+  });
+  if (docOriginales.length === 0) {
+    docOriginales.push({ name: "planos_layout_arquitectura.dwg", ext: "DWG" });
+    docOriginales.push({ name: "registro_fotofisico.jpg", ext: "JPG" });
+  }
+
   vProjects.unshift({
     cliente,
     id: hId,
     monto: montoStr,
     magn,
     magnClass,
-    proyectista: "Buscando Disponibilidad...",
-    etapa: "En Cola Técnica"
+    proyectista: "Asignación Automática",
+    etapa: "En Cola Técnica",
+    solicitudOriginal: solicitudOriginalVal,
+    documentosOriginales: docOriginales,
+    modificaciones: []
   });
 
   renderTable();
   goToDashboard();
   showToast('success', 'Proyecto Despachado', 'Solicitud transferida al departamento técnico para modelado.');
+}
+
+/* --- CONEXIONES EXPEDIENTES / MODALES --- */
+let activeProjectForMod = null;
+let selectedModFiles = [];
+
+function openProjectDetails(pId) {
+  const proj = vProjects.find(p => p.id === pId);
+  if (!proj) return;
+  
+  activeProjectForMod = proj;
+  selectedModFiles = [];
+  document.getElementById('mod-files-preview-list').innerHTML = '';
+  document.getElementById('mod-instrucciones').value = '';
+
+  // Update UI Elements
+  document.getElementById('modal-project-title').textContent = `Expediente: ${proj.cliente}`;
+  document.getElementById('md-hunter-id').textContent = proj.id;
+  document.getElementById('md-monto').textContent = proj.monto;
+  
+  const magnEl = document.getElementById('md-magnitud');
+  magnEl.textContent = proj.magn;
+  magnEl.className = `badge ${proj.magnClass.split('-')[2]}`;
+  
+  document.getElementById('md-proyectista').textContent = proj.proyectista;
+  
+  const etapaEl = document.getElementById('md-etapa');
+  etapaEl.textContent = proj.etapa;
+  etapaEl.style.borderColor = proj.etapa.includes('Cola') ? 'var(--red)' : proj.etapa.includes('Diseño') ? 'var(--blue)' : 'rgba(255,255,255,0.1)';
+
+  // Render Solicitud Original
+  const solText = proj.solicitudOriginal || 'No se especificaron detalles adicionales.';
+  document.getElementById('md-solicitud').textContent = solText;
+
+  // Render Original Documents list
+  const docsList = document.getElementById('md-documentos-list');
+  docsList.innerHTML = '';
+  if (proj.documentosOriginales && proj.documentosOriginales.length > 0) {
+    proj.documentosOriginales.forEach(doc => {
+      docsList.innerHTML += `
+        <div class="form-file-item">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:2px 4px; border-radius:3px;">${doc.ext}</span>
+            <span class="file-name" style="font-size:13px; max-width:280px;">${doc.name}</span>
+          </div>
+          <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="showToast('success', 'Descarga Registrada', 'Protocolo de descarga para ${doc.name}')" title="Descargar original">⬇</button>
+        </div>
+      `;
+    });
+  } else {
+    docsList.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px 0;">No se asociaron planos o levantamientos originales.</div>`;
+  }
+
+  // Render Revision History
+  renderModificationsHistory();
+
+  // Show Modal
+  document.getElementById('project-detail-modal').classList.add('active');
+}
+
+function renderModificationsHistory() {
+  const historyContainer = document.getElementById('md-modificaciones-history');
+  historyContainer.innerHTML = '';
+  
+  if (activeProjectForMod && activeProjectForMod.modificaciones && activeProjectForMod.modificaciones.length > 0) {
+    activeProjectForMod.modificaciones.forEach((mod, index) => {
+      let filesMarkup = '';
+      if (mod.files && mod.files.length > 0) {
+        filesMarkup = `<div style="display:flex; flex-direction:column; gap:4px; margin-top:8px;">` + mod.files.map(f => `
+          <div style="font-size:11px; font-family:var(--font-mono); color:var(--blue); display:flex; align-items:center; gap:4px;">
+            <span>📄</span> <span>${f}</span>
+          </div>
+        `).join('') + `</div>`;
+      }
+      
+      historyContainer.innerHTML += `
+        <div class="card" style="padding:16px; background:rgba(255,255,255,0.02); display:flex; flex-direction:column; border-color:rgba(255,255,255,0.05); gap:6px;">
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); font-weight:600;">
+            <span>REVISIÓN #${index + 1}</span>
+            <span>⏱ ${mod.fecha}</span>
+          </div>
+          <p style="font-size:13px; color:var(--text-secondary); line-height:1.4; margin:4px 0;">${mod.instrucciones}</p>
+          ${filesMarkup}
+        </div>
+      `;
+    });
+  } else {
+    historyContainer.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:24px 0; border: 1px dashed var(--border); border-radius: var(--radius);">No se han solicitado correcciones técnicas para este proyecto.</div>`;
+  }
+}
+
+function closeProjectModal(e, force = false) {
+  if (e.target === document.getElementById('project-detail-modal') || force) {
+    document.getElementById('project-detail-modal').classList.remove('active');
+  }
+}
+
+/* --- SOLICITAR NUEVO CAMBIO / REPORTE DE ARCHIVOS --- */
+function triggerModFileUpload() {
+  document.getElementById('mod-file-input').click();
+}
+
+function handleModFileSelected(event) {
+  const files = event.target.files;
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    addModFileToList(file.name, (file.size / 1024 / 1024).toFixed(2) + " MB");
+  }
+}
+
+function handleModFileDrop(e) {
+  e.preventDefault();
+  const files = e.dataTransfer.files;
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    addModFileToList(file.name, (file.size / 1024 / 1024).toFixed(2) + " MB");
+  }
+}
+
+function addModFileToList(name, size) {
+  selectedModFiles.push(name);
+  const list = document.getElementById('mod-files-preview-list');
+  const fileId = 'mod-file-' + Math.floor(Math.random() * 1000000);
+  
+  const div = document.createElement('div');
+  div.className = 'form-file-item';
+  div.id = fileId;
+  div.innerHTML = `
+    <div style="display:flex; align-items:center; gap:8px;">
+      <span style="font-family:var(--font-mono); font-size:10px; color:var(--amber); font-weight:600; border:1px solid rgba(210,153,34,0.2); padding:2px 4px; border-radius:3px;">NUEVO</span>
+      <span class="file-name" style="font-size:12px; max-width:180px;">${name}</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span class="file-size" style="color:var(--text-muted); font-size:11px;">${size}</span>
+      <button class="btn-remove" style="background:none; border:none; cursor:pointer;" onclick="removeModFile('${name}', '${fileId}')">✕</button>
+    </div>
+  `;
+  list.appendChild(div);
+  showToast('info', 'Archivo listo', `Para adjuntar: ${name}`);
+}
+
+function removeModFile(name, elementId) {
+  selectedModFiles = selectedModFiles.filter(f => f !== name);
+  const el = document.getElementById(elementId);
+  if (el) el.remove();
+}
+
+function submitModificationRequest() {
+  const text = document.getElementById('mod-instrucciones').value.trim();
+  if (!text) {
+    showToast('error', 'Descripción requerida', 'Por favor, especifique el texto de los cambios solicitados.');
+    return;
+  }
+
+  if (!activeProjectForMod) return;
+
+  if (!activeProjectForMod.modificaciones) {
+    activeProjectForMod.modificaciones = [];
+  }
+
+  const newRevision = {
+    instrucciones: text,
+    fecha: "Hoy a las " + new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
+    files: [...selectedModFiles]
+  };
+
+  activeProjectForMod.modificaciones.push(newRevision);
+  activeProjectForMod.etapa = "Re-diseño Solicitado";
+
+  // Reset fields
+  document.getElementById('mod-instrucciones').value = '';
+  document.getElementById('mod-files-preview-list').innerHTML = '';
+  selectedModFiles = [];
+
+  // Update lists and dashboard
+  renderModificationsHistory();
+  renderTable();
+
+  showToast('success', 'Cambios Solicitados', `Modificación canalizada exitosamente para ${activeProjectForMod.cliente}.`);
+  
+  setTimeout(() => {
+    document.getElementById('project-detail-modal').classList.remove('active');
+  }, 1200);
 }
 
 /* --- MAGNITUD ALGORITMO --- */
