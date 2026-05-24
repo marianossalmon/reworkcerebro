@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendario de Entregas & Agenda de Clientes — Gebesa Cerebro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & THEME TOKENS - SOPHISTICATED DARK & GOLD
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:             #0d1117;
+  --surface:        #161b22;
+  --surface-2:      #1c2128;
+  --surface-hover:  #21262d;
+  --border:         rgba(255, 255, 255, 0.08);
+  --border-light:   rgba(255, 255, 255, 0.15);
+  
+  --text-primary:   #f0f6fc;
+  --text-secondary: #8b949e;
+  --text-muted:     #6e7681;
+
+  /* Accents */
+  --blue:           #58a6ff;
+  --blue-light:     rgba(88, 166, 255, 0.08);
+  --green:          #3fb950;
+  --green-light:    rgba(63, 185, 80, 0.08);
+  --amber:          #d29922;
+  --red:            #f85149;
+  --red-dim:        rgba(248, 81, 73, 0.08);
+  
+  /* Institutional Gold Accent */
+  --gold:           #c9a96e;
+  --gold-hover:     #bfa065;
+  --gold-d:         rgba(201, 169, 110, 0.08);
+  --gold-shadow:    rgba(201, 169, 110, 0.25);
+
+  --radius:         8px;
+  --radius-lg:      12px;
+  --radius-xl:      20px;
+  --transition:     0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  --font-ui:        'IBM Plex Sans', system-ui, sans-serif;
+  --font-display:   'Playfair Display', serif;
+  --font-mono:      'IBM Plex Mono', monospace;
+}
+
+html, body {
+  height: 100%;
+  overflow-y: auto;
+  font-family: var(--font-ui);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  color: var(--text-primary);
+  background: var(--bg);
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
+.display-title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #fff;
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+}
+
+.text-gold { color: var(--gold); }
+.text-red { color: var(--red); }
+.text-green { color: var(--green); }
+
+/* ============================================================
+   LAYOUT COMPONENTS
+   ============================================================ */
+header {
+  height: 80px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  position: sticky;
+  top: 0;
+  background: rgba(13, 17, 23, 0.95);
+  backdrop-filter: blur(16px);
+  z-index: 1000;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.brand-title {
+  font-family: var(--font-ui);
+  font-size: 18px;
+  font-weight: 600;
+  height: max-content;
+}
+
+.btn-back {
+  text-decoration: none;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition);
+}
+
+.btn-back:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 12px var(--gold-shadow);
+}
+
+.main-content {
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 32px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Bento Grid */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.card-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+/* ============================================================
+   CALENDAR COMPONENT
+   ============================================================ */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.month-navigator {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.btn-nav {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.btn-nav:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.current-month-label {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  min-width: 160px;
+  text-align: center;
+}
+
+.weekdays-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.weekday-name {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(5, 120px);
+  gap: 8px;
+}
+
+.calendar-cell {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.calendar-cell:hover {
+  border-color: var(--border-light);
+  background: var(--surface-hover);
+}
+
+.calendar-cell.inactive {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.calendar-cell.is-today {
+  border-color: var(--gold);
+  background: rgba(201, 169, 110, 0.04);
+}
+
+.calendar-cell.is-weekend {
+  background: rgba(22, 27, 34, 0.4);
+}
+
+.calendar-cell.is-holiday {
+  border-color: rgba(210, 153, 34, 0.4);
+}
+
+.cell-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cell-day-num {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.is-today .cell-day-num {
+  color: var(--gold);
+}
+
+.cell-indicator-bullet {
+  font-size: 10px;
+}
+
+.cell-items-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+  overflow-y: auto;
+  max-height: 80px;
+}
+
+/* Event layouts on cells */
+.cell-event {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.cell-event.type-delivery-macro {
+  background: rgba(248, 81, 73, 0.15);
+  color: #ff7b72;
+  border-left: 2px solid var(--red);
+}
+
+.cell-event.type-delivery-medio {
+  background: rgba(88, 166, 255, 0.15);
+  color: var(--blue);
+  border-left: 2px solid var(--blue);
+}
+
+.cell-event.type-delivery-micro {
+  background: rgba(63, 185, 80, 0.15);
+  color: var(--green);
+  border-left: 2px solid var(--green);
+}
+
+.cell-event.type-meeting-confirmada {
+  background: rgba(201, 169, 110, 0.15);
+  color: var(--gold);
+  border-left: 2px solid var(--gold);
+}
+
+.cell-event.type-meeting-pendiente {
+  background: rgba(110, 118, 129, 0.15);
+  color: var(--text-secondary);
+  border-left: 2px solid var(--text-muted);
+}
+
+/* ============================================================
+   SCHEDULER CARD SIDE PANEL
+   ============================================================ */
+.scheduler-side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.project-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+  transition: all var(--transition);
+}
+
+.project-item-row:hover {
+  background: var(--surface-2);
+}
+
+.project-item-row:last-child {
+  border-bottom: none;
+}
+
+.proj-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.proj-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.proj-meta {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.btn-schedule {
+  background: var(--gold-d);
+  border: 1px dashed rgba(201, 169, 110, 0.5);
+  color: var(--gold);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.btn-schedule:hover {
+  background: var(--gold);
+  color: #000;
+  font-weight: 700;
+  border-style: solid;
+}
+
+.btn-schedule.status-confirmada {
+  background: rgba(201, 169, 110, 0.1);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.btn-schedule.status-completada {
+  background: rgba(63, 185, 80, 0.1);
+  border-color: var(--green);
+  color: var(--green);
+}
+
+/* Form Styles */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.form-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.form-input, .form-select, .form-textarea {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-family: var(--font-ui);
+  transition: all var(--transition);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--gold);
+  outline: none;
+  box-shadow: 0 0 8px rgba(201, 169, 110, 0.15);
+}
+
+.form-textarea {
+  resize: none;
+  height: 80px;
+}
+
+.btn-solid {
+  background: var(--gold);
+  color: #0d1117;
+  border: none;
+  border-radius: var(--radius);
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition);
+  width: 100%;
+}
+
+.btn-solid:hover {
+  background: var(--gold-hover);
+  box-shadow: 0 0 16px var(--gold-shadow);
+}
+
+.badge {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  max-width: max-content;
+}
+
+.badge.hunter {
+  border-color: rgba(88,166,255,0.3);
+  color: var(--blue);
+  background: rgba(88,166,255,0.05);
+}
+
+.badge.gold {
+  border-color: rgba(201,169,110,0.3);
+  color: var(--gold);
+  background: rgba(201,169,110,0.05);
+}
+
+.badge.green {
+  border-color: rgba(63, 185, 80, 0.3);
+  color: var(--green);
+  background: rgba(63, 185, 80, 0.05);
+}
+
+/* ============================================================
+   MODAL / POPUP
+   ============================================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(13, 17, 23, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+  transform: scale(0.95);
+  transition: transform var(--transition);
+}
+
+.modal-overlay.active .modal-card {
+  transform: scale(1);
+}
+
+.modal-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  font-style: italic;
+  color: #fff;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+
+.modal-close:hover {
+  color: #fff;
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+/* TOASTS */
+#toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 99999;
+}
+
+.toast {
+  background: #1c2128;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 16px 24px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  font-size: 13.5px;
+  min-width: 320px;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: slideUpIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-left: 4px solid var(--blue);
+}
+
+.toast-header {
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.toast-body {
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+@keyframes slideUpIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Quick Calendar Summary KPI */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.kpi-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kpi-val {
+  font-size: 24px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-section">
+    <div class="brand-title text-gold" style="font-family: var(--font-display); font-size: 22px; font-style: italic; letter-spacing: -0.5px;">CEREBRO V2.0</div>
+    <div style="font-size:12px; color:var(--text-muted); font-family:var(--font-mono)">DELIVERY_CALENDAR.SYS</div>
+  </div>
+  <div>
+    <a href="/index.html" class="btn-back">✕ Volver a Mis Negocios</a>
+  </div>
+</header>
+
+<div class="main-content">
+  <!-- Top Intro Section -->
+  <div style="display:flex; justify-content:space-between; align-items:flex-end; border-bottom: 1px solid var(--border); padding-bottom: 24px;">
+    <div>
+      <h1 class="display-title">Calendario de <span class="text-gold">Entregas</span></h1>
+      <div class="subtitle" style="margin-top: 12px; color: var(--text-muted)">Agenda Comercial y Monitoreo Activo de Presentaciones con Clientes</div>
+    </div>
+    
+    <!-- Quick KPIs -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <span class="subtitle" style="font-size: 9px;">Entregas de Mes</span>
+        <span class="kpi-val text-gold" id="kpi-entregas-totales">3</span>
+      </div>
+      <div class="kpi-card">
+        <span class="subtitle" style="font-size: 9px;">Reuniones Agendadas</span>
+        <span class="kpi-val text-green" id="kpi-reuniones-agendadas">0</span>
+      </div>
+      <div class="kpi-card">
+        <span class="subtitle" style="font-size: 9px;">Pendientes Agenda</span>
+        <span class="kpi-val text-red" id="kpi-reuniones-pendientes">3</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bento-grid">
+    <!-- LEFT PANEL: INTERACTIVE CALENDAR -->
+    <div class="card" style="padding: 24px;">
+      <div class="calendar-header">
+        <div style="display:flex; flex-direction:column; gap:4px;">
+          <span class="subtitle">Monitoreo Visual</span>
+          <h2 style="font-size: 18px; font-weight: 600;">Mayo 2026</h2>
+        </div>
+        
+        <div class="month-navigator">
+          <button class="btn-nav" id="btn-prev-month" onclick="showToast('info', 'Mes Cambiado', 'Navegación limitada a agenda operativa de Mayo 2026')">◀</button>
+          <span class="current-month-label">Mayo 2026</span>
+          <button class="btn-nav" id="btn-next-month" onclick="showToast('info', 'Mes Cambiado', 'Navegación limitada a agenda operativa de Mayo 2026')">▶</button>
+        </div>
+      </div>
+
+      <!-- Weekly days grid names -->
+      <div class="weekdays-header">
+        <div class="weekday-name">Lun</div>
+        <div class="weekday-name">Mar</div>
+        <div class="weekday-name">Mié</div>
+        <div class="weekday-name">Jue</div>
+        <div class="weekday-name">Vie</div>
+        <div class="weekday-name" style="color: var(--text-muted);">Sáb</div>
+        <div class="weekday-name" style="color: var(--text-muted);">Dom</div>
+      </div>
+
+      <!-- Cells of Mayo 2026 -->
+      <!-- Mayo 1st 2026 falls on a Friday. So there are 4 offset days (Mon, Tue, Wed, Thu) -->
+      <div class="calendar-grid" id="calendar-cells-container">
+        <!-- Generado por JS -->
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL: DETAILED LIST & ACTION BOARD -->
+    <div class="scheduler-side-panel">
+      <!-- PIPELINE MONITOR CARD -->
+      <div class="card">
+        <div class="card-title-section">
+          <span class="subtitle">1. Listado de Entregas & SLA</span>
+          <span class="badge hunter">Sincronizado</span>
+        </div>
+        
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+          Calculado automáticamente según fecha de ingreso carpetero + ventana hábil Gebesa.
+        </p>
+        
+        <div id="project-list-wrapper" style="display:flex; flex-direction:column; gap:8px;">
+          <!-- Generado dinámicamente -->
+        </div>
+      </div>
+
+      <!-- INSTRUCTIONS HELPER CARD -->
+      <div class="card" style="background: rgba(201,169,110,0.02); border-color: rgba(201,169,110,0.15);">
+        <h4 style="font-size: 13px; color: var(--gold); display:flex; align-items:center; gap:6px; margin-bottom:10px;">
+          <span>💡</span> <span>Guía de Flujo para Ventas</span>
+        </h4>
+        <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5;">
+          El diseñador genera los layouts respetando el SLA establecido. El equipo de ventas monitorea este calendario para agendar las reuniones de presentación de propuesta con los clientes oportunamente. Evite cruzar reuniones antes de la fecha oficial de compromiso.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVENT SCHEDULER MODAL -->
+<div id="scheduler-modal" class="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-title">Agendar Reunión de Entrega</div>
+      <button class="modal-close" onclick="closeModal(event, true)">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="scheduler-form" onsubmit="saveScheduledMeeting(event)">
+        <input type="hidden" id="modal-project-id">
+        
+        <div class="form-group">
+          <label class="form-label">Socio Comercial / Cliente</label>
+          <input type="text" id="modal-project-cliente" class="form-input" readonly style="font-weight: 600; background: var(--surface-2);">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label">ID Oportunidad Hunter</label>
+            <input type="text" id="modal-project-hunter" class="form-input" readonly style="font-family: var(--font-mono); background: var(--surface-2);">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Compromiso Técnico</label>
+            <input type="text" id="modal-project-compromiso" class="form-input" readonly style="font-family: var(--font-mono); font-weight:600; background: var(--surface-2); color: var(--gold);">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="form-group">
+            <label class="form-label" for="modal-meeting-date">Fecha de Reunión</label>
+            <input type="date" id="modal-meeting-date" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="modal-meeting-time">Hora de Reunión</label>
+            <input type="time" id="modal-meeting-time" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modal-meeting-channel">Canal / Ubicación de Reunión</label>
+          <select id="modal-meeting-channel" class="form-select">
+            <option value="Virtual (Teams / Meet)">🌐 Teams / Google Meet</option>
+            <option value="Showroom Ventas">🏢 Showroom Ventas Gebesa</option>
+            <option value="Planta Corporativa">🏭 Planta Corporativa</option>
+            <option value="Oficinas Cliente">🚪 Oficinas del Cliente</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modal-meeting-status">Estatus Agenda</label>
+          <select id="modal-meeting-status" class="form-select">
+            <option value="confirmada">🤝 Reunión Confirmada</option>
+            <option value="pendiente">⏳ Por Agendar / Pendiente</option>
+            <option value="completada">✅ Entregado & Reunión Completada</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modal-meeting-notes">Notas / Objetivos de la Reunión</label>
+          <textarea id="modal-meeting-notes" class="form-textarea" placeholder="Ej. Presentación de renders de alta gama 3D, muestras físicas de acabados y feedback de diseño corporativo."></textarea>
+        </div>
+
+        <button type="submit" class="btn-solid" style="margin-top: 12px;">💾 Guardar & Publicar en Agenda</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+/* ============================================================
+   CALENDAR SYSTEM ENGINE
+   ============================================================ */
+const HOLIDAYS = [
+  '2026-01-01', '2026-02-02', '2026-03-16', '2026-05-01', '2026-09-16', '2026-11-16', '2026-12-25'
+];
+
+const defaultProjects = [
+  { 
+    cliente: "Corporativo Sigma / Torres del Valle", 
+    id: "HNT-0418", 
+    monto: "$1,850,000", 
+    magn: "Macro", 
+    magnClass: "mag-alert-macro", 
+    proyectista: "Karen Tovar", 
+    etapa: "En Diseño (Arquitectura)",
+    solicitudOriginal: "Modelado premium para oficinas...",
+    documentosOriginales: [],
+    modificaciones: [],
+    m2: 560,
+    renders: true,
+    fechaIngreso: "2026-05-22",
+    horaIngreso: "14:15",
+    diasSla: 7,
+    fechaHoraOperativa: "2026-05-22T14:15:00.000Z"
+  },
+  { 
+    cliente: "Oficinas Regionales OXXO", 
+    id: "HNT-0391", 
+    monto: "$480,000", 
+    magn: "Medio", 
+    magnClass: "mag-alert-medio", 
+    proyectista: "Karen Tovar", 
+    etapa: "Validación Hunter",
+    solicitudOriginal: "Reconfiguración modular...",
+    documentosOriginales: [],
+    modificaciones: [],
+    m2: 120,
+    renders: false,
+    fechaIngreso: "2026-05-20",
+    horaIngreso: "11:00",
+    diasSla: 5,
+    fechaHoraOperativa: "2026-05-20T11:00:00.000Z"
+  },
+  { 
+    cliente: "Consultorio Especialidades Médicas", 
+    id: "HNT-0405", 
+    monto: "$85,000", 
+    magn: "Micro", 
+    magnClass: "mag-alert-micro", 
+    proyectista: "Susana Ortiz", 
+    etapa: "Cotización Exprés",
+    solicitudOriginal: "Diseño ergonómico para...",
+    documentosOriginales: [],
+    modificaciones: [],
+    m2: 40,
+    renders: false,
+    fechaIngreso: "2026-05-18",
+    horaIngreso: "09:30",
+    diasSla: 4,
+    fechaHoraOperativa: "2026-05-18T09:30:00.000Z"
+  }
+];
+
+let vProjects = JSON.parse(localStorage.getItem('vProjects')) || defaultProjects;
+
+function saveProjects() {
+  localStorage.setItem('vProjects', JSON.stringify(vProjects));
+}
+
+function initCalendar() {
+  renderCalendarGrid();
+  renderProjectSideList();
+  updateKPIs();
+}
+
+/* ============================================================
+   BUSINESS WINDOW CALCULATIONS (REPLICATED CORE)
+   ============================================================ */
+function evaluarVentanaOperativa(fechaStr, horaStr) {
+  let [yr, mn, dy] = fechaStr.split('-').map(Number);
+  let [hr, min] = horaStr.split(':').map(Number);
+  
+  let originalDate = new Date(yr, mn - 1, dy, hr, min);
+  let adjustedDate = new Date(yr, mn - 1, dy, hr, min);
+
+  function isBusinessDate(date) {
+    const d = date.getDay();
+    if (d === 0 || d === 6) return false;
+    const yStr = date.getFullYear();
+    const mStr = String(date.getMonth() + 1).padStart(2, '0');
+    const dStr = String(date.getDate()).padStart(2, '0');
+    const compStr = `${yStr}-${mStr}-${dStr}`;
+    return !HOLIDAYS.includes(compStr);
+  }
+
+  while (!isBusinessDate(adjustedDate)) {
+    adjustedDate.setDate(adjustedDate.getDate() + 1);
+    adjustedDate.setHours(8, 30, 0, 0);
+  }
+
+  const currentHour = adjustedDate.getHours();
+  const currentMinutes = adjustedDate.getMinutes();
+  const totalMinutes = currentHour * 60 + currentMinutes;
+  const minHourStart = 8 * 60 + 30; // 08:30 AM
+  const cutOffHour = 17 * 60;       // 17:00 PM
+
+  if (totalMinutes < minHourStart) {
+    adjustedDate.setHours(8, 30, 0, 0);
+  } else if (totalMinutes >= cutOffHour) {
+    adjustedDate.setDate(adjustedDate.getDate() + 1);
+    while (!isBusinessDate(adjustedDate)) {
+      adjustedDate.setDate(adjustedDate.getDate() + 1);
+    }
+    adjustedDate.setHours(8, 30, 0, 0);
+  }
+
+  return adjustedDate;
+}
+
+function calcularEntrega(proj) {
+  const fFecha = proj.fechaIngreso || "2026-05-22";
+  const fHora = proj.horaIngreso || "14:15";
+  const finalSlaDias = proj.diasSla || 5;
+
+  const adjustedStart = evaluarVentanaOperativa(fFecha, fHora);
+  let trackingDate = new Date(adjustedStart);
+
+  function isBusinessDay(date) {
+    const d = date.getDay();
+    if (d === 0 || d === 6) return false;
+    const yStr = date.getFullYear();
+    const mStr = String(date.getMonth() + 1).padStart(2, '0');
+    const dStr = String(date.getDate()).padStart(2, '0');
+    const compStr = `${yStr}-${mStr}-${dStr}`;
+    return !HOLIDAYS.includes(compStr);
+  }
+
+  let daysAdded = 0;
+  while (daysAdded < finalSlaDias) {
+    trackingDate.setDate(trackingDate.getDate() + 1);
+    if (isBusinessDay(trackingDate)) {
+      daysAdded++;
+    }
+  }
+
+  return trackingDate;
+}
+
+/* ============================================================
+   REPOSITORIES AND RENDERING
+   ============================================================ */
+function renderCalendarGrid() {
+  const container = document.getElementById('calendar-cells-container');
+  container.innerHTML = '';
+  
+  // Statically setting up May 2026 grid
+  // Days of May 2026: 31 days. May 1st is Friday.
+  // In our header we start on Monday:
+  // Offset to Friday is 4 empty/inactive cells (Monday, Tuesday, Wednesday, Thursday)
+  const offsetCells = 4;
+  const daysInMonth = 31;
+  const totalCells = offsetCells + daysInMonth;
+  const nextMonthOffset = 35 - totalCells > 0 ? 35 - totalCells : 42 - totalCells; // Round grid beautifully
+  const renderTotalCellsCount = totalCells + nextMonthOffset;
+
+  for (let i = 1; i <= renderTotalCellsCount; i++) {
+    const cellIndex = i - offsetCells;
+    
+    if (cellIndex <= 0 || cellIndex > daysInMonth) {
+      // Inactive offset cells
+      const cell = document.createElement('div');
+      cell.className = 'calendar-cell inactive';
+      cell.innerHTML = `<div class="cell-day-num">${cellIndex <= 0 ? 30 + cellIndex : cellIndex - daysInMonth}</div>`;
+      container.appendChild(cell);
+    } else {
+      // Active cells of Mayo 2026
+      const cellDateStr = `2026-05-${String(cellIndex).padStart(2, '0')}`;
+      const cellDateObj = new Date(2026, 4, cellIndex);
+      const isWeekend = cellDateObj.getDay() === 0 || cellDateObj.getDay() === 6;
+      const isHolidayStr = String(cellDateObj.getFullYear()) + '-' + String(cellDateObj.getMonth() + 1).padStart(2, '0') + '-' + String(cellDateObj.getDate()).padStart(2, '0');
+      const isHoliday = HOLIDAYS.includes(isHolidayStr);
+      const isToday = cellIndex === 23; // System local focus setup is May 23, 2026
+
+      let cellClasses = 'calendar-cell';
+      if (isToday) cellClasses += ' is-today';
+      if (isWeekend) cellClasses += ' is-weekend';
+      if (isHoliday) cellClasses += ' is-holiday';
+
+      const cell = document.createElement('div');
+      cell.className = cellClasses;
+      cell.setAttribute('data-date', cellDateStr);
+      cell.onclick = () => handleCellClick(cellDateStr);
+
+      // Check events in cell (Deliveries and meetings)
+      let eventsHtml = '';
+      vProjects.forEach(p => {
+        // Calculate Technical Commitment Date
+        const delDate = calcularEntrega(p);
+        const delDateStr = delDate.toISOString().split('T')[0];
+        
+        let labelName = p.cliente.split(' / ')[0];
+        if (labelName.length > 20) labelName = labelName.substring(0, 18) + '...';
+
+        if (delDateStr === cellDateStr) {
+          // It's delivery commitment day!
+          const magClass = p.magn === 'Macro' ? 'type-delivery-macro' : (p.magn === 'Medio' ? 'type-delivery-medio' : 'type-delivery-micro');
+          eventsHtml += `
+            <div class="cell-event ${magClass}" title="Entrega de Diseño: ${p.cliente}">
+              🏁 ${p.id} ${labelName}
+            </div>
+          `;
+        }
+
+        // Check if there is a meeting on this date
+        if (p.meetingDate === cellDateStr) {
+          const statusClass = p.meetingStatus === 'confirmada' ? 'type-meeting-confirmada' : 'type-meeting-pendiente';
+          const icon = p.meetingStatus === 'completada' ? '✅' : (p.meetingStatus === 'confirmada' ? '🤝' : '⏳');
+          const timeLabel = p.meetingTime ? p.meetingTime : 'S/H';
+
+          eventsHtml += `
+            <div class="cell-event ${statusClass}" title="Reunión Cliente: ${timeLabel} hrs">
+              ${icon} ${timeLabel} ${labelName}
+            </div>
+          `;
+        }
+      });
+
+      cell.innerHTML = `
+        <div class="cell-header">
+          <span class="cell-day-num">${cellIndex}</span>
+          ${isHoliday ? '<span class="cell-indicator-bullet text-gold" title="Día Festivo Feriado">🎗️</span>' : ''}
+          ${isToday ? '<span class="badge gold" style="font-size:8px; padding:1px 4px;">Hoy</span>' : ''}
+        </div>
+        <div class="cell-items-wrapper">
+          ${eventsHtml}
+        </div>
+      `;
+      container.appendChild(cell);
+    }
+  }
+}
+
+function renderProjectSideList() {
+  const container = document.getElementById('project-list-wrapper');
+  container.innerHTML = '';
+
+  if (vProjects.length === 0) {
+    container.innerHTML = `<div style="text-align:center; padding: 24px 0; color: var(--text-muted); font-size:13px;">No hay proyectos activos en el pipeline.</div>`;
+    return;
+  }
+
+  vProjects.forEach(p => {
+    const delDate = calcularEntrega(p);
+    const optionsStyle = { weekday: 'short', day: 'numeric', month: 'short' };
+    const formattedDelDate = delDate.toLocaleDateString('es-MX', optionsStyle);
+    
+    let meetingText = '<span style="color:var(--text-muted)">⚠️ Sin agendar</span>';
+    let btnClass = '';
+    
+    if (p.meetingDate) {
+      const parts = p.meetingDate.split('-');
+      const mDateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+      const formattedMeetingDate = mDateObj.toLocaleDateString('es-MX', {day: 'numeric', month: 'short'});
+      const timeLabel = p.meetingTime ? ` a las ${p.meetingTime} hrs` : '';
+      
+      const icon = p.meetingStatus === 'completada' ? '✅' : (p.meetingStatus === 'confirmada' ? '🤝' : '⏳');
+      const statusLabel = p.meetingStatus === 'completada' ? 'Completada' : (p.meetingStatus === 'confirmada' ? 'Confirmada' : 'Pendiente');
+      
+      meetingText = `<span style="color: var(--gold); font-weight: 500">${icon} Reu. ${formattedMeetingDate}${timeLabel} (${statusLabel})</span>`;
+      btnClass = `status-${p.meetingStatus}`;
+    }
+
+    container.innerHTML += `
+      <div class="project-item-row">
+        <div class="proj-info">
+          <div class="proj-title">${p.cliente}</div>
+          <div class="proj-meta">
+            <span class="badge hunter" style="font-size: 8px; padding: 1px 4px; display:inline-block; vertical-align:middle; margin-right:4px;">${p.id}</span>
+            <span>Estrella SLA: <strong>${formattedDelDate}</strong></span>
+          </div>
+          <div style="font-size:12px; margin-top:2px;">
+            ${meetingText}
+          </div>
+        </div>
+        <div>
+          <button class="btn-schedule ${btnClass}" onclick="openSchedulerForId('${p.id}')">
+            ${p.meetingDate ? '✏️ Agenda' : '🤝 Agendar'}
+          </button>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function updateKPIs() {
+  document.getElementById('kpi-entregas-totales').textContent = vProjects.length;
+  
+  const confirmedCount = vProjects.filter(p => p.meetingDate && p.meetingStatus === 'confirmada').length;
+  const completedCount = vProjects.filter(p => p.meetingDate && p.meetingStatus === 'completada').length;
+  document.getElementById('kpi-reuniones-agendadas').textContent = confirmedCount + completedCount;
+  
+  const pendingCount = vProjects.filter(p => !p.meetingDate || p.meetingStatus === 'pendiente').length;
+  document.getElementById('kpi-reuniones-pendientes').textContent = pendingCount;
+}
+
+/* ============================================================
+   SCHEDULER SELECTION ACTIONS
+   ============================================================ */
+function handleCellClick(dateStr) {
+  // Let's see if there is a project that delivers near or on this day to preselect it!
+  const matchedProject = vProjects.find(p => {
+    const delDate = calcularEntrega(p);
+    return delDate.toISOString().split('T')[0] === dateStr;
+  });
+
+  if (matchedProject) {
+    openSchedulerForId(matchedProject.id, dateStr);
+  } else {
+    // Just open scheduler for the first project without a date, or prefill the date
+    if (vProjects.length > 0) {
+      openSchedulerForId(vProjects[0].id, dateStr);
+    } else {
+      showToast('warning', 'Sin Proyectos', 'Registre una orden de diseño antes en el pipeline.');
+    }
+  }
+}
+
+function openSchedulerForId(pId, prefillMeetingDate = '') {
+  const p = vProjects.find(proj => proj.id === pId);
+  if (!p) return;
+
+  const delDate = calcularEntrega(p);
+  const formattedDelStr = delDate.toLocaleDateString('es-MX', {day: 'numeric', month: 'long', year: 'numeric'});
+
+  document.getElementById('modal-project-id').value = p.id;
+  document.getElementById('modal-project-cliente').value = p.cliente;
+  document.getElementById('modal-project-hunter').value = p.id;
+  document.getElementById('modal-project-compromiso').value = formattedDelStr;
+  
+  // Load existing agenda values if present
+  document.getElementById('modal-meeting-date').value = prefillMeetingDate || p.meetingDate || p.fechaIngreso || '2026-05-23';
+  document.getElementById('modal-meeting-time').value = p.meetingTime || '11:00';
+  document.getElementById('modal-meeting-channel').value = p.meetingChannel || 'Virtual (Teams / Meet)';
+  document.getElementById('modal-meeting-status').value = p.meetingStatus || 'confirmada';
+  document.getElementById('modal-meeting-notes').value = p.meetingNotes || '';
+
+  const overlay = document.getElementById('scheduler-modal');
+  overlay.classList.add('active');
+}
+
+function saveScheduledMeeting(event) {
+  event.preventDefault();
+  
+  const pId = document.getElementById('modal-project-id').value;
+  const pIdx = vProjects.findIndex(proj => proj.id === pId);
+  if (pIdx === -1) return;
+
+  vProjects[pIdx].meetingDate = document.getElementById('modal-meeting-date').value;
+  vProjects[pIdx].meetingTime = document.getElementById('modal-meeting-time').value;
+  vProjects[pIdx].meetingChannel = document.getElementById('modal-meeting-channel').value;
+  vProjects[pIdx].meetingStatus = document.getElementById('modal-meeting-status').value;
+  vProjects[pIdx].meetingNotes = document.getElementById('modal-meeting-notes').value;
+
+  saveProjects();
+  initCalendar();
+  closeModal();
+
+  showToast('success', 'Agenda Certificada', `Reunión de entrega de ${vProjects[pIdx].cliente.split(' / ')[0]} publicada con éxito.`);
+}
+
+function closeModal(event, force = false) {
+  if (force || event.target === document.getElementById('scheduler-modal')) {
+    document.getElementById('scheduler-modal').classList.remove('active');
+  }
+}
+
+/* ============================================================
+   TOASTS NOTIFIER
+   ============================================================ */
+function showToast(type, header, body) {
+  const toastContainer = document.getElementById('toast-container');
+  if (!toastContainer) return;
+  
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  
+  if (type === 'success') {
+    toast.style.borderLeftColor = 'var(--green)';
+  } else if (type === 'warning') {
+    toast.style.borderLeftColor = 'var(--red)';
+  } else {
+    toast.style.borderLeftColor = 'var(--gold)';
+  }
+  
+  toast.innerHTML = `
+    <div class="toast-header">${header}</div>
+    <div class="toast-body">${body}</div>
+  `;
+  
+  toastContainer.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'fadeOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards';
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// Initial Booting
+window.addEventListener('DOMContentLoaded', initCalendar);
+</script>
+</body>
+</html>

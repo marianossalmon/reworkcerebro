@@ -41,6 +41,7 @@
   --header-h:       72px;
   --sidebar-w:      280px;
   --right-w:        380px;
+  --resizer-w:      4px;
   --radius:         8px;
   --radius-lg:      16px;
   --radius-xl:      24px;
@@ -265,6 +266,27 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
   background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);
 }
 
+.resizer {
+  width: var(--resizer-w);
+  background: transparent;
+  cursor: col-resize;
+  position: relative;
+  z-index: 100;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.resizer:hover, .resizer.dragging {
+  background: var(--gold);
+}
+.resizer::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 50%; width: 1px;
+  background: var(--border);
+  transform: translateX(-50%);
+}
+
 .main-view-wrapper {
   flex: 1;
   position: relative;
@@ -293,7 +315,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 }
 
 .content-header {
-  padding: 48px 56px 0;
+  padding: 48px 40px 0;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -302,7 +324,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 .scroll-area {
   flex: 1;
   overflow-y: auto;
-  padding: 40px 56px;
+  padding: 40px;
 }
 
 /* ============================================================
@@ -437,6 +459,127 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 .mag-alert-medio .magnitude-title { color: var(--amber); }
 .mag-alert-macro .magnitude-title { color: var(--red); }
 
+/* Matriz Técnica Styles - Ultra Compact */
+.matrix-card {
+  margin-top: 32px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.matrix-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.02);
+}
+.matrix-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.8fr 1.4fr 1.4fr 0.2fr;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.01);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background 0.2s;
+}
+.matrix-row:last-child { border-bottom: none; }
+.matrix-row:hover { background: rgba(255, 255, 255, 0.03); }
+
+.matrix-row > .form-input, 
+.matrix-row > .form-select {
+  padding: 5px 8px !important;
+  font-size: 12.5px !important;
+  height: 32px !important;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  background-position: right 8px center !important;
+}
+.matrix-remove-btn {
+  background: none;
+  border: none;
+  color: var(--red);
+  opacity: 0.5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  width: 24px;
+  height: 24px;
+  transition: all 0.2s;
+}
+.matrix-remove-btn:hover { opacity: 1; transform: scale(1.1); }
+
+/* Custom Circular Checkboxes */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px !important;
+  height: 20px !important;
+  border: 1.5px solid var(--border-light);
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  outline: none;
+  flex-shrink: 0;
+  margin: 0;
+  position: relative;
+}
+input[type="checkbox"]:checked {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+input[type="checkbox"]:checked::after {
+  content: "✓";
+  color: #000;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+input[type="checkbox"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* RTF Tool Buttons */
+.rtf-btn {
+  background: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rtf-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.rtf-btn:active {
+  background: var(--gold-light);
+  color: var(--gold);
+}
+
 /* Form Footer */
 .form-footer {
   padding: 24px 56px;
@@ -458,7 +601,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  transition: margin-right 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+  transition: width 0.1s ease, margin-right 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 }
 .vault-panel.collapsed {
   margin-right: calc(var(--right-w) * -1); /* Pulls it off screen cleanly to the right */
@@ -683,7 +826,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
   border: 1px solid var(--border-light);
   border-radius: var(--radius-xl);
   width: 100%;
-  max-width: 1120px;
+  max-width: 1340px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -739,6 +882,11 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
   grid-template-columns: 1.1fr 0.9fr;
   gap: 40px;
 }
+.modal-grid-three-col {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr 1fr;
+  gap: 24px;
+}
 .modal-section-title {
   font-size: 11px;
   font-weight: 600;
@@ -793,10 +941,345 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 }
 
 @media (max-width: 900px) {
-  .modal-grid-two-col {
+  .modal-grid-two-col,
+  .modal-grid-three-col {
     grid-template-columns: 1fr;
     gap: 32px;
   }
+}
+
+/* ============================================================
+   CONTRATO DIGITAL DE TIEMPOS (SLA) — ESTILOS INTEGRADOS
+   ============================================================ */
+:root {
+  --gold:           #c9a96e;
+  --gold-hover:     #bfa065;
+  --gold-d:         rgba(201, 169, 110, 0.08);
+  --gold-shadow:    rgba(201, 169, 110, 0.25);
+  --red-dim:        rgba(248, 81, 73, 0.08);
+}
+
+.modal-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  padding: 0 40px;
+  background: rgba(22, 27, 34, 0.6);
+}
+
+.modal-tab-btn {
+  background: none;
+  border: none;
+  padding: 16px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all var(--transition);
+}
+
+.modal-tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.modal-tab-btn.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+  text-shadow: 0 0 8px rgba(201, 169, 110, 0.2);
+}
+
+.modal-tab-content {
+  display: none;
+}
+
+.modal-tab-content.active {
+  display: block;
+}
+
+/* Checkbox Premium */
+.checkbox-premium-container {
+  grid-column: 1 / -1;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition);
+}
+
+.checkbox-premium-container:hover {
+  background: rgba(201, 169, 110, 0.04);
+  border-color: rgba(201, 169, 110, 0.3);
+}
+
+.checkbox-premium-input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-custom-box {
+  position: relative;
+  display: block;
+  width: 20px;
+  height: 20px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: all var(--transition);
+}
+
+.checkbox-premium-input:checked ~ .checkbox-custom-box {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 8px rgba(201, 169, 110, 0.4);
+}
+
+.checkbox-custom-box::after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid #0d1117;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-premium-input:checked ~ .checkbox-custom-box::after {
+  display: block;
+}
+
+/* Locked readOnly visual state */
+.form-input.locked {
+  background: var(--gold-d) !important;
+  border-color: var(--gold) !important;
+  color: var(--gold) !important;
+  box-shadow: 0 0 12px var(--gold-shadow), inset 0 0 4px rgba(201, 169, 110, 0.1);
+  font-weight: 700;
+  cursor: not-allowed;
+  font-family: var(--font-mono);
+}
+
+/* Vacations Banner */
+.override-banner {
+  background: var(--red-dim);
+  border: 1px solid rgba(248, 81, 73, 0.4);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  transition: all var(--transition);
+  animation: slideDownIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.override-banner.hidden {
+  display: none !important;
+}
+
+.override-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.override-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.override-badge {
+  background: rgba(248, 81, 73, 0.15);
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Contractual Alert Notes */
+.mag-auto-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  line-height: 1.5;
+  transition: all var(--transition);
+}
+
+.mag-auto-note.hidden {
+  display: none !important;
+}
+
+.mag-auto-note.gold-shield {
+  background: var(--gold-d);
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  color: #f7e6c4;
+}
+
+.mag-auto-note.red-moon {
+  background: var(--red-dim);
+  border: 1px solid rgba(248, 81, 73, 0.35);
+  color: #ffd8d6;
+}
+
+/* Right column displays */
+.deliverable-highlight {
+  text-align: center;
+  background: linear-gradient(180deg, var(--surface) 0%, rgba(201, 169, 110, 0.03) 100%);
+  border-color: rgba(201, 169, 110, 0.2) !important;
+}
+
+.deliverable-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--gold);
+  line-height: 1.2;
+  font-style: italic;
+  font-weight: 700;
+  margin-top: 8px;
+  text-shadow: 0 0 15px rgba(201, 169, 110, 0.2);
+}
+
+/* Timeline */
+.sla-timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 16px;
+  position: relative;
+  padding-left: 12px;
+}
+
+.sla-timeline-container::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 20px;
+  width: 2px;
+  background: var(--border);
+  z-index: 1;
+}
+
+.timeline-step {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  padding-bottom: 20px;
+  z-index: 2;
+}
+
+.timeline-step:last-child {
+  padding-bottom: 0px;
+}
+
+.timeline-bullet {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--border-light);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  position: relative;
+  z-index: 3;
+  transition: all var(--transition);
+}
+
+.timeline-step.active .timeline-bullet {
+  background: var(--blue);
+  border-color: var(--blue);
+  box-shadow: 0 0 10px rgba(88, 166, 255, 0.6);
+}
+
+.timeline-step.weekend .timeline-bullet {
+  background: var(--surface-hover);
+  border-color: var(--text-muted);
+}
+
+.timeline-step.holiday .timeline-bullet {
+  background: var(--surface-hover);
+  border-color: var(--amber);
+}
+
+.timeline-step.milestone .timeline-bullet {
+  background: var(--gold);
+  border-color: var(--gold);
+  box-shadow: 0 0 12px rgba(201, 169, 110, 0.8);
+  width: 22px;
+  height: 22px;
+  margin-left: -2px;
+  margin-top: 2px;
+}
+
+.timeline-content {
+  flex: 1;
+}
+
+.timeline-day-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timeline-day-desc {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+.audit-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.audit-details-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.audit-details-table tr:last-child td {
+  border-bottom: none;
+}
+
+.audit-key {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.audit-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: right;
+  font-family: var(--font-mono);
 }
 
 /* ============================================================
@@ -1018,7 +1501,215 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
   }
 }
 
+/* Custom Step Wizard & SLA Lock Styles */
+.locked {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 0 1px var(--gold) !important;
+}
+.wizard-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  position: relative;
+}
+.wizard-steps::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border);
+  z-index: 1;
+}
+.step-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+.step-circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', var(--font-mono);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+.step-label {
+  margin-top: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+.step-node.active .step-circle {
+  background: var(--bg);
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: 0 0 12px rgba(201,169,110,0.2);
+}
+.step-node.active .step-label {
+  color: #fff;
+  font-weight: 600;
+}
+.step-node.completed .step-circle {
+  background: var(--teal-dim);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+.step-node.completed .step-label {
+  color: var(--teal);
+}
+.cintillo-vacaciones {
+  border-left: 3px solid var(--red);
+  background: rgba(244,112,103,0.03);
+  padding: 10px 14px;
+  border-radius: 0 4px 4px 0;
+  font-size: 12.5px;
+  margin-top: 10px;
+  display: none;
+}
+.cintillo-vacaciones.show {
+  display: block;
+}
+.btn-nav {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.btn-prev {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+.btn-prev:hover {
+  background: var(--surface-hover);
+  border-color: var(--text-secondary);
+}
+.btn-next {
+  background: var(--gold);
+  border: 1px solid var(--gold);
+  color: #000;
+  font-weight: 600;
+  margin-left: auto;
+}
+.btn-next:hover {
+  background: #e8c98a;
+  border-color: #e8c98a;
+}
+.summary-box {
+  background: rgba(255,255,255,0.01);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(255,255,255,0.04);
+}
+.summary-row:last-child {
+  border-bottom: none;
+}
+.summary-row span:first-child {
+  color: var(--text-muted);
+}
+.summary-row span:last-child {
+  font-family: 'IBM Plex Mono', var(--font-mono);
+  color: #fff;
+}
+.footnote-mono {
+  font-family: 'IBM Plex Mono', var(--font-mono);
+  font-size: 11.5px;
+  color: var(--gold);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.inline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+.inline-badge.red {
+  background: rgba(244,112,103,0.1);
+  color: #ff948f;
+  border: 1px solid rgba(244,112,103,0.15);
+}
+.inline-badge.teal {
+  background: rgba(57,208,176,0.1);
+  color: var(--teal);
+  border: 1px solid rgba(57,208,176,0.15);
+}
+.wizard-step.completed .step-num {
+  background: var(--teal) !important;
+  color: #fff !important;
+}
+.wizard-step.completed .step-text {
+  color: var(--teal) !important;
+}
+.checkbox-premium-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  cursor: pointer;
+}
+.checkbox-premium-input {
+  display: none;
+}
+.checkbox-custom-box {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--border-light);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+.checkbox-premium-input:checked + .checkbox-custom-box {
+  background: var(--gold);
+  border-color: var(--gold);
+}
+.checkbox-premium-input:checked + .checkbox-custom-box::after {
+  content: "✓";
+  color: #000;
+  font-size: 11px;
+  font-weight: 900;
+}
 </style>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 </head>
 <body>
 
@@ -1055,11 +1746,14 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
   <div id="role-ventas" class="role-container active">
 
     <!-- LEFT SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="left-sidebar">
     <div class="subtitle" style="padding: 0 40px 24px;">Gestión Ventas</div>
     <a class="nav-item active" onclick="goToDashboard()">📊 Mis Negocios (Home)</a>
-    <a class="nav-item">📅 Agenda & Visitas</a>
+    <a class="nav-item" onclick="showToast('info', 'Mis Presentaciones', 'Cargando repositorio de presentaciones personalizadas...')">🎞️ Mis Presentaciones</a>
+    <a class="nav-item" href="/cerebro-calendar.html" style="color: var(--gold); border-left: 2px solid var(--gold); background: rgba(201, 169, 110, 0.05); font-weight: 600; font-size:13px; display:flex; align-items:center;">📅 Agenda de Proyectos</a>
   </aside>
+  
+  <div class="resizer" id="resizer-left"></div>
 
 
   <!-- CENTRAL VIEW WRAPPER -->
@@ -1135,80 +1829,225 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 
           <div class="scroll-area" style="position:relative;">
             
-            <!-- Tab 1: Datos Generales -->
+            <!-- Tab 1: Datos Generales & Wizard -->
             <div id="pane-datos" class="tab-pane active">
               
-              <div class="magnitude-box mag-alert-micro" id="mag-box">
-                <div>
-                  <div class="subtitle" id="mag-label" style="color:var(--text-muted); margin-bottom: 8px;">CALIBRACIÓN DEL PROYECTO</div>
-                  <div class="magnitude-title" id="mag-title">Fast-Track Aprobado</div>
-                  <div class="magnitude-desc" id="mag-desc">Monto y metraje dentro de los parámetros para asignación directa exprés (Entrega esperada &lt; 48hrs).</div>
+              <!-- STEPS PROGRESS TRACK -->
+              <div class="wizard-steps">
+                <div class="step-node active" id="node-1">
+                  <div class="step-circle">1</div>
+                  <div class="step-label">Comercial</div>
+                </div>
+                <div class="step-node" id="node-2">
+                  <div class="step-circle">2</div>
+                  <div class="step-label">Ingeniería</div>
+                </div>
+                <div class="step-node" id="node-3">
+                  <div class="step-circle">3</div>
+                  <div class="step-label">Contrato</div>
                 </div>
               </div>
 
-              <!-- General Info -->
-              <div class="card">
-                <div class="subtitle" style="margin-bottom: 32px;">Información Comercial Core</div>
+              <!-- PASO 1: INFORMACIÓN COMERCIAL -->
+              <input type="hidden" id="f-contacto" value="Vendedor">
+              <div class="wizard-card active" id="step-card-1" style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                <div class="section-title">📝 Datos Generales del Cliente</div>
                 <div class="form-grid">
-                  <div class="form-group" style="grid-column: 1 / -1;">
-                    <label class="form-label">Razón Social del Cliente</label>
-                    <input type="text" class="form-input" placeholder="Ej. Corporativo Sigma / Torres del Valle" id="v-cliente" oninput="autoSave()">
+                  <div class="form-group col-span-2">
+                    <label class="form-label">Razón Social del Cliente <span style="color: var(--gold);">*</span></label>
+                    <input type="text" class="form-input" id="f-razon" placeholder="Ej. Grupo Industrial Torreón S.A." oninput="recalcularCalibracion(); autoSave();">
+                  </div>
+                  <div class="form-group col-span-2">
+                    <label class="form-label">ID de Proyecto (En caso de cliente recurrente)</label>
+                    <input type="text" class="form-input" placeholder="Ej. PRJ-2026-X" id="f-tel">
                   </div>
                   <div class="form-group">
-                    <label class="form-label">ID Oportunidad Hunter (Autogenerado)</label>
-                    <input type="text" class="form-input hunter-input" id="v-hunterid" value="HNT-0000" readonly>
+                    <label class="form-label">Hunter ID</label>
+                    <input type="text" class="form-input" id="f-hunter" placeholder="HNT-2026-0000" readonly>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Contacto Responsable en Sitio</label>
-                    <input type="text" class="form-input" placeholder="Nombre completo" id="v-contacto">
+                    <label class="form-label">Unidad Nacional</label>
+                    <select class="form-select" id="f-unidad">
+                      <option value="laguna" selected>Laguna (Torreón)</option>
+                      <option value="mty">Monterrey</option>
+                      <option value="qro">Querétaro</option>
+                      <option value="cdmx">CDMX</option>
+                    </select>
                   </div>
-                  <div class="form-group">
-                    <label class="form-label">Monto Estimado de Inversión (MXN)</label>
-                    <input type="number" class="form-input" value="0" id="v-monto" oninput="calcMag()">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Superficie Total a Intervenir (m²)</label>
-                    <input type="number" class="form-input" value="0" id="v-m2" oninput="calcMag()">
+                  <div class="form-group col-span-2">
+                    <label class="form-label">Email / Datos del Vendedor</label>
+                    <input type="email" class="form-input" placeholder="Ej. vendedor@gebesa.com" id="f-email">
                   </div>
                 </div>
               </div>
 
-              <!-- Consultoría Crítica -->
-              <div class="card">
-                <div class="subtitle" style="margin-bottom: 32px;">Parámetros Técnicos de Consultoría</div>
-                <div class="form-grid">
+              <!-- PASO 2: INSUMOS DE INGENIERÍA -->
+              <div class="wizard-card" id="step-card-2" style="display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                <div class="section-title">⚙️ Alcance e Insumos de Ingeniería</div>
+                
+                <!-- Hidden Proyectista select for compatibility -->
+                <div style="display: none;">
+                  <select id="f-proyectista">
+                    <option value="unassigned" selected>Disponible en Bolsa de Trabajo (Automático)</option>
+                  </select>
+                </div>
+                
+                <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;">
                   <div class="form-group">
-                    <label class="form-label">Condición Actual del Espacio</label>
+                    <label class="form-label">📏 Metros Cuadrados (m²)</label>
+                    <input type="number" class="form-input" id="f-m2" value="0" oninput="recalcularCalibracion()">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">💰 Monto Estimado (MXN)</label>
+                    <input type="number" class="form-input" id="f-mxn" value="0" oninput="recalcularCalibracion()">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">🏗️ Condición del Espacio</label>
                     <select class="form-select" id="v-condicion">
-                      <option value="gris">Obra Gris (Desde Cero)</option>
-                      <option value="activo">Remodelación con Personal Activo</option>
-                      <option value="vacio">Espacio Adaptado pero Vacío</option>
+                      <option value="gris" selected>Obra Gris (Cero)</option>
+                      <option value="activo">Personal Activo</option>
+                      <option value="vacio">Espacio Adaptado</option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Densidad de Usuarios (Puestos aprox.)</label>
-                    <input type="number" class="form-input" placeholder="Cantidad de sillas" min="1" id="v-densidad">
+                    <label class="form-label">👥 Densidad (Puestos)</label>
+                    <input type="number" class="form-input" placeholder="Cant. sillas" min="1" id="f-densidad">
                   </div>
-                  <div class="form-group">
-                    <label class="form-label">Línea de Mobiliario Tentativa</label>
-                    <select class="form-select" id="v-linea">
-                      <option value="ascend">Línea Ascend (Ejecutiva Premium)</option>
-                      <option value="bento">Sistema Bento (Colaborativo)</option>
-                      <option value="concord">Concord Modular</option>
-                      <option value="nova">Nova Operativo</option>
-                      <option value="kenza">Kenza (Accesibilidad)</option>
-                    </select>
+                </div>
+
+                <div style="margin-top: 24px;">
+                  <label class="form-label">📋 Entregables Técnicos Requeridos</label>
+                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 8px;">
+                    <label style="margin: 0; padding: 14px 8px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.01); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; opacity: 0.7; min-height: 90px; text-align: center;">
+                      <span style="font-size: 11px; font-weight: 600;">📐 Planos</span>
+                      <input type="checkbox" id="v-entregable-planos" checked disabled>
+                    </label>
+                    <label style="margin: 0; padding: 14px 8px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.01); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; min-height: 90px; text-align: center;">
+                      <span style="font-size: 11px; font-weight: 600;">✨ Renders</span>
+                      <input type="checkbox" id="f-render" onchange="recalcularCalibracion();">
+                    </label>
+                    <label style="margin: 0; padding: 14px 8px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.01); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; min-height: 90px; text-align: center;">
+                      <span style="font-size: 11px; font-weight: 600;">🎥 Recorrido</span>
+                      <input type="checkbox" id="v-entregable-recorrido" onchange="recalcularCalibracion();">
+                    </label>
+                    <label style="margin: 0; padding: 14px 8px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.01); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; min-height: 90px; text-align: center;">
+                      <span style="font-size: 11px; font-weight: 600;">📋 Despiece</span>
+                      <input type="checkbox" id="v-entregable-especs" onchange="recalcularCalibracion();">
+                    </label>
                   </div>
-                  <div class="form-group">
-                    <label class="form-label">Compromiso de Entrega a Cliente</label>
-                    <input type="date" class="form-input" style="color:var(--text-secondary); font-family:var(--font-mono);" id="v-compromiso">
+                </div>
+
+                <!-- NUEVO: MATRIZ DE ESPECIFICACIÓN TÉCNICA RELACIONAL -->
+                <div class="matrix-card">
+                  <div class="matrix-card-header">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <span style="font-size: 18px;">📦</span>
+                      <h3 style="font-family: var(--font-display); font-style: italic; font-size: 16.5px; margin: 0; color: var(--text-primary);">Despiece Técnico y Acabados por Área</h3>
+                    </div>
+                    <button type="button" onclick="addMatrixRow()" style="background: var(--gold); color: #000; font-weight: 700; border-radius: 4px; font-size: 11px; padding: 5px 12px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.3px;">
+                      + Añadir Componente
+                    </button>
                   </div>
-                  <div class="form-group" style="grid-column: 1 / -1;">
-                    <label class="form-label">Restricciones Estructurales / Notas Especiales</label>
-                    <textarea class="form-textarea" rows="3" placeholder="Restricciones de voltaje, plafones, alfombras existentes, etc." id="v-restricciones"></textarea>
+                  <div style="padding: 0; background: rgba(0,0,0,0.1);">
+                    <div style="padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                      <p style="font-size: 11px; color: var(--text-muted); margin:0;">📌 Vincula componentes específicos por zona física para generar un reporte relacional limpio.</p>
+                    </div>
+                    <div id="contenedor-matriz-despiece">
+                      <!-- Filas dinámicas se inyectan aquí -->
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 40px; border-top: 1px solid var(--border-light); padding-top: 40px; width: 100%;">
+                  <div style="margin-bottom: 24px;">
+                    <label class="form-label" style="font-size: 16px; color: var(--gold); font-weight: 600; margin-bottom: 4px;">Notas del Proyecto o Solicitud de Proyecto</label>
+                    <p style="font-size: 12px; color: var(--text-muted);">Describa aquí las solicitudes específicas, restricciones técnicas o adaptaciones especiales requeridas.</p>
+                  </div>
+                  
+                  <div style="display: flex; gap: 12px; padding: 12px 20px; background: var(--surface-3); border: 1px solid var(--border-light); border-bottom: none; border-radius: var(--radius) var(--radius) 0 0; align-items:center;">
+                    <div style="display: flex; gap: 4px;">
+                      <button type="button" class="rtf-btn" onclick="document.execCommand('bold', false, null)" title="Negrita">B</button>
+                      <button type="button" class="rtf-btn" style="font-style: italic;" onclick="document.execCommand('italic', false, null)" title="Cursiva">I</button>
+                      <button type="button" class="rtf-btn" style="text-decoration: underline;" onclick="document.execCommand('underline', false, null)" title="Subrayado">U</button>
+                    </div>
+                    <div style="width:1px; height:24px; background:var(--border); margin:0 8px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Color Texto:</span>
+                      <input type="color" onchange="document.execCommand('foreColor', false, this.value)" style="border:none; width:28px; height:28px; padding:0; background:none; cursor:pointer;" title="Color de Texto">
+                    </div>
+                  </div>
+                  <div id="v-restricciones-rtf" contenteditable="true" style="min-height: 380px; width: 100%; padding: 24px; background: rgba(0,0,0,0.15); border: 1px solid var(--border-light); border-radius: 0 0 var(--radius) var(--radius); color: var(--text-primary); outline: none; line-height: 1.6; font-size: 15px; overflow-y: auto; resize: vertical; display: block;" oninput="document.getElementById('v-restricciones').value = this.innerHTML; autoSave();" placeholder="Comience a escribir aquí..."></div>
+                  <textarea id="v-restricciones" style="display:none;"></textarea>
+                  <textarea id="v-matriz-data-compilada" style="display:none;"></textarea>
+                </div>
+              </div>
+
+              <!-- PASO 3: VALIDACIÓN Y RESUMEN DE ENTREGA -->
+              <div class="wizard-card" id="step-card-3" style="display: none; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+                <div class="section-title">📅 Fecha Compromiso & Resumen del Proyecto</div>
+                
+                <!-- Hidden inputs for automated date/time capture -->
+                <input type="hidden" id="f-fecha" onchange="recalcularCalibracion()">
+                <input type="hidden" id="f-hora" onchange="recalcularCalibracion()">
+                <!-- Hidden fields for compatibility -->
+                <input type="hidden" id="f-dias" value="3">
+                <input type="hidden" id="f-entrega-final">
+
+                <!-- SLA & Delivery Date Highlights -->
+                <div style="background: rgba(212,175,55,0.05); border: 1px dashed rgba(212,175,55,0.25); border-radius: 12px; padding: 22px; text-align: center; margin-bottom: 24px;">
+                  <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); font-family: var(--font-mono); font-weight: 600;">FECHA TENTATIVA DE ENTREGA (SLA COMPROMISO)</span>
+                  <h2 id="summary-fecha-entrega-display" style="font-family: var(--font-display); font-size: 30px; color: var(--gold); margin-top: 10px; font-weight: 500; letter-spacing: -0.5px;">--</h2>
+                  <div id="calibracion-badge-container-step3" style="margin-top: 12px; display: flex; justify-content: center;"></div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px;">
+                  <!-- Left side: Summary of specifications -->
+                  <div>
+                    <h4 style="font-family: var(--font-mono); font-size: 11px; color: var(--gold); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">📝 Ficha de Especificaciones</h4>
+                    <div id="wizard-summary-specs-block" style="display: flex; flex-direction: column; gap: 10px;">
+                      <!-- Populated dynamically -->
+                    </div>
+                  </div>
+
+                  <!-- Right side: Assets/Artifacts list loaded in Vault -->
+                  <div>
+                    <h4 style="font-family: var(--font-mono); font-size: 11px; color: var(--gold); border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">📂 Expediente Digital (Assets)</h4>
+                    <div id="wizard-summary-assets-block" style="display: flex; flex-direction: column; gap: 8px;">
+                      <!-- Populated dynamically -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- RESUMEN DE AUDITORÍA INTEGRADO (Hidden but kept in DOM for compatible telemetry logic) -->
+                <div class="summary-box" style="margin-top: 24px; display: none;">
+                  <div class="summary-row">
+                    <span>Arranque Operativo de Planta:</span>
+                    <span id="lbl-arranque-real">--</span>
+                  </div>
+                  <div class="summary-row">
+                    <span>Complejidad de Infraestructura:</span>
+                    <span id="lbl-complejidad" style="text-transform: uppercase;">--</span>
                   </div>
                 </div>
               </div>
+
+              <!-- COMPATIBILIDAD CON ALGORITMOS HISTÓRICOS -->
+              <div style="display: none;">
+                <input type="hidden" id="v-cliente">
+                <input type="hidden" id="v-hunterid">
+                <input type="hidden" id="v-contacto">
+                <input type="hidden" id="v-m2">
+                <input type="hidden" id="v-monto">
+                <input type="hidden" id="v-densidad">
+                <input type="hidden" id="v-compromiso">
+                <input type="checkbox" id="v-entregable-planos" checked disabled>
+                <input type="checkbox" id="v-entregable-renders">
+                <input type="checkbox" id="v-entregable-recorrido">
+                <input type="checkbox" id="v-entregable-especs">
+                <input type="checkbox" id="f-renders-premium">
+                <input type="number" id="f-dias-entrega" value="3">
+              </div>
+
             </div>
 
             <!-- Tab 2: Canvas / Briefing -->
@@ -1283,14 +2122,20 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 
           </div>
 
-          <div class="form-footer">
-            <button class="btn-outline" onclick="goToDashboard()">⬅️ Cancelar y Volver</button>
-            <div style="display:flex; gap:24px;">
-               <button class="btn-outline" onclick="showToast('info','Borrador Autoguardado', 'Progreso guardado de manera local.')">Guardar Borrador</button>
-               <button class="btn-solid" onclick="submitForm()">🚀 Enviar Solicitud Técnica</button>
+          <div class="form-footer" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <button class="btn-outline" id="btn-wizard-prev" onclick="prevWizardStep()" style="display: none;">⬅️ Atrás</button>
+              <button class="btn-outline" id="btn-wizard-cancel" onclick="goToDashboard()">⬅️ Cancelar y Volver</button>
+            </div>
+            <div style="display:flex; gap:16px;">
+               <button class="btn-outline" id="btn-wizard-draft" onclick="showToast('info','Borrador Autoguardado', 'Progreso guardado de manera local.')">Guardar Borrador</button>
+               <button class="btn-solid" id="btn-wizard-next" onclick="nextWizardStep()">Siguiente ➡️</button>
+               <button class="btn-solid" id="btn-wizard-submit" onclick="submitForm()" style="display: none;">🚀 Enviar Solicitud Técnica</button>
             </div>
           </div>
         </div>
+
+        <div class="resizer" id="resizer-right"></div>
 
         <!-- Bóveda Lado Derecho en Ventas (Briefing) -->
         <aside class="vault-panel" id="vault-panel-boveda">
@@ -1406,6 +2251,11 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
           <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted);">HNT-0391 • Medio</div>
         </div>
       </a>
+      <div style="border-top: 1px solid var(--border); margin-top: auto; padding: 24px 32px 0;">
+        <a class="nav-item" href="/cerebro-calendar.html" style="color: var(--gold); font-weight: 600; font-size:12.5px; border: 1px dashed rgba(201,169,110,0.3); border-radius: var(--radius); text-align: center; justify-content: center; background: rgba(201,169,110,0.03);">
+          📅 Agenda de Proyectos
+        </a>
+      </div>
     </aside>
 
     <div class="main-view-wrapper">
@@ -1534,79 +2384,348 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
       <button class="modal-close" onclick="closeProjectModal(event, true)">✕</button>
     </div>
     
+    <!-- Selector de Pestañas del Expediente -->
+    <div class="modal-tabs">
+      <button class="modal-tab-btn active" id="btn-tab-info" onclick="switchModalTab('info')">
+        📋 Información Original
+      </button>
+      <button class="modal-tab-btn" id="btn-tab-calendario" onclick="switchModalTab('calendario')">
+        📅 Calendarización
+      </button>
+      <button class="modal-tab-btn" id="btn-tab-modificacion" onclick="switchModalTab('modificacion')">
+        🔄 Solicitud Modificación
+      </button>
+      <button class="modal-tab-btn" id="btn-tab-entregables" onclick="switchModalTab('entregables')">
+        📂 Entregables & Assets
+      </button>
+    </div>
+
     <div class="modal-body-scroll">
-      <div class="modal-grid-two-col">
-        <!-- left side: project data -->
-        <div>
-          <div class="modal-section-title">Información y Códigos del Proyecto</div>
-          <div class="card" style="padding: 24px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">ID Hunter CRM:</span>
-              <span class="badge hunter" id="md-hunter-id" style="font-family: var(--font-mono); font-size: 12px;">HNT-0000</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Volumen / Monto:</span>
-              <span id="md-monto" style="font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--blue);">--</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Flujo Operativo (Magnitud):</span>
-              <span class="badge" id="md-magnitud">--</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Proyectista Asignado:</span>
-              <span id="md-proyectista" style="font-size: 14px; font-weight: 500; color: var(--text-primary);">--</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Etapa Pipeline:</span>
-              <span class="badge" id="md-etapa" style="border-color: rgba(255,255,255,0.1);">--</span>
-            </div>
+      <div id="modal-override-banner" class="override-banner hidden" style="margin-bottom: 24px;">
+        <div class="override-icon">🌴</div>
+        <div class="override-content">
+          <div style="font-weight:700; font-size:14px; color:#fff; display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+            <span>MÓDULO DE AUSENCIA ACTIVADO (MWM)</span>
+            <span class="override-badge">Redirección Master</span>
           </div>
-          
-          <div class="modal-section-title">Solicitud Original</div>
-          <p id="md-solicitud" style="font-size: 14px; line-height: 1.6; color: var(--text-secondary); background: var(--surface-2); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); margin-bottom: 24px; font-style: italic;">
-            No se especificaron detalles adicionales.
-          </p>
-          
-          <div class="modal-section-title">Documentos Originales / Assets</div>
-          <div id="md-documentos-list" style="display: flex; flex-direction: column; gap: 8px;">
-            <!-- Rendered in JS -->
-          </div>
-        </div>
-        
-        <!-- right side: list additions or solicitar modificacion -->
-        <div style="border-left: 1px solid var(--border); padding-left: 32px;" id="md-modificacion-column">
-          <div class="modal-section-title">Historial de Revisiones / Modificaciones</div>
-          <div id="md-modificaciones-history" style="display:flex; flex-direction:column; gap:16px; margin-bottom: 32px; max-height: 200px; overflow-y: auto;">
-            <!-- list of mods -->
-            <div style="font-size:12px; color:var(--text-muted); text-align:center; padding: 16px 0;">No se han solicitado re-diseños técnicos para este proyecto.</div>
-          </div>
-          
-          <div class="modal-section-title">Solicitar Nueva Modificación</div>
-          <div class="card" style="padding: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(255,255,255,0.01);">
-            <div class="form-group">
-              <label class="form-label" style="font-size:11px; margin-bottom:8px;">Instrucciones para el Ingeniero / Proyectista</label>
-              <textarea class="form-input" id="mod-instrucciones" rows="4" style="height:auto; resize:vertical; padding:12px; font-size:13px;" placeholder="Ej. El cliente solicita expandir 4 escritorios más en la zona central y reducir un panel..."></textarea>
-            </div>
-            
-            <div class="form-group">
-              <label class="form-label" style="font-size:11px; margin-bottom:4px;">Nuevos Planos o Archivos Adicionales</label>
-              <div style="border: 1px dashed var(--border-light); border-radius: var(--radius); padding: 16px; text-align:center; cursor:pointer; background: var(--surface-2); transition: background 0.2s;" onclick="triggerModFileUpload()" ondragover="event.preventDefault()" ondrop="handleModFileDrop(event)">
-                <div style="font-size: 20px; margin-bottom: 6px;">📂</div>
-                <div style="font-size:12px; font-weight:600; color: var(--text-primary);">Haga click o arrastre para cargar</div>
-                <div style="font-size:11px; color: var(--text-muted); margin-top:2px;">PDF, DWG o JPG nuevo plano</div>
-              </div>
-              <input type="file" id="mod-file-input" style="display:none;" onchange="handleModFileSelected(event)">
-              
-              <!-- dynamic list of selected modification files -->
-              <div class="form-file-list" id="mod-files-preview-list"></div>
-            </div>
-            
-            <button class="btn-solid" style="width: 100%; margin-top: 8px; justify-content:center;" onclick="submitModificationRequest()">
-              🚀 Enviar Solicitud de Cambios
-            </button>
+          <div class="override-text" id="modal-override-banner-text">
+            El diseñador asignado original se encuentra ausente de manera justificada. Todo queda grabado técnicamente en el contrato.
           </div>
         </div>
       </div>
+
+      <!-- PESTAÑA 1: INFORMACIÓN ORIGINAL -->
+      <div id="modal-tab-content-info" class="modal-tab-content active">
+        <div class="modal-grid-two-col">
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div>
+              <div class="modal-section-title">Información y Códigos del Proyecto</div>
+              <div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">ID Hunter CRM:</span>
+                  <span class="badge hunter" id="md-hunter-id" style="font-family: var(--font-mono); font-size: 12px;">HNT-0000</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Volumen / Monto:</span>
+                  <span id="md-monto" style="font-family: var(--font-mono); font-size: 15px; font-weight: 600; color: var(--blue);">--</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Flujo Operativo (Magnitud):</span>
+                  <span class="badge" id="md-magnitud">--</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Proyectista Asignado:</span>
+                  <span id="md-proyectista" style="font-size: 14px; font-weight: 500; color: var(--text-primary);">--</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Etapa Pipeline:</span>
+                  <span class="badge" id="md-etapa" style="border-color: rgba(255,255,255,0.1);">--</span>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 16px;">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size:10px;">Fecha de Captura de Carpeta</label>
+                    <input type="date" id="f-modal-fecha" class="form-input" style="font-family:var(--font-mono); font-size:13px; padding: 10px 14px; background: rgba(0,0,0,0.2);" onchange="calcModalContract()">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" style="font-size:10px;">Hora Registrada de Envío</label>
+                    <input type="time" id="f-modal-hora" class="form-input" style="font-family:var(--font-mono); font-size:13px; padding: 10px 14px; background: rgba(0,0,0,0.2);" onchange="calcModalContract()">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div>
+            <div class="modal-section-title">Solicitud Original</div>
+            <p id="md-solicitud" style="font-size: 14px; line-height: 1.6; color: var(--text-secondary); background: var(--surface-2); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0; font-style: italic;">
+              No se especificaron detalles adicionales.
+            </p>
+            <div style="background: var(--surface-2); border: 1px solid var(--border); border-top: none; padding: 20px; border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius);">
+              <div class="subtitle" style="font-size: 10px; margin-bottom: 12px; color: var(--text-muted);">ARCHIVOS ADJUNTOS EN SOLICITUD</div>
+              <div id="md-documentos-list-info" style="display: flex; flex-direction: column; gap: 8px;">
+                <!-- Rendered in JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PESTAÑA 2: CALENDARIZACION -->
+      <div id="modal-tab-content-calendario" class="modal-tab-content" style="display:none;">
+        <div class="modal-grid-two-col">
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <div class="card deliverable-highlight" style="padding: 24px;">
+              <div class="subtitle" style="color:var(--text-secondary); font-size: 11px;">FECHA OFICIAL DE COMPROMISO</div>
+              <div class="deliverable-title" id="md-sla-entrega-fecha" style="font-size: 22px;">...</div>
+              <div style="font-family: var(--font-mono); font-size: 10px; margin-top: 8px; color:var(--text-muted)">
+                SLA VIGENTE • ENTREGA PREVISTA ANTES DE LAS 18:30 HRS
+              </div>
+            </div>
+
+            <div class="card" style="padding: 20px; border: 1px dashed var(--gold); background: rgba(201,169,110,0.03);">
+              <div class="subtitle" style="color: var(--gold); font-size: 11px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span>🤝 Agendar Reunión de Entrega</span>
+                <span class="badge" id="md-meeting-status-badge" style="border-color: rgba(201,169,110,0.4); color: var(--gold); font-size: 9px; min-height: auto; padding: 2px 6px;">Pendiente</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                  <div class="form-group">
+                    <label class="form-label" style="font-size: 10px; margin-bottom: 2px;">Fecha Reunión</label>
+                    <input type="date" id="f-meeting-date" class="form-input" style="font-size: 11.5px; padding: 6px 10px; color: var(--text-primary); background: var(--surface);" onchange="saveMeetingFromModal()">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" style="font-size: 10px; margin-bottom: 2px;">Hora Reunión</label>
+                    <input type="time" id="f-meeting-time" class="form-input" style="font-size: 11.5px; padding: 6px 10px; color: var(--text-primary); background: var(--surface);" onchange="saveMeetingFromModal()">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="font-size: 10px; margin-bottom: 2px;">Canal / Ubicación</label>
+                  <select id="f-meeting-channel" class="form-select" style="font-size: 11.5px; padding: 6px 10px; color: var(--text-primary); background: var(--surface);" onchange="saveMeetingFromModal()">
+                    <option value="Virtual (Teams / Meet)">🌐 Teams / Google Meet</option>
+                    <option value="Showroom Ventas">🏢 Showroom Ventas Gebesa</option>
+                    <option value="Planta Corporativa">🏭 Planta Corporativa</option>
+                    <option value="Oficinas Cliente">🚪 Oficinas del Cliente</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" style="font-size: 10px; margin-bottom: 2px;">Estatus Agenda</label>
+                  <select id="f-meeting-status" class="form-select" style="font-size: 11.5px; padding: 6px 10px; color: var(--text-primary); background: var(--surface);" onchange="saveMeetingFromModal()">
+                    <option value="pendiente">⏳ Por Agendar / Pendiente</option>
+                    <option value="confirmada">🤝 Reunión Confirmada</option>
+                    <option value="completada">✅ Entregado & Reunión Completada</option>
+                  </select>
+                </div>
+              </div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">* Sincronizado en tiempo real con la Agenda de Proyectos.</div>
+            </div>
+
+            <div class="card" style="padding: 20px;">
+              <div class="subtitle" style="margin-bottom: 12px; font-size: 11px;">Hoja de Auditoría del Contrato</div>
+              <table class="audit-details-table">
+                <tr>
+                  <td class="audit-key">Envío Original</td>
+                  <td class="audit-value" id="md-audit-original">--</td>
+                </tr>
+                <tr>
+                  <td class="audit-key">Inicio Operativo</td>
+                  <td class="audit-value" id="md-audit-ajustada" style="color: var(--blue)">--</td>
+                </tr>
+                <tr>
+                  <td class="audit-key">Responsable Técnico</td>
+                  <td class="audit-value" id="md-audit-proyectista">--</td>
+                </tr>
+                <tr>
+                  <td class="audit-key">Estatus Licencia</td>
+                  <td class="audit-value" id="md-audit-modulacion">--</td>
+                </tr>
+                <tr>
+                  <td class="audit-key">Magnitud Orden</td>
+                  <td class="audit-value" id="md-audit-magnitud" style="font-weight: 700;">--</td>
+                </tr>
+                <tr>
+                  <td class="audit-key">Plazo SLA Real</td>
+                  <td class="audit-value" id="md-audit-sla-plazo">--</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <div class="card" style="padding: 24px; position: sticky; top: 0; z-index: 10;">
+              <div class="subtitle" style="font-size: 11px;">Secuenciador Diario de Hitos</div>
+              <div class="sla-timeline-container" id="md-timeline-container" style="max-height: 500px; overflow-y: auto; padding-right: 8px;">
+                <!-- Rendered sequentially via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PESTAÑA 3: SOLICITUD DE MODIFICACIÓN -->
+      <div id="modal-tab-content-modificacion" class="modal-tab-content" style="display:none;">
+        <div class="modal-grid-two-col">
+          <div>
+            <div class="modal-section-title">Historial de Revisiones</div>
+            <div id="md-modificaciones-history" style="display:flex; flex-direction:column; gap:16px; max-height: 400px; overflow-y: auto;">
+              <div style="font-size:12px; color:var(--text-muted); text-align:center; padding: 16px 0;">No metadatos.</div>
+            </div>
+          </div>
+          <div>
+            <div class="modal-section-title">Solicitar Modificación</div>
+            <div class="card" style="padding: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(255,255,255,0.01);">
+              <div class="form-group">
+                <textarea class="form-input" id="mod-instrucciones" rows="3" style="height:auto; resize:vertical; padding:12px; font-size:13px;" placeholder="Instrucciones para el Ingeniero..."></textarea>
+              </div>
+              <div class="form-group">
+                <div style="border: 1px dashed var(--border-light); border-radius: var(--radius); padding: 16px; text-align:center; cursor:pointer; background: var(--surface-2); transition: background 0.2s;" onclick="triggerModFileUpload()" ondragover="event.preventDefault()" ondrop="handleModFileDrop(event)">
+                  <div style="font-size: 20px; margin-bottom: 6px;">📂</div>
+                  <div style="font-size:12px; font-weight:600; color: var(--text-primary);">Adjuntar Archivo</div>
+                </div>
+                <input type="file" id="mod-file-input" style="display:none;" onchange="handleModFileSelected(event)">
+                <div class="form-file-list" id="mod-files-preview-list"></div>
+              </div>
+              <button class="btn-solid" style="width: 100%; justify-content:center;" onclick="submitModificationRequest()">
+                🚀 Enviar Solicitud de Modificación
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PESTAÑA 4: ENTREGABLES Y ASSETS -->
+      <div id="modal-tab-content-entregables" class="modal-tab-content" style="display:none;">
+        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; align-items: start;">
+          <!-- LADO IZQUIERDO: ARCHIVOS -->
+          <div style="display: flex; flex-direction: column; gap: 32px; max-height: 65vh; overflow-y: auto; padding-right: 12px;" class="custom-scrollbar">
+            
+            <!-- Archivos Solicitud Vendedor -->
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                <div class="modal-section-title" style="margin-bottom:0;">Archivos de Solicitud Inicial (Ventas)</div>
+                <button class="btn-solid" style="padding: 6px 12px; font-size: 11px; display:flex; align-items:center; gap:6px; background: rgba(88,166,255,0.1); color:var(--blue); border:1px solid rgba(88,166,255,0.2);" onclick="showToast('success', 'Descargando ZIP', 'Preparando archivos de la solicitud inicial...')">
+                  📦 Descargar ZIP
+                </button>
+              </div>
+              <div id="md-documentos-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+                <!-- Rendered in JS -->
+              </div>
+            </div>
+
+            <!-- Entregables Originales (Primera Entrega de Ingeniería) -->
+            <div style="border-top: 1px dashed var(--border); padding-top: 24px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
+                <div class="modal-section-title" style="margin-bottom:0;">Entregables de Ingeniería (Proyecto Original)</div>
+                <div style="display:flex; gap:8px;">
+                  <button class="btn-solid" style="padding: 6px 12px; font-size: 11px; display:flex; align-items:center; gap:6px; background: rgba(201,169,110,0.1); color:var(--gold); border:1px solid rgba(201,169,110,0.2);" onclick="showToast('info', 'Generando Presentación', 'La integración con el presentador se activará aquí.')">
+                    🎞️ Crear Presentación
+                  </button>
+                  <button class="btn-solid" style="padding: 6px 12px; font-size: 11px; display:flex; align-items:center; gap:6px; background: rgba(88,166,255,0.1); color:var(--blue); border:1px solid rgba(88,166,255,0.2);" onclick="showToast('success', 'Descargando ZIP', 'Preparando entregables originales...')">
+                    📦 Descargar ZIP
+                  </button>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                
+                <!-- Categoría: Documentos Técnicos -->
+                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span>📐</span> Planos y Documentos
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-tech-docs">
+                      <div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>
+                  </div>
+                </div>
+
+                <!-- Categoría: Galería / Renders -->
+                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span>🖼️</span> Galería Renders & VR
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-gallery">
+                     <div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>
+                  </div>
+                </div>
+
+                <!-- Categoría: Modelos 3D -->
+                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span>🧊</span> Modelos 3D (.glb)
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-3d">
+                     <div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>
+                  </div>
+                </div>
+
+                <!-- Categoría: Archivos XML -->
+                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                    <span>📄</span> Archivos XML y Datos
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-xml">
+                     <div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Archivos de Modificaciones (Iterativas) -->
+            <div id="md-assets-modificaciones-container" style="display: none; border-top: 1px dashed var(--border); padding-top: 24px;">
+              <div class="modal-section-title">Entregables de Modificaciones (Revisiones / Iteraciones)</div>
+               <div id="md-assets-modificaciones-list" style="display: flex; flex-direction: column; gap: 32px;">
+                 <!-- dynamic content: R1, R2 folders -->
+               </div>
+            </div>
+          </div>
+          
+          <!-- LADO DERECHO: VISOR DE PREVISUALIZACIÓN -->
+          <div class="card" style="padding: 16px; position: sticky; top: 0; display: flex; flex-direction: column; height: 65vh; background: var(--surface);">
+            <div style="font-size: 11px; font-weight: 600; margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+              <span style="color:var(--text-secondary); letter-spacing:0.5px;">VISOR DE ARCHIVOS</span>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span id="preview-filename" style="color:var(--text-primary); font-family:var(--font-mono); font-size:10px;">--</span>
+                <button id="btn-fullscreen-preview" class="btn-icon" style="background:var(--surface-3); border:1px solid var(--border); cursor:pointer; color:var(--text-secondary); display:none; padding:4px 8px; border-radius:4px; font-size:12px;" onclick="openFullscreenPreview()" title="Ver en pantalla completa">🔍 Fullscreen</button>
+              </div>
+            </div>
+            <div id="file-preview-content" style="flex: 1; background: var(--surface-2); border-radius: var(--radius); border: 1px dashed var(--border-light); display: flex; align-items: center; justify-content: center; overflow: hidden; position:relative;">
+              <span style="color: var(--text-muted); font-size: 13px;">Seleccione un archivo de la lista</span>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+        <div style="display: none;">
+          <span id="f-modal-id-display"></span>
+          <input type="text" id="f-modal-cliente">
+          <input type="number" id="f-modal-monto">
+          <input type="number" id="f-modal-m2">
+          <select id="f-modal-proyectista"></select>
+          <input type="checkbox" id="f-modal-renders">
+          <input type="number" id="f-modal-dias">
+        </div>
+        
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN PREVIEW MODAL -->
+<div class="modal-overlay" id="fullscreen-preview-modal" onclick="closeFullscreenPreview(event)">
+  <div class="modal-card" style="width: 95vw; max-width: none; height: 95vh; display: flex; flex-direction: column; padding: 0;" onclick="event.stopPropagation()">
+    <div style="padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--surface);">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <h2 style="margin: 0; font-size: 16px; color: var(--gold);" id="fs-preview-title">Visor a Detalle</h2>
+        <span id="fs-preview-filename" style="font-family:var(--font-mono); font-size:13px; color:var(--text-secondary);"></span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px;">
+        <button class="btn-solid" style="padding: 6px 12px; font-size: 13px; display:flex; align-items:center; gap:6px;" onclick="showToast('success', 'Descarga Registrada', 'Descargando desde el visor...')" title="Descargar original">
+          ⬇ Descargar Archivo
+        </button>
+        <button class="btn-icon" style="background: none; border: none; cursor: pointer; color: var(--text-muted);" onclick="closeFullscreenPreview(event, true)">✕</button>
+      </div>
+    </div>
+    <div id="fs-preview-content" style="flex: 1; min-height: 0; background: var(--surface-2); display: flex; align-items: center; justify-content: center; overflow: hidden; position:relative;">
+      <!-- Cloned preview element will be injected here -->
     </div>
   </div>
 </div>
@@ -1630,7 +2749,7 @@ const STATE = {
   ]
 };
 
-let vProjects = [
+const defaultProjects = [
   { 
     cliente: "Corporativo Sigma / Torres del Valle", 
     id: "HNT-0418", 
@@ -1639,7 +2758,7 @@ let vProjects = [
     magnClass: "mag-alert-macro", 
     proyectista: "Karen Tovar", 
     etapa: "En Diseño (Arquitectura)",
-    solicitudOriginal: "Modelado premium para oficinas corporativas de alta densidad de tránsito, integrando la Línea Ascend ejecutiva. Se requiere especial atención en la sala magna con columnas intermedias y aforo de personal operativo de unas 120 personas.",
+    solicitudOriginal: "Modelado premium para oficinas corporativas de alta densidad de tránsito, integrando la Línea Ascend ejecutiva. Se requiere especial atención en la sala magna con columnas intermedias y aforo de personal operativo de unos 120 personas.",
     documentosOriginales: [
       { name: "layout_planta_2_v1.pdf", ext: "PDF" },
       { name: "IMG_8492.JPG", ext: "JPG" },
@@ -1647,7 +2766,13 @@ let vProjects = [
     ],
     modificaciones: [
       { instrucciones: "Remodelar sala de juntas norte para ampliar el espacio de desborde y cambiar muro por cancelería de vidrio.", fecha: "Ayer a las 14:32", files: ["req_sala_vidrio_v2.pdf"] }
-    ]
+    ],
+    m2: 560,
+    renders: true,
+    fechaIngreso: "2026-05-22",
+    horaIngreso: "14:15",
+    diasSla: 7,
+    fechaHoraOperativa: "2026-05-22T14:15:00.000Z"
   },
   { 
     cliente: "Oficinas Regionales OXXO", 
@@ -1655,13 +2780,19 @@ let vProjects = [
     monto: "$480,000", 
     magn: "Medio", 
     magnClass: "mag-alert-medio", 
-    proyectista: "Sin Asignar", 
+    proyectista: "Karen Tovar", 
     etapa: "Validación Hunter",
     solicitudOriginal: "Reconfiguración modular de espacios operativos de atención presencial para optimización de aforo y flujo de personal.",
     documentosOriginales: [
       { name: "esquema_general_oxxo.pdf", ext: "PDF" }
     ],
-    modificaciones: []
+    modificaciones: [],
+    m2: 120,
+    renders: false,
+    fechaIngreso: "2026-05-20",
+    horaIngreso: "11:00",
+    diasSla: 5,
+    fechaHoraOperativa: "2026-05-20T11:00:00.000Z"
   },
   { 
     cliente: "Consultorio Especialidades Médicas", 
@@ -1669,15 +2800,27 @@ let vProjects = [
     monto: "$85,000", 
     magn: "Micro", 
     magnClass: "mag-alert-micro", 
-    proyectista: "Sin Asignar", 
+    proyectista: "Susana Ortiz", 
     etapa: "Cotización Exprés",
     solicitudOriginal: "Diseño ergonómico para consultorio y sala de espera de pacientes. Espacio reducido estilo contemporáneo.",
     documentosOriginales: [
       { name: "planos_consultoriodermatologia.pdf", ext: "PDF" }
     ],
-    modificaciones: []
+    modificaciones: [],
+    m2: 40,
+    renders: false,
+    fechaIngreso: "2026-05-18",
+    horaIngreso: "09:30",
+    diasSla: 4,
+    fechaHoraOperativa: "2026-05-18T09:30:00.000Z"
   }
 ];
+
+let vProjects = JSON.parse(localStorage.getItem('vProjects')) || defaultProjects;
+
+function saveProjectsToStorage() {
+  localStorage.setItem('vProjects', JSON.stringify(vProjects));
+}
 
 const TOOL_ICONS = { privado: '🛋️', operativo: '👥', juntas: '🤝'};
 
@@ -1711,6 +2854,7 @@ function switchRoleWorkspace(role) {
 
 /* --- FLUJO SPA NAVEGACIÓN --- */
 function renderTable() {
+  saveProjectsToStorage();
   const tbody = document.getElementById('v-table-body');
   tbody.innerHTML = vProjects.map(p => `
     <tr onclick="openProjectDetails('${p.id}')">
@@ -1741,10 +2885,75 @@ function goToForm(isEdit = false) {
   document.getElementById('screen-form').classList.add('active');
   
   if(!isEdit) {
-    document.getElementById('v-cliente').value = '';
-    document.getElementById('v-monto').value = '0';
-    document.getElementById('v-m2').value = '0';
-    document.getElementById('v-hunterid').value = 'HNT-' + Math.floor(Math.random()*9000 + 1000);
+    const hId = 'HNT-' + Math.floor(Math.random()*9000 + 1000);
+    
+    const fHunterEl = document.getElementById('f-hunter');
+    if (fHunterEl) fHunterEl.value = hId;
+    const fHunterIdEl = document.getElementById('f-hunter-id');
+    if (fHunterIdEl) fHunterIdEl.value = hId;
+    
+    const fRazonEl = document.getElementById('f-razon');
+    if (fRazonEl) fRazonEl.value = '';
+    
+    const fContactoEl = document.getElementById('f-contacto');
+    if (fContactoEl) fContactoEl.value = 'Vendedor';
+    
+    const fTelEl = document.getElementById('f-tel');
+    if (fTelEl) fTelEl.value = '';
+    
+    const fEmailEl = document.getElementById('f-email');
+    if (fEmailEl) fEmailEl.value = '';
+    
+    const fMetrosEl = document.getElementById('f-metros');
+    if (fMetrosEl) fMetrosEl.value = '0';
+    const fM2El = document.getElementById('f-m2');
+    if (fM2El) fM2El.value = '0';
+    
+    const fMontoEl = document.getElementById('f-monto');
+    if (fMontoEl) fMontoEl.value = '0';
+    const fMxnEl = document.getElementById('f-mxn');
+    if (fMxnEl) fMxnEl.value = '0';
+    
+    const fDensidadEl = document.getElementById('f-densidad');
+    if (fDensidadEl) fDensidadEl.value = '';
+    
+    const fRendersPremiumEl = document.getElementById('f-renders-premium');
+    if (fRendersPremiumEl) fRendersPremiumEl.checked = false;
+    const fRenderEl = document.getElementById('f-render');
+    if (fRenderEl) fRenderEl.checked = false;
+    
+    const vClienteEl = document.getElementById('v-cliente');
+    if (vClienteEl) vClienteEl.value = '';
+    const vMontoEl = document.getElementById('v-monto');
+    if (vMontoEl) vMontoEl.value = '0';
+    const vM2El = document.getElementById('v-m2');
+    if (vM2El) vM2El.value = '0';
+    const vHunterIdEl = document.getElementById('v-hunterid');
+    if (vHunterIdEl) vHunterIdEl.value = hId;
+    
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+    if (document.getElementById('v-compromiso')) {
+      document.getElementById('v-compromiso').value = dateStr;
+    }
+    if (document.getElementById('f-fecha')) {
+      document.getElementById('f-fecha').value = dateStr;
+    }
+    const timeStr = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+    if (document.getElementById('f-hora')) {
+      document.getElementById('f-hora').value = timeStr;
+    }
+    
+    if (document.getElementById('v-entregable-renders')) {
+      document.getElementById('v-entregable-renders').checked = false;
+    }
+    if (document.getElementById('v-entregable-recorrido')) {
+      document.getElementById('v-entregable-recorrido').checked = false;
+    }
+    if (document.getElementById('v-entregable-especs')) {
+      document.getElementById('v-entregable-especs').checked = false;
+    }
+
     // Reset canvas
     STATE.pins = [];
     STATE.savedWallsStrings = [];
@@ -1753,6 +2962,8 @@ function goToForm(isEdit = false) {
     document.getElementById('c-bg-image').style.display = 'none';
     
     switchTab('datos');
+    mapWizardFields();
+    showWizardStep(1);
     calcMag();
   }
 }
@@ -1773,7 +2984,7 @@ function switchTab(tabId) {
 }
 
 function submitForm() {
-  const cliente = document.getElementById('v-cliente').value || 'Desarrollo Sin Título';
+  const cliente = document.getElementById('f-razon').value.trim() || document.getElementById('v-cliente').value.trim() || 'Desarrollo Sin Título';
   const monto = parseFloat(document.getElementById('v-monto').value) || 0;
   const hId = document.getElementById('v-hunterid').value;
   
@@ -1786,16 +2997,25 @@ function submitForm() {
   else if(monto >= 200000 || m2 >= 80) { magn = "Medio"; magnClass = "mag-alert-medio"; }
 
   // Extract other technical & commercial inputs for original request
-  const contacto = document.getElementById('v-contacto').value || 'Sin asignar';
+  const contacto = document.getElementById('f-contacto').value.trim() || document.getElementById('v-contacto').value.trim() || 'Sin asignar';
+  const telefono = document.getElementById('f-tel') ? document.getElementById('f-tel').value.trim() : '';
+  const email = document.getElementById('f-email') ? document.getElementById('f-email').value.trim() : '';
   const condicionVal = document.getElementById('v-condicion').value;
   const condicionLabel = condicionVal === 'gris' ? 'Obra Gris (Desde Cero)' : condicionVal === 'activo' ? 'Remodelación con Personal Activo' : 'Espacio Adaptado pero Vacío';
   const densidad = document.getElementById('v-densidad').value || 'Mapeo modular estático';
   const lineSelect = document.getElementById('v-linea');
   const linea = lineSelect.options[lineSelect.selectedIndex].text;
-  const compromiso = document.getElementById('v-compromiso').value || 'Por definir';
+  const compromisoStr = document.getElementById('v-compromiso').value || '2026-05-23';
   const restricciones = document.getElementById('v-restricciones').value || 'Sin observaciones mecánicas o eléctricas de relevancia.';
 
-  const solicitudOriginalVal = `Responsable en obra: ${contacto}. Condición del espacio: ${condicionLabel}. Densidad: aprox. ${densidad} puestos. Línea decorativa sugerida: ${linea}. Fecha requerida: ${compromiso}. Observaciones y restricciones estructurales: ${restricciones}`;
+  // Read checkbox values
+  const hasRenders = document.getElementById('f-renders-premium') ? document.getElementById('f-renders-premium').checked : false;
+  const hasRecorrido = hasRenders; // Premium implies renders & potential sweep
+  const hasEspecs = true; // Suggest spec generation is always active
+
+  const finalSlaDias = parseInt(document.getElementById('f-dias-entrega').value) || 3;
+
+  const solicitudOriginalVal = `Responsable en obra: ${contacto}. Teléfono: ${telefono}. Email: ${email}. Condición del espacio: ${condicionLabel}. Densidad: aprox. ${densidad} puestos. Línea decorativa sugerida: ${linea}.\nFecha Registro Proyecto: ${compromisoStr}.\nEntregables solicitados: Planos Técnicos (Base)${hasRenders ? ', Renders de Alta Gama o Recorridos Virtuales (7 hábiles)' : ''}.\nObservaciones y restricciones: ${restricciones}`;
 
   // Read current draft vault files as original documents for realism
   const docOriginales = [];
@@ -1809,17 +3029,29 @@ function submitForm() {
     docOriginales.push({ name: "registro_fotofisico.jpg", ext: "JPG" });
   }
 
+  const now = new Date();
+  const horaIngresoValue = document.getElementById('f-hora') ? document.getElementById('f-hora').value : (String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'));
+
+  const windowResult = evaluarVentanaOperativa(compromisoStr, horaIngresoValue);
+  const fechaHoraOperativa = windowResult.ajustada.toISOString();
+
   vProjects.unshift({
     cliente,
     id: hId,
     monto: montoStr,
     magn,
     magnClass,
-    proyectista: "Asignación Automática",
+    proyectista: "Sin Asignar - Bolsa de Trabajo",
     etapa: "En Cola Técnica",
     solicitudOriginal: solicitudOriginalVal,
     documentosOriginales: docOriginales,
-    modificaciones: []
+    modificaciones: [],
+    m2: m2,
+    renders: hasRenders,
+    fechaIngreso: compromisoStr,
+    horaIngreso: horaIngresoValue,
+    diasSla: finalSlaDias,
+    fechaHoraOperativa: fechaHoraOperativa
   });
 
   renderTable();
@@ -1830,6 +3062,353 @@ function submitForm() {
 /* --- CONEXIONES EXPEDIENTES / MODALES --- */
 let activeProjectForMod = null;
 let selectedModFiles = [];
+
+/* --- CONTENIDO CONTRATO DIGITAL (SLA) SOPORTE --- */
+const HOLIDAYS = [
+  '2026-01-01', // Año Nuevo
+  '2026-02-02', // Constitución (primer lunes feb)
+  '2026-03-16', // Natalicio de Benito Juárez (tercer lunes mar)
+  '2026-05-01', // Día del Trabajo
+  '2026-09-16', // Independencia de México
+  '2026-11-16', // Revolución Mexicana (tercer lunes nov)
+  '2026-12-25'  // Navidad
+];
+
+const CLINIC_PROYECTISTAS = {
+  unassigned: { id: "unassigned", nombre: "Sin Asignar - Bolsa de Trabajo", enVacaciones: false },
+  oscar: { id: "oscar", nombre: "Oscar Macías", enVacaciones: true, suplenteId: "rodrigo", suplenteNombre: "Rodrigo Vergara" },
+  karen: { id: "karen", nombre: "Karen Tovar", enVacaciones: false },
+  rodrigo: { id: "rodrigo", nombre: "Rodrigo Vergara", enVacaciones: false },
+  susana: { id: "susana", nombre: "Susana Ortiz", enVacaciones: false }
+};
+
+const shortDateStyle = new Intl.DateTimeFormat('es-MX', { weekday: 'short', day: 'numeric', month: 'short' });
+const textDateStyle = new Intl.DateTimeFormat('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+// Inicializar select de proyectistas en el modal de forma segura al cargar
+setTimeout(() => {
+  const modalSelect = document.getElementById('f-modal-proyectista');
+  if (modalSelect) {
+    modalSelect.innerHTML = Object.values(CLINIC_PROYECTISTAS).map(p => {
+      if (p.id === 'unassigned') {
+        return `<option value="unassigned">Disponible en Bolsa de Trabajo</option>`;
+      }
+      const label = p.enVacaciones ? `${p.nombre} (🌴 Vacaciones)` : `${p.nombre} (Activo)`;
+      return `<option value="${p.id}">${label}</option>`;
+    }).join('');
+  }
+}, 300);
+
+function evaluarVentanaOperativa(fechaStr, horaStr) {
+  const [yr, mn, dy] = fechaStr.split('-').map(Number);
+  const [hr, min] = horaStr.split(':').map(Number);
+  
+  let originalDate = new Date(yr, mn - 1, dy, hr, min);
+  let adjustedDate = new Date(yr, mn - 1, dy, hr, min);
+  let adjusted = false;
+  let motivo = "Tratamiento Técnico Estándar";
+
+  function isBusinessDate(date) {
+    const d = date.getDay();
+    if (d === 0 || d === 6) return false;
+    const yStr = date.getFullYear();
+    const mStr = String(date.getMonth() + 1).padStart(2, '0');
+    const dStr = String(date.getDate()).padStart(2, '0');
+    const compStr = `${yStr}-${mStr}-${dStr}`;
+    return !HOLIDAYS.includes(compStr);
+  }
+
+  // Si ingresa en fin de semana o feriado, recorrer iterativamente al próximo hábil
+  while (!isBusinessDate(adjustedDate)) {
+    adjusted = true;
+    motivo = "Ingreso en Fin de Semana / Día Inhábil (Ajustado al siguiente día hábil a las 08:30 hrs)";
+    adjustedDate.setDate(adjustedDate.getDate() + 1);
+    adjustedDate.setHours(8, 30, 0, 0);
+  }
+
+  const currentHour = adjustedDate.getHours();
+  const currentMinutes = adjustedDate.getMinutes();
+  const totalMinutes = currentHour * 60 + currentMinutes;
+
+  const minHourStart = 8 * 60 + 30; // 08:30 AM
+  const cutOffHour = 17 * 60;       // 17:00 PM (Corte operacional de planta)
+
+  if (totalMinutes < minHourStart) {
+    adjusted = true;
+    motivo = "Apertura Anticipada (Ajustado al inicio de jornada hábil a las 08:30 hrs)";
+    adjustedDate.setHours(8, 30, 0, 0);
+  } else if (totalMinutes >= cutOffHour) {
+    adjusted = true;
+    motivo = "Corte Operativo Post-17:00 hrs (Ajustado al siguiente día hábil a las 08:30 hrs)";
+    
+    adjustedDate.setDate(adjustedDate.getDate() + 1);
+    while (!isBusinessDate(adjustedDate)) {
+      adjustedDate.setDate(adjustedDate.getDate() + 1);
+    }
+    adjustedDate.setHours(8, 30, 0, 0);
+  }
+
+  return {
+    original: originalDate,
+    ajustada: adjustedDate,
+    ajustado: adjusted,
+    motivo: motivo
+  };
+}
+
+function switchModalTab(tabId) {
+  document.querySelectorAll('.modal-tab-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-content').forEach(content => content.style.display = 'none');
+  
+  const activeTabBtn = document.getElementById(`btn-tab-${tabId}`);
+  const activeTabContent = document.getElementById(`modal-tab-content-${tabId}`);
+  
+  if (activeTabBtn) activeTabBtn.classList.add('active');
+  if (activeTabContent) activeTabContent.style.display = 'block';
+  
+  if (tabId === 'calendario') {
+    calcModalContract();
+  }
+}
+
+function calcModalContract() {
+  if (!activeProjectForMod) return;
+
+  const fFecha = document.getElementById('f-modal-fecha').value;
+  const fHora = document.getElementById('f-modal-hora').value;
+  const fMonto = parseFloat(document.getElementById('f-modal-monto').value) || 0;
+  const fM2 = parseFloat(document.getElementById('f-modal-m2').value) || 0;
+  const fProyectistaId = document.getElementById('f-modal-proyectista').value;
+  const fRenders = document.getElementById('f-modal-renders').checked;
+  const inputDias = document.getElementById('f-modal-dias');
+  const lockIndicator = document.getElementById('modal-lock-indicator');
+
+  if (!fFecha || !fHora) return;
+
+  activeProjectForMod.m2 = fM2;
+  activeProjectForMod.renders = fRenders;
+  activeProjectForMod.fechaIngreso = fFecha;
+  activeProjectForMod.horaIngreso = fHora;
+  
+  const formatterMXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+  activeProjectForMod.monto = formatterMXN.format(fMonto);
+
+  // Sincronizar UI del Expediente
+  document.getElementById('md-monto').textContent = activeProjectForMod.monto;
+
+  // Evaluar ventana operativa
+  const windowCheck = evaluarVentanaOperativa(fFecha, fHora);
+  activeProjectForMod.fechaHoraOperativa = windowCheck.ajustada.toISOString();
+
+  // Determinar magnitud
+  let magnitud = "Micro (Fast-Track)";
+  let isMacro = false;
+  let magnClass = "mag-alert-micro";
+  
+  if (fMonto > 1000000 || fM2 > 500) {
+    magnitud = "Grande (Macro Flow)";
+    isMacro = true;
+    magnClass = "mag-alert-macro";
+  } else if (fMonto >= 200000 || fM2 >= 80) {
+    magnitud = "Medio (Estándar)";
+    magnClass = "mag-alert-medio";
+  }
+
+  activeProjectForMod.magn = isMacro ? "Macro" : (fMonto >= 200000 || fM2 >= 80 ? "Medio" : "Micro");
+  activeProjectForMod.magnClass = magnClass;
+
+  // Sincronizar badge de magnitud
+  const mdMagnitudEl = document.getElementById('md-magnitud');
+  mdMagnitudEl.textContent = activeProjectForMod.magn;
+  mdMagnitudEl.className = `badge ${magnClass.split('-')[2]}`;
+
+  // Rule #2: Blindaje 3D (ZONA MACRO)
+  let finalSlaDias = parseInt(inputDias.value) || 5;
+  if (isMacro && fRenders) {
+    finalSlaDias = 7;
+    inputDias.value = 7;
+    inputDias.readOnly = true;
+    inputDias.classList.add('locked');
+    if (lockIndicator) lockIndicator.style.display = 'inline';
+  } else {
+    inputDias.readOnly = false;
+    inputDias.classList.remove('locked');
+    if (lockIndicator) lockIndicator.style.display = 'none';
+  }
+  activeProjectForMod.diasSla = finalSlaDias;
+
+  // Rule #3 – Modo Vacaciones (MWM)
+  const p = CLINIC_PROYECTISTAS[fProyectistaId];
+  let suplenteBackupName = "";
+  
+  if (fProyectistaId === 'unassigned') {
+    document.getElementById('modal-override-banner').classList.add('hidden');
+    document.getElementById('md-audit-modulacion').innerHTML = `<span class="text-green">Bolsa de Trabajo Activa (Disponible)</span>`;
+    activeProjectForMod.proyectista = "Sin Asignar - Bolsa de Trabajo";
+  } else if (p && p.enVacaciones) {
+    document.getElementById('modal-override-banner').classList.remove('hidden');
+    const suplente = CLINIC_PROYECTISTAS[p.suplenteId];
+    suplenteBackupName = suplente ? suplente.nombre : "Rodrigo Vergara";
+    
+    document.getElementById('modal-override-banner-text').textContent = 
+      `🌴 ALERTA CRUZADA MWM: El diseñador asignado original (${p.nombre}) se encuentra ausente por periodo vacacional. La orden de trabajo fue interceptada por el sistema y redirigida al panel Master para balanceo inmediato con su suplente designado (${suplenteBackupName}). Tu fecha de entrega permanece blindada.`;
+    
+    document.getElementById('md-audit-modulacion').innerHTML = `<span class="text-red">Ausente (Ruta suplente)</span>`;
+    activeProjectForMod.proyectista = `${p.nombre} (Backup: ${suplenteBackupName})`;
+
+    if (activeProjectForMod.lastSelectedDropdownId !== fProyectistaId) {
+      showToast('warning', 'Alerta Cruzada MWM', `Redirigiendo proyecto de ${p.nombre} a ${suplenteBackupName} por vacaciones.`);
+    }
+  } else {
+    document.getElementById('modal-override-banner').classList.add('hidden');
+    document.getElementById('md-audit-modulacion').innerHTML = `<span class="text-green">Disponible (Asignado Directo)</span>`;
+    activeProjectForMod.proyectista = p ? p.nombre : "Karen Tovar";
+  }
+  activeProjectForMod.lastSelectedDropdownId = fProyectistaId;
+  
+  // Sincronizar en pestaña comercial
+  document.getElementById('md-proyectista').textContent = activeProjectForMod.proyectista;
+
+  // Sincronizar en la tabla de negocios general
+  renderTable();
+
+  // Rule #4 – Alertas Contractuales
+  const autoNote = document.getElementById('mag-modal-auto-note');
+  if (autoNote) {
+    if (isMacro && fRenders) {
+      autoNote.className = "mag-auto-note gold-shield";
+      if (document.getElementById('mag-modal-note-icon')) document.getElementById('mag-modal-note-icon').textContent = "🛡️";
+      if (document.getElementById('mag-modal-note-text')) document.getElementById('mag-modal-note-text').innerHTML = 
+        `<strong>Blindaje Calidad 3D:</strong> Se asignaron 7 días hábiles obligatorios e inamovibles para asegurar la excelencia del renderizado por arquitectura de fábrica corporativa Gebesa.`;
+    } else if (windowCheck.ajustado && windowCheck.motivo.includes("17:00")) {
+      autoNote.className = "mag-auto-note red-moon";
+      if (document.getElementById('mag-modal-note-icon')) document.getElementById('mag-modal-note-icon').textContent = "🌙";
+      if (document.getElementById('mag-modal-note-text')) document.getElementById('mag-modal-note-text').innerHTML = 
+        `<strong>Corte Horario (Línea de Sombra):</strong> Debido al ingreso posterior a las 17:00 hrs, el conteo arranca oficialmente el próximo día hábil a las 08:30 AM sin computar horas muertas nocturnas.`;
+    } else {
+      autoNote.className = "mag-auto-note hidden";
+    }
+  }
+
+  // --- SLA CALCULATION TIMELINE GENERATION ---
+  let timelineItems = [];
+  let trackingDate = new Date(windowCheck.ajustada);
+  
+  function isBusinessDay(date) {
+    const d = date.getDay();
+    if (d === 0 || d === 6) return false;
+    const yStr = date.getFullYear();
+    const mStr = String(date.getMonth() + 1).padStart(2, '0');
+    const dStr = String(date.getDate()).padStart(2, '0');
+    const compStr = `${yStr}-${mStr}-${dStr}`;
+    return !HOLIDAYS.includes(compStr);
+  }
+
+  // Hito 0: Carga
+  timelineItems.push({
+    date: new Date(trackingDate),
+    isStart: true,
+    dayIndex: 0,
+    label: "Ingreso & Recepción de Carpeta",
+    description: `Alineación Operativa: ${trackingDate.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'})} hrs`
+  });
+
+  let daysAdded = 0;
+  while (daysAdded < finalSlaDias) {
+    trackingDate.setDate(trackingDate.getDate() + 1);
+    
+    const dayName = shortDateStyle.format(trackingDate);
+    const dayOfWeek = trackingDate.getDay();
+    const yStr = trackingDate.getFullYear();
+    const mStr = String(trackingDate.getMonth() + 1).padStart(2, '0');
+    const dStr = String(trackingDate.getDate()).padStart(2, '0');
+    const compStr = `${yStr}-${mStr}-${dStr}`;
+    
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      timelineItems.push({
+        date: new Date(trackingDate),
+        isWeekend: true,
+        label: `Omitido: Fin de Semana`,
+        description: `${dayName} - Sin procesamiento comercial`
+      });
+    } else if (HOLIDAYS.includes(compStr)) {
+      timelineItems.push({
+        date: new Date(trackingDate),
+        isHoliday: true,
+        label: `Omitido: Día Inhábil Oficial`,
+        description: `Conmemorativo Ley de Trabajo`
+      });
+    } else {
+      daysAdded++;
+      timelineItems.push({
+        date: new Date(trackingDate),
+        isWork: true,
+        dayIndex: daysAdded,
+        label: `Procesamiento Técnico: Día #${daysAdded}`,
+        description: `Ingeniería de Layout, Estructuras y Acabados`
+      });
+    }
+  }
+
+  const finalMilestone = timelineItems[timelineItems.length - 1];
+  finalMilestone.isMilestone = true;
+  finalMilestone.label = `🏆 Entrega Técnica de Proyecto`;
+  finalMilestone.description = `Convenio Digital Sólido antes de las 18:30 hrs`;
+
+  // UI Updates for the SLA Delivery Panel
+  const finalDelDateValue = finalMilestone.date;
+  const formattedFinalDateStr = textDateStyle.format(finalDelDateValue);
+  document.getElementById('md-sla-entrega-fecha').textContent = formattedFinalDateStr;
+
+  // Hoja de auditoría
+  const fmtTime = {hour:'2-digit', minute:'2-digit'};
+  document.getElementById('md-audit-original').textContent = 
+    `${windowCheck.original.toLocaleDateString('es-MX')} ${windowCheck.original.toLocaleTimeString('es-MX', fmtTime)} hrs`;
+  
+  document.getElementById('md-audit-ajustada').textContent = 
+    `${windowCheck.ajustada.toLocaleDateString('es-MX')} ${windowCheck.ajustada.toLocaleTimeString('es-MX', fmtTime)} hrs`;
+  
+  document.getElementById('md-audit-proyectista').textContent = activeProjectForMod.proyectista;
+  
+  document.getElementById('md-audit-magnitud').textContent = magnitud;
+  document.getElementById('md-audit-sla-plazo').textContent = `${finalSlaDias} Días Hábiles (${isMacro && fRenders ? 'BLINDADO 3D' : 'ORDINARIO'})`;
+
+  // Draw timeline steps
+  const mTimelineContainer = document.getElementById('md-timeline-container');
+  mTimelineContainer.innerHTML = timelineItems.map((item, i) => {
+    let typeClass = "";
+    let icon = "⚪";
+    if (item.isStart) {
+      typeClass = "active";
+      icon = "📩";
+    } else if (item.isMilestone) {
+      typeClass = "milestone";
+      icon = "🏆";
+    } else if (item.isWeekend) {
+      typeClass = "weekend";
+      icon = "💤";
+    } else if (item.isHoliday) {
+      typeClass = "holiday";
+      icon = "🎗️";
+    } else if (item.isWork) {
+      typeClass = "active";
+      icon = "💼";
+    }
+
+    return `
+      <div class="timeline-step ${typeClass}">
+        <div class="timeline-bullet">${icon}</div>
+        <div class="timeline-content">
+          <div class="timeline-day-label">
+            <span>${item.label}</span>
+            <span style="font-size:11px; color:var(--text-secondary); font-weight:400">${item.date.toLocaleDateString('es-MX', {day:'numeric', month:'short'})}</span>
+          </div>
+          <div class="timeline-day-desc">${item.description}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
 
 function openProjectDetails(pId) {
   const proj = vProjects.find(p => p.id === pId);
@@ -1860,29 +3439,120 @@ function openProjectDetails(pId) {
   document.getElementById('md-solicitud').textContent = solText;
 
   // Render Original Documents list
-  const docsList = document.getElementById('md-documentos-list');
-  docsList.innerHTML = '';
+  const docsListAssets = document.getElementById('md-documentos-list');
+  const docsListInfo = document.getElementById('md-documentos-list-info');
+  docsListAssets.innerHTML = '';
+  docsListInfo.innerHTML = '';
+
   if (proj.documentosOriginales && proj.documentosOriginales.length > 0) {
     proj.documentosOriginales.forEach(doc => {
-      docsList.innerHTML += `
-        <div class="form-file-item">
+      const docMarkup = `
+        <div class="form-file-item file-clickable" style="cursor:pointer;" onclick="previewFile('${doc.name}', '${doc.ext}')">
           <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:2px 4px; border-radius:3px;">${doc.ext}</span>
-            <span class="file-name" style="font-size:13px; max-width:280px;">${doc.name}</span>
+            <span class="file-name" style="font-size:12px; max-width:260px;">${doc.name}</span>
           </div>
-          <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="showToast('success', 'Descarga Registrada', 'Protocolo de descarga para ${doc.name}')" title="Descargar original">⬇</button>
+          <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Protocolo de descarga para ${doc.name}')" title="Descargar original">⬇</button>
         </div>
       `;
+      docsListAssets.innerHTML += docMarkup;
+      docsListInfo.innerHTML += docMarkup;
     });
   } else {
-    docsList.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px 0;">No se asociaron planos o levantamientos originales.</div>`;
+    const emptyMsg = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px 0;">No se asociaron planos o levantamientos originales.</div>`;
+    docsListAssets.innerHTML = emptyMsg;
+    docsListInfo.innerHTML = emptyMsg;
   }
 
   // Render Revision History
   renderModificationsHistory();
+  renderEngineeringDeliveries();
+
+  // Inicialización del Contrato Digital de SLA
+  const montoNum = parseFloat(proj.monto.replace(/[^0-9.]/g, '')) || 0;
+  
+  document.getElementById('f-modal-id-display').textContent = proj.id;
+  document.getElementById('f-modal-cliente').value = proj.cliente;
+  document.getElementById('f-modal-monto').value = Math.round(montoNum);
+  
+  // Derivar superficie m2 si no existe
+  let initialM2 = proj.m2 || (proj.magn === 'Macro' ? 560 : proj.magn === 'Medio' ? 120 : 40);
+  document.getElementById('f-modal-m2').value = initialM2;
+  proj.m2 = initialM2;
+  
+  // Derivar proyectistaId
+  let pIdSelected = 'unassigned';
+  if (proj.proyectista.includes('Oscar')) pIdSelected = 'oscar';
+  else if (proj.proyectista.includes('Rodrigo')) pIdSelected = 'rodrigo';
+  else if (proj.proyectista.includes('Susana')) pIdSelected = 'susana';
+  else if (proj.proyectista.includes('Karen')) pIdSelected = 'karen';
+  else pIdSelected = 'unassigned';
+  
+  // Guardar proyectistaId original por si es útil
+  const defaultSelectElement = document.getElementById('f-modal-proyectista');
+  if (defaultSelectElement) {
+    defaultSelectElement.value = pIdSelected;
+  }
+  
+  // Renders checkbox
+  let showRenders = proj.renders === undefined ? (proj.cliente.includes('Sigma') ? true : false) : proj.renders;
+  document.getElementById('f-modal-renders').checked = showRenders;
+  proj.renders = showRenders;
+  
+  // Fecha y hora del sistema para el envío
+  const ahora = new Date();
+  const yyyy = ahora.getFullYear();
+  const mm = String(ahora.getMonth() + 1).padStart(2, '0');
+  const dd = String(ahora.getDate()).padStart(2, '0');
+  const systemDate = `${yyyy}-${mm}-${dd}`;
+  const systemTime = String(ahora.getHours()).padStart(2, '0') + ':' + String(ahora.getMinutes()).padStart(2, '0');
+  
+  document.getElementById('f-modal-fecha').value = proj.fechaIngreso || systemDate;
+  document.getElementById('f-modal-hora').value = proj.horaIngreso || systemTime;
+  
+  // Días de SLA habituales
+  document.getElementById('f-modal-dias').value = proj.diasSla || 5;
+
+  // Inicialización de campos de reunión
+  document.getElementById('f-meeting-date').value = proj.meetingDate || '';
+  document.getElementById('f-meeting-time').value = proj.meetingTime || '';
+  document.getElementById('f-meeting-channel').value = proj.meetingChannel || 'Virtual (Teams / Meet)';
+  document.getElementById('f-meeting-status').value = proj.meetingStatus || 'pendiente';
+  updateMeetingStatusBadge(proj.meetingStatus || 'pendiente');
+
+  // Resetear siempre a la pestaña de Ficha Comercial al abrir el expediente
+  switchModalTab('info');
 
   // Show Modal
   document.getElementById('project-detail-modal').classList.add('active');
+}
+
+function updateMeetingStatusBadge(status) {
+  const badge = document.getElementById('md-meeting-status-badge');
+  if (!badge) return;
+  if (status === 'confirmada') {
+    badge.textContent = '🤝 Confirmada';
+    badge.style.color = 'var(--gold)';
+    badge.style.borderColor = 'rgba(201,169,110,0.5)';
+  } else if (status === 'completada') {
+    badge.textContent = '✅ Completada';
+    badge.style.color = 'var(--green)';
+    badge.style.borderColor = 'rgba(63,185,80,0.5)';
+  } else {
+    badge.textContent = '⏳ Pendiente';
+    badge.style.color = 'var(--text-secondary)';
+    badge.style.borderColor = 'rgba(255,255,255,0.1)';
+  }
+}
+
+function saveMeetingFromModal() {
+  if (!activeProjectForMod) return;
+  activeProjectForMod.meetingDate = document.getElementById('f-meeting-date').value;
+  activeProjectForMod.meetingTime = document.getElementById('f-meeting-time').value;
+  activeProjectForMod.meetingChannel = document.getElementById('f-meeting-channel').value;
+  activeProjectForMod.meetingStatus = document.getElementById('f-meeting-status').value;
+  updateMeetingStatusBadge(activeProjectForMod.meetingStatus);
+  saveProjectsToStorage();
 }
 
 function renderModificationsHistory() {
@@ -1913,6 +3583,179 @@ function renderModificationsHistory() {
     });
   } else {
     historyContainer.innerHTML = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:24px 0; border: 1px dashed var(--border); border-radius: var(--radius);">No se han solicitado correcciones técnicas para este proyecto.</div>`;
+  }
+}
+
+function renderEngineeringDeliveries() {
+  const techDocs = document.getElementById('md-assets-tech-docs');
+  const galleryDocs = document.getElementById('md-assets-gallery');
+  const d3Docs = document.getElementById('md-assets-3d');
+  const xmlDocs = document.getElementById('md-assets-xml');
+  const modContainer = document.getElementById('md-assets-modificaciones-container');
+  const modList = document.getElementById('md-assets-modificaciones-list');
+
+  // Reset preview pane
+  const previewFilenameEl = document.getElementById('preview-filename');
+  const previewContentEl = document.getElementById('file-preview-content');
+  const previewBtnFullscreen = document.getElementById('btn-fullscreen-preview');
+  if (previewFilenameEl) previewFilenameEl.textContent = '--';
+  if (previewContentEl) previewContentEl.innerHTML = '<span style="color: var(--text-muted); font-size: 13px;">Seleccione un archivo de la lista</span>';
+  if (previewBtnFullscreen) previewBtnFullscreen.style.display = 'none';
+
+  // Clear previous state
+  const noMeta = `<div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>`;
+  techDocs.innerHTML = noMeta;
+  galleryDocs.innerHTML = noMeta;
+  d3Docs.innerHTML = noMeta;
+  xmlDocs.innerHTML = noMeta;
+  modContainer.style.display = 'none';
+  modList.innerHTML = '';
+
+  if (!activeProjectForMod) return;
+
+  // Mocked logic for the specific files that engineering might have delivered
+  // (In a real app, this data would come from the CRM / database)
+  const isSigma = activeProjectForMod.cliente.toLowerCase().includes('sigma');
+  const isDesarrollo = activeProjectForMod.cliente.toLowerCase().includes('desarrollo');
+
+  // Let's create some dummy files for 'original' delivery
+  if (isSigma || isDesarrollo) {
+    techDocs.innerHTML = `
+      <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('planos_arquitectonicos_v1.pdf', 'PDF')">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">PDF</span>
+          <span class="file-name" style="font-size:11px; max-width:140px;">planos_arquitectonicos_v1.pdf</span>
+        </div>
+        <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Archivo descargado')" title="Descargar">⬇</button>
+      </div>
+    `;
+    xmlDocs.innerHTML = `
+      <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('metadata_proyecto.xml', 'XML')">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-family:var(--font-mono); font-size:10px; color:var(--gold); font-weight:600; border:1px solid rgba(201,169,110,0.2); padding:1px 3px; border-radius:3px;">XML</span>
+          <span class="file-name" style="font-size:11px; max-width:140px;">metadata_proyecto.xml</span>
+        </div>
+        <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Archivo descargado')" title="Descargar">⬇</button>
+      </div>
+    `;
+  }
+
+  if (activeProjectForMod.renders || isSigma) {
+    galleryDocs.innerHTML = `
+      <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('render_vista_1.jpg', 'JPG')">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">JPG</span>
+          <span class="file-name" style="font-size:11px; max-width:140px;">render_vista_1.jpg</span>
+        </div>
+        <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Archivo descargado')" title="Descargar">⬇</button>
+      </div>
+    `;
+    d3Docs.innerHTML = `
+      <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('modelo_oficinas_magna.glb', 'GLB')">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">GLB</span>
+          <span class="file-name" style="font-size:11px; max-width:140px;">modelo_oficinas_magna.glb</span>
+        </div>
+        <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Archivo descargado')" title="Descargar">⬇</button>
+      </div>
+    `;
+  }
+
+  // Handle Modifications (Iterative Deliverables)
+  if (activeProjectForMod.modificaciones && activeProjectForMod.modificaciones.length > 0) {
+    modContainer.style.display = 'block';
+
+    activeProjectForMod.modificaciones.forEach((mod, idx) => {
+      // Mock some returned files for each modification
+      let rNum = idx + 1;
+      
+      const fileJpg = (activeProjectForMod.renders || isSigma) ? 
+        '<div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile(\'render_vista_1_R' + rNum + '.jpg\', \'JPG\')">\n' +
+        '  <div style="display:flex; align-items:center; gap:6px;">\n' +
+        '    <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">JPG</span>\n' +
+        '    <span class="file-name" style="font-size:11px; max-width:140px;">render_vista_1_R' + rNum + '.jpg</span>\n' +
+        '  </div>\n' +
+        '  <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast(\'success\', \'Descarga Registrada\', \'Archivo descargado\')" title="Descargar">⬇</button>\n' +
+        '</div>' : '<div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>';
+
+      const fileGlb = (activeProjectForMod.renders || isSigma) ? 
+        '<div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile(\'modelo_R' + rNum + '.glb\', \'GLB\')">\n' +
+        ' <div style="display:flex; align-items:center; gap:6px;">\n' +
+        '   <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">GLB</span>\n' +
+        '   <span class="file-name" style="font-size:11px; max-width:140px;">modelo_R' + rNum + '.glb</span>\n' +
+        ' </div>\n' +
+        ' <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast(\'success\', \'Descarga Registrada\', \'Archivo descargado\')" title="Descargar">⬇</button>\n' +
+        '</div>' : '<div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>';
+
+      const revisionMarkup = `
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <div style="font-size: 13px; font-weight: 600; color:var(--text-primary);">
+                <span class="badge" style="background: rgba(88,166,255,0.1); color: var(--blue);">R${rNum}</span> Iteración ${rNum}
+              </div>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <button class="btn-solid" style="padding: 4px 8px; font-size: 10px; display:flex; align-items:center; gap:6px; background: rgba(201,169,110,0.1); color:var(--gold); border:1px solid rgba(201,169,110,0.2);" onclick="showToast('info', 'Generando Presentación', 'Iniciando plugin de presentación para Iteración R${rNum}...')">
+                  🎞️ Crear Presentación
+                </button>
+                <button class="btn-solid" style="padding: 4px 8px; font-size: 10px; display:flex; align-items:center; gap:6px; background: rgba(88,166,255,0.1); color:var(--blue); border:1px solid rgba(88,166,255,0.2);" onclick="showToast('success', 'Descargando ZIP', 'Preparando archivos de la Iteración R${rNum}...')">
+                  📦 Descargar ZIP
+                </button>
+              </div>
+            </div>
+            <div style="font-size:11px; color:var(--text-muted);">Entregado: ${mod.fecha} (Simulado)</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+            <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                  <span>📐</span> Planos y Documentos
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                   <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('planos_modificados_R${rNum}.pdf', 'PDF')">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">PDF</span>
+                      <span class="file-name" style="font-size:11px; max-width:140px;">planos_modificados_R${rNum}.pdf</span>
+                    </div>
+                    <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Archivo descargado')" title="Descargar">⬇</button>
+                  </div>
+                </div>
+            </div>
+            <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                  <span>🖼️</span> Galería Renders & VR
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                  ${fileJpg}
+                </div>
+            </div>
+            <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                  <span>🧊</span> Modelos 3D (.glb)
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                   ${fileGlb}
+                </div>
+            </div>
+            <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                  <span>📄</span> Archivos XML y Datos
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                   <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('metadata_R${rNum}.xml', 'XML')">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                      <span style="font-family:var(--font-mono); font-size:10px; color:var(--gold); font-weight:600; border:1px solid rgba(201,169,110,0.2); padding:1px 3px; border-radius:3px;">XML</span>
+                      <span class="file-name" style="font-size:11px; max-width:140px;">metadata_R${rNum}.xml</span>
+                    </div>
+                    <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Archivo descargado')" title="Descargar">⬇</button>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      modList.innerHTML += revisionMarkup;
+    });
   }
 }
 
@@ -2010,29 +3853,254 @@ function submitModificationRequest() {
   }, 1200);
 }
 
-/* --- MAGNITUD ALGORITMO --- */
-function calcMag() {
-  const m = parseFloat(document.getElementById('v-monto').value) || 0;
-  const m2 = parseFloat(document.getElementById('v-m2').value) || 0;
-  const box = document.getElementById('mag-box');
-  const title = document.getElementById('mag-title');
-  const desc = document.getElementById('mag-desc');
+/* --- WIZARD NAVIGATION HELPERS & FIELD MAPPINGS --- */
+let currentWizardStep = 1;
 
-  box.className = 'magnitude-box'; // reset
+function showWizardStep(stepNum) {
+  currentWizardStep = stepNum;
   
-  if(m > 1000000 || m2 > 500) {
-    box.classList.add('mag-alert-macro');
-    title.textContent = 'Flujo MACRO (Validación Especial)';
-    desc.textContent = 'Volumen crítico. Requiere autorización de Dirección y asignación de Sr. Proyectista.';
-  } else if(m >= 200000 || m2 >= 80) {
-    box.classList.add('mag-alert-medio');
-    title.textContent = 'Flujo MEDIO (Estándar Técnico)';
-    desc.textContent = 'Magnitud ideal. Pasa directo a asignación de pool de proyectistas.';
-  } else {
-    box.classList.add('mag-alert-micro');
-    title.textContent = 'Flujo MICRO (Fast-Track)';
-    desc.textContent = 'Monto y metraje dentro de los parámetros para asignación directa exprés (Entrega esperada < 48hrs).';
+  // Hide all step cards
+  document.getElementById('step-card-1').style.display = 'none';
+  document.getElementById('step-card-2').style.display = 'none';
+  document.getElementById('step-card-3').style.display = 'none';
+  
+  // Show active step card
+  document.getElementById(`step-card-${stepNum}`).style.display = 'block';
+
+  // Update progress nodes
+  for (let i = 1; i <= 3; i++) {
+    const node = document.getElementById(`node-${i}`);
+    if (node) {
+      node.classList.remove('active', 'completed');
+      if (i === stepNum) {
+        node.classList.add('active');
+      } else if (i < stepNum) {
+        node.classList.add('completed');
+      }
+    }
   }
+
+  // Handle footer buttons visibility
+  const prevBtn = document.getElementById('btn-wizard-prev');
+  const cancelBtn = document.getElementById('btn-wizard-cancel');
+  const nextBtn = document.getElementById('btn-wizard-next');
+  const submitBtn = document.getElementById('btn-wizard-submit');
+
+  if (stepNum === 1) {
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (cancelBtn) cancelBtn.style.display = 'block';
+    if (nextBtn) {
+      nextBtn.style.display = 'block';
+      nextBtn.textContent = 'Siguiente ➡️';
+    }
+    if (submitBtn) submitBtn.style.display = 'none';
+  } else if (stepNum === 2) {
+    if (prevBtn) prevBtn.style.display = 'block';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    if (nextBtn) {
+      nextBtn.style.display = 'block';
+      nextBtn.textContent = 'Siguiente ➡️';
+    }
+    if (submitBtn) submitBtn.style.display = 'none';
+  } else if (stepNum === 3) {
+    if (prevBtn) prevBtn.style.display = 'block';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
+    if (submitBtn) submitBtn.style.display = 'block';
+  }
+
+  // Auto recalculate calibration on step 3
+  if (stepNum === 3) {
+    recalcularCalibracion();
+    populateSummaryInfo();
+  }
+}
+
+function nextWizardStep() {
+  if (currentWizardStep === 1) {
+    const razonVal = document.getElementById('f-razon').value.trim();
+    if (!razonVal) {
+      showToast('error', 'Campo Requerido', 'Razón Social es obligatoria para continuar.');
+      return;
+    }
+    showWizardStep(2);
+  } else if (currentWizardStep === 2) {
+    showWizardStep(3);
+  }
+}
+
+function prevWizardStep() {
+  if (currentWizardStep > 1) {
+    showWizardStep(currentWizardStep - 1);
+  }
+}
+
+function mapWizardFields() {
+  // Backwards compatibility layer
+}
+
+function handlePremiumCheckboxChange() {
+  recalcularCalibracion();
+}
+
+function verificarAusencia() {
+  const pId = document.getElementById('f-proyectista').value;
+  const cintillo = document.getElementById('vacaciones-cintillo');
+  
+  if (pId === 'oscar') {
+    if (cintillo) {
+      cintillo.classList.add('show');
+    }
+    showToast('info', 'Notificación MWM', 'Oscar Macías se encuentra en periodo vacacional. Re-ruteo provisional asignado automáticamente por MWM.');
+  } else {
+    if (cintillo) {
+      cintillo.classList.remove('show');
+    }
+  }
+}
+
+/* --- MAGNITUD ALGORITMO (RECALIBRAR IMPRIMIR TIEMPOS Y ALERTAS COHERENTES) --- */
+function recalcularCalibracion() {
+  const m2 = parseFloat(document.getElementById('f-m2').value) || 0;
+  const mxn = parseFloat(document.getElementById('f-mxn').value) || 0;
+  const fStr = document.getElementById('f-fecha').value;
+  const hStr = document.getElementById('f-hora').value;
+  const solicitaRender = document.getElementById('f-render').checked;
+  
+  if (!fStr || !hStr) return;
+
+  let mag = 'chico';
+  let dias = 1;
+
+  if (m2 > 500 || mxn > 1000000) {
+    mag = 'grande';
+    dias = 4;
+  } else if (m2 > 80 || mxn > 200000) {
+    mag = 'mediano';
+    dias = 2;
+  }
+
+  const inputDias = document.getElementById('f-dias');
+  const lockNote = document.getElementById('lock-note');
+
+  // Blindaje 3D discreto
+  if (mag === 'grande' && solicitaRender) {
+    dias = 7;
+    inputDias.value = 7;
+    inputDias.readOnly = true;
+    inputDias.classList.add('locked');
+    if (lockNote) {
+      lockNote.style.display = 'flex';
+      lockNote.innerHTML = '🛡️ Plazo congelado por estándar de infraestructura 3D Gebesa.';
+    }
+  } else {
+    if (inputDias) {
+      inputDias.readOnly = false;
+      inputDias.classList.remove('locked');
+    }
+    if (lockNote) {
+      lockNote.style.display = 'none';
+    }
+    
+    // Modify days of delivery manually or suggest based on category
+    let suggestedDays = 3;
+    if (mag === 'grande') {
+      suggestedDays = 5;
+    } else if (mag === 'mediano') {
+      suggestedDays = 4;
+    }
+    if (solicitaRender) {
+      suggestedDays += 3;
+    }
+    
+    if (inputDias && (!inputDias.value || inputDias.value === '1' || inputDias.value === '2' || inputDias.value === '3' || inputDias.value === '4' || inputDias.value === '7' || inputDias.value === '5')) {
+      inputDias.value = suggestedDays;
+    }
+    dias = inputDias ? (parseInt(inputDias.value) || suggestedDays) : suggestedDays;
+  }
+
+  // Calculate delivery date based on tracking starting from the adjusted start date
+  const aud = evaluarVentanaOperativa(fStr, hStr);
+  const totalDays = dias;
+  
+  let trackingDate = new Date(aud.ajustada);
+  
+  function isBusinessDay(date) {
+    const d = date.getDay();
+    if (d === 0 || d === 6) return false;
+    const yStr = date.getFullYear();
+    const mStr = String(date.getMonth() + 1).padStart(2, '0');
+    const dStr = String(date.getDate()).padStart(2, '0');
+    const compStr = `${yStr}-${mStr}-${dStr}`;
+    return !HOLIDAYS.includes(compStr);
+  }
+
+  let daysAdded = 0;
+  while (daysAdded < totalDays) {
+    trackingDate.setDate(trackingDate.getDate() + 1);
+    if (isBusinessDay(trackingDate)) {
+      daysAdded++;
+    }
+  }
+
+  // Update compatibility shadow fields for original submitForm to read:
+  const vMontoEl = document.getElementById('v-monto');
+  if (vMontoEl) vMontoEl.value = mxn;
+  const vM2El = document.getElementById('v-m2');
+  if (vM2El) vM2El.value = m2;
+  const vCompromisoEl = document.getElementById('v-compromiso');
+  if (vCompromisoEl) vCompromisoEl.value = fStr;
+  const fDiasEntregaEl = document.getElementById('f-dias-entrega');
+  if (fDiasEntregaEl) fDiasEntregaEl.value = totalDays;
+  const vEntregableRendersEl = document.getElementById('v-entregable-renders');
+  if (vEntregableRendersEl) vEntregableRendersEl.checked = solicitaRender;
+  const vEntregableRecorridosEl = document.getElementById('v-entregable-recorrido');
+  if (vEntregableRecorridosEl) vEntregableRecorridosEl.checked = solicitaRender;
+
+  // Render option results
+  const resultOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+  const formattedDate = trackingDate.toLocaleDateString('es-MX', resultOptions);
+
+  const finalOutputField = document.getElementById('f-entrega-final');
+  if (finalOutputField) {
+    finalOutputField.value = formattedDate.toUpperCase();
+  }
+  
+  const optionsShort = { weekday: 'short', day: 'numeric', month: 'short' };
+  const lblArranque = document.getElementById('lbl-arranque-real');
+  if (lblArranque) {
+    lblArranque.textContent = aud.ajustada.toLocaleDateString('es-MX', optionsShort) + ' a las 08:30 AM';
+    if (aud.ajustado) {
+      lblArranque.style.color = '#ff948f';
+    } else {
+      lblArranque.style.color = 'var(--teal)';
+    }
+  }
+
+  const lblComplexity = document.getElementById('lbl-complejidad');
+  if (lblComplexity) {
+    lblComplexity.textContent = (mag === 'grande' ? 'Grande (Macro)' : mag === 'mediano' ? 'Mediana (Medio)' : 'Chica (Micro)') + ` (${totalDays} días hábiles)`;
+  }
+
+  // Insignias discretas inline
+  const badgeContainer = document.getElementById('calibracion-badge-container') || document.getElementById('calibracion-badge-container-step3');
+  if (badgeContainer) {
+    if (mag === 'grande' && solicitaRender) {
+      badgeContainer.innerHTML = '<div class="inline-badge teal" style="width:100%; justify-content: center;">✨ Blindaje 3D activado: Calidad estética resguardada por la planta</div>';
+    } else if (aud.ajustado) {
+      badgeContainer.innerHTML = '<div class="inline-badge red" style="width:100%; justify-content: center;">🌙 Inicio operativo ajustado: Siguiente día hábil 08:30 AM por horario de corte</div>';
+    } else {
+      badgeContainer.innerHTML = '<div class="inline-badge teal" style="width:100%; justify-content: center;">⚡ Procesamiento en tiempo ordinario</div>';
+    }
+  }
+}
+
+// Redirect old hooks
+function calcMag() {
+  recalcularCalibracion();
+}
+function calcApproxDeliveryDate() {
+  recalcularCalibracion();
 }
 
 /* --- CANVAS VECTORIAL INTERACTIVO --- */
@@ -2254,10 +4322,364 @@ function autoSave() {
   if(Math.random() > 0.8) console.log('Autosaving draft...');
 }
 
+// Populates Paso 3 dynamically with a beautiful summary of parameters and files
+function populateSummaryInfo() {
+  const razonName = document.getElementById('f-razon') ? document.getElementById('f-razon').value.trim() : '';
+  const customerName = razonName || 'Cliente No Especficado';
+  const prjId = document.getElementById('f-tel') ? document.getElementById('f-tel').value.trim() : '';
+  const prjIdText = prjId || 'No Aplica (Cliente Nuevo)';
+  const hunter = document.getElementById('f-hunter') ? document.getElementById('f-hunter').value.trim() : 'HNT-TEMP';
+  
+  const unitVal = document.getElementById('f-unidad') ? document.getElementById('f-unidad').value : 'laguna';
+  const unitLabel = unitVal === 'laguna' ? 'Laguna (Torreón)' : unitVal === 'mty' ? 'Monterrey' : unitVal === 'qro' ? 'Querétaro' : 'CDMX';
+  
+  const emailVendedor = document.getElementById('f-email') ? document.getElementById('f-email').value.trim() : '';
+  const emailVendedorText = emailVendedor || 'Vendedor No Especificado';
+  
+  const m2Val = document.getElementById('f-m2') ? document.getElementById('f-m2').value : '0';
+  const mxnVal = document.getElementById('f-mxn') ? document.getElementById('f-mxn').value : '0';
+  const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
+  const mxnFormatted = formatter.format(parseFloat(mxnVal) || 0);
+
+  const condVal = document.getElementById('v-condicion') ? document.getElementById('v-condicion').value : 'gris';
+  const condLabel = condVal === 'gris' ? 'Obra Gris (Cero)' : condVal === 'activo' ? 'Remodelación con personal activo' : 'Adaptado pero vacío';
+  
+  const dSillas = document.getElementById('f-densidad') ? document.getElementById('f-densidad').value : '';
+  const sillasText = dSillas ? dSillas + ' puestos' : 'Sin definir';
+  
+  const matrizData = document.getElementById('v-matriz-data-compilada') ? document.getElementById('v-matriz-data-compilada').value : '';
+  const matrizHtml = matrizData ? `
+    <div style="margin-top: 14px; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 6px;">
+      <div style="font-size: 11px; font-weight: 600; color: var(--gold); font-family: var(--font-mono); margin-bottom: 8px; letter-spacing: 0.5px;">DESPIECE TÉCNICO (RELACIONAL):</div>
+      <div style="font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); white-space: pre-wrap; line-height: 1.4;">${matrizData}</div>
+    </div>
+  ` : '';
+
+  const notasText = document.getElementById('v-restricciones') ? document.getElementById('v-restricciones').value.trim() : '';
+  const notasFinal = notasText || 'Sin observaciones o notas especiales registradas.';
+
+  // Gather Checked deliverables
+  const deliverables = [];
+  deliverables.push('📐 Planos Técnicos (2D)');
+  if (document.getElementById('f-render') && document.getElementById('f-render').checked) {
+    deliverables.push('✨ Renders de Alta Gama (3D)');
+  }
+  if (document.getElementById('v-entregable-recorrido') && document.getElementById('v-entregable-recorrido').checked) {
+    deliverables.push('🎥 Recorrido Virtual 3D');
+  }
+  if (document.getElementById('v-entregable-especs') && document.getElementById('v-entregable-especs').checked) {
+    deliverables.push('📋 Despiece Técnico');
+  }
+
+  // Inject Specs Summary
+  const specsContainer = document.getElementById('wizard-summary-specs-block');
+  if (specsContainer) {
+    specsContainer.innerHTML = `
+      <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">Cliente / Razón Social:</span>
+          <span style="font-weight: 600; color: #fff;">${customerName}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">ID Proy. Recurrente:</span>
+          <span style="font-family: var(--font-mono); font-size:11px; color: var(--amber);">${prjIdText}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">Hunter ID Generado:</span>
+          <span style="font-family: var(--font-mono); font-size:11px; color: var(--teal);">${hunter}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">Unidad Nacional:</span>
+          <span style="color: #fff;">${unitLabel}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">Email del Vendedor:</span>
+          <span style="color: #fff;">${emailVendedorText}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">Área de Levantamiento:</span>
+          <span style="color: #fff;">${m2Val} m²</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">Monto de Inversión (Est):</span>
+          <span style="color: #fff; font-family: var(--font-mono);">${mxnFormatted}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">Estado del Espacio:</span>
+          <span style="color: #fff; font-size: 12px;">${condLabel}</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-bottom: 1px solid rgba(255,255,255,0.02); padding-bottom: 4px;">
+          <span style="font-weight: 500; color: var(--text-muted);">Densidad de Usuarios:</span>
+          <span style="color: #fff;">${sillasText}</span>
+        </div>
+      </div>
+      <div style="margin-top: 14px; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-light); border-radius: 6px;">
+        <div style="font-size: 11px; font-weight: 600; color: var(--gold); font-family: var(--font-mono); margin-bottom: 8px; letter-spacing: 0.5px;">ENTREGABLES SOLICITADOS:</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+          ${deliverables.map(d => `<span style="font-size: 10px; background: rgba(212,175,55,0.06); border: 1px solid rgba(212,175,55,0.15); color: var(--gold); padding: 3px 8px; border-radius: 4px; font-family: var(--font-mono); font-weight: 500;">${d}</span>`).join('')}
+        </div>
+      </div>
+      ${matrizHtml}
+      <div style="margin-top: 12px; font-size: 13px; color: var(--text-secondary); border-left: 2px solid var(--gold); padding: 12px; background: rgba(255,255,255,0.01); border-radius: 0 4px 4px 0;">
+        <strong style="display:block; margin-bottom:6px; color:var(--text-primary);">Notas o Solicitud de Proyecto:</strong>
+        <div style="line-height:1.4;">${notasFinal}</div>
+      </div>
+    `;
+  }
+
+  // Inject Assets Summary
+  const assetsContainer = document.getElementById('wizard-summary-assets-block');
+  if (assetsContainer) {
+    let assetsHtml = '';
+    let totalFiles = 0;
+    STATE.vault.forEach(folder => {
+      folder.files.forEach(f => {
+        totalFiles++;
+        assetsHtml += `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-light); border-radius: 6px; margin-bottom: 6px;">
+            <div style="display: flex; align-items: center; gap: 8px; min-width: 0;">
+              <span style="font-family: var(--font-mono); font-size: 9px; background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25); color: var(--gold); padding: 2px 4px; border-radius: 3px; font-weight: 600;">${f.ext}</span>
+              <span style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-secondary);">${f.name}</span>
+            </div>
+          </div>
+        `;
+      });
+    });
+
+    if (totalFiles === 0) {
+      assetsHtml = `
+        <div style="text-align: center; padding: 20px 12px; border: 1px dashed var(--border-light); border-radius: 8px; color: var(--text-muted); background: rgba(255,255,255,0.005);">
+          <div style="font-size: 20px; margin-bottom: 6px;">📂</div>
+          <div style="font-size: 12px; font-weight: 500; color: var(--text-secondary);">Bóveda Digital Vacía</div>
+          <p style="font-size: 11px; margin-top: 4px; line-height: 1.4;">No se han cargado archivos. Se utilizarán el boceto y los activos por defecto establecidos en la bolsa.</p>
+        </div>
+      `;
+    }
+
+    assetsContainer.innerHTML = assetsHtml;
+  }
+
+  // Set Centered Delivery Date Display Text from hidden field
+  const deliveryDisplay = document.getElementById('summary-fecha-entrega-display');
+  const realDeliveryField = document.getElementById('f-entrega-final');
+  if (deliveryDisplay && realDeliveryField) {
+    deliveryDisplay.textContent = realDeliveryField.value || 'POR DETERMINAR';
+  }
+}
+
+window.previewFile = function(filename, ext) {
+  document.getElementById('preview-filename').textContent = filename;
+  const previewEl = document.getElementById('file-preview-content');
+  ext = ext.toLowerCase();
+
+  // Highlight active
+  document.querySelectorAll('.file-clickable').forEach(el => el.style.background = '');
+  if (event && event.currentTarget) {
+    event.currentTarget.style.background = 'var(--surface-3)';
+  }
+
+  if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
+    previewEl.innerHTML = `<img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800" style="width:100%; height:100%; object-fit:cover; background:#000;" alt="Preview">`;
+  } else if (ext === 'pdf') {
+    // Note: a real app would use the actual PDF source url. We use a placeholder image representation in demo since actual PDF viewing can be tricky in an iframe without a real valid URL.
+    previewEl.innerHTML = `
+      <div style="width:100%; height:100%; display:flex; flex-direction:column; background:var(--surface);">
+        <div style="padding: 12px; background: rgba(88,166,255,0.05); border-bottom:1px solid var(--border); display:flex; gap:12px; align-items:center;">
+          <span style="font-size:24px;">📄</span>
+          <div>
+            <div style="font-size:12px; font-weight:600; color:var(--text-primary); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width:200px;">${filename}</div>
+            <div style="font-size:10px; color:var(--text-muted);">PDF Previsualización (Simulador)</div>
+          </div>
+        </div>
+        <div style="flex:1; overflow:hidden; position:relative;">
+           <img src="https://images.unsplash.com/photo-1618042164219-62c820f10723?auto=format&fit=crop&q=80&w=800" style="width:100%; height:100%; object-fit:cover; opacity: 0.8;" alt="Plano">
+           <div style="position:absolute; top:0; left:0; right:0; bottom:0; padding:24px; pointer-events:none;">
+             <div style="width:100%; height:100%; border: 2px dashed rgba(88,166,255,0.3); border-radius: 4px;"></div>
+           </div>
+        </div>
+      </div>
+    `;
+  } else if (ext === 'glb') {
+    previewEl.innerHTML = `<div style="position:absolute; top:0; left:0; width:100%; height:100%;"><model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" poster="https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&w=800&q=80" alt="Preview 3D" auto-rotate camera-controls style="width:100%; height:100%; display:block; background:transparent;"></model-viewer></div>`;
+  } else if (ext === 'xml') {
+    const defaultXml = `<?xml version="1.0" encoding="UTF-8"?>
+<proyecto id="${activeProjectForMod ? activeProjectForMod.hunterID : 'HNT-000'}">
+  <metadatos>
+    <estado>Aprobado</estado>
+    <origen>Bóveda Hunter CRM</origen>
+    <timestamp>${new Date().toISOString()}</timestamp>
+  </metadatos>
+  <entregables>
+    <item tipo="3D" hash="8f4a3b">modelo.glb</item>
+    <item tipo="Plano" hash="2c1d9f">planos.pdf</item>
+  </entregables>
+</proyecto>`;
+    previewEl.innerHTML = `<div style="width:100%; height:100%; overflow:auto; text-align:left;"><pre style="font-family:var(--font-mono); font-size:11px; color:var(--text-secondary); margin:0; padding:16px;">${defaultXml.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></div>`;
+  } else {
+    previewEl.innerHTML = `<div style="padding:24px; text-align:center; color:var(--text-muted);"><div style="font-size:32px; margin-bottom:12px;">📦</div>Formato <strong>${ext.toUpperCase()}</strong> sin vista previa<br><br><span style="font-size:11px;">Descargue el archivo para visualizarlo</span></div>`;
+  }
+
+  document.getElementById('btn-fullscreen-preview').style.display = 'block';
+};
+
+window.openFullscreenPreview = function() {
+  const modal = document.getElementById('fullscreen-preview-modal');
+  const filename = document.getElementById('preview-filename').textContent;
+  document.getElementById('fs-preview-filename').textContent = filename;
+  
+  const originalPreview = document.getElementById('file-preview-content');
+  const fsPreviewContainer = document.getElementById('fs-preview-content');
+  
+  // Clone the node to recreate the inner stuff cleanly
+  const cloned = originalPreview.cloneNode(true);
+  cloned.id = 'fs-cloned-preview';
+  cloned.style.border = 'none';
+  cloned.style.borderRadius = '0';
+  cloned.style.width = '100%';
+  cloned.style.height = '100%';
+  
+  fsPreviewContainer.innerHTML = '';
+  fsPreviewContainer.appendChild(cloned);
+  
+  modal.classList.add('active');
+};
+
+window.closeFullscreenPreview = function(e, force = false) {
+  if (force || e.target.id === 'fullscreen-preview-modal') {
+    document.getElementById('fullscreen-preview-modal').classList.remove('active');
+    document.getElementById('fs-preview-content').innerHTML = ''; // release resources
+  }
+};
+
+// Matriz de Despiece Técnico Ultra Compacta
+window.addMatrixRow = function() {
+  const container = document.getElementById('contenedor-matriz-despiece');
+  const rowId = 'row-' + Date.now();
+  
+  const div = document.createElement('div');
+  div.className = 'matrix-row';
+  div.id = rowId;
+  
+  div.innerHTML = `
+    <input type="text" class="form-input" placeholder="Área / Zona" oninput="compilarMatrizHaciaReporte()">
+    <select class="form-select" onchange="compilarMatrizHaciaReporte()">
+      <option value="" disabled selected>Mobiliario / Componente</option>
+      <option value="Mesa Juntas G-Connect|GCON-305">Mesa Juntas G-Connect</option>
+      <option value="Escritorio Synergy|SYN-120">Escritorio Synergy</option>
+      <option value="Archivero Pedestal Elite|ELT-PED">Archivero Pedestal Elite</option>
+      <option value="Silla Operativa Aeron|AER-01">Silla Operativa Aeron</option>
+    </select>
+    <select class="form-select" onchange="compilarMatrizHaciaReporte()">
+      <option value="" disabled selected>Acabado Cubierta</option>
+      <option value="Spanish Oak|SO-01">Spanish Oak</option>
+      <option value="Baysand|BS-44">Baysand</option>
+      <option value="Encino Polar|EP-09">Encino Polar</option>
+    </select>
+    <select class="form-select" onchange="compilarMatrizHaciaReporte()">
+      <option value="" disabled selected>Soporte o Cuerpos</option>
+      <option value="Negro Texturizado|NT-X">Negro Texturizado</option>
+      <option value="Blanco Puro|BP-W">Blanco Puro</option>
+      <option value="Gris Grafito|GG-G">Gris Grafito</option>
+    </select>
+    <button type="button" class="matrix-remove-btn" onclick="removeMatrixRow('${rowId}')" title="Eliminar fila">🗑️</button>
+  `;
+  
+  container.appendChild(div);
+  compilarMatrizHaciaReporte();
+};
+
+window.removeMatrixRow = function(id) {
+  const row = document.getElementById(id);
+  if (row) row.remove();
+  compilarMatrizHaciaReporte();
+};
+
+window.compilarMatrizHaciaReporte = function() {
+  const container = document.getElementById('contenedor-matriz-despiece');
+  const rows = container.querySelectorAll('.matrix-row');
+  let report = "";
+  
+  rows.forEach(row => {
+    const area = row.querySelector('input').value || 'Sín Área';
+    const selects = row.querySelectorAll('select');
+    const compVal = selects[0].value || '|';
+    const finishVal = selects[1].value || '|';
+    const bodyVal = selects[2].value || '|';
+    
+    const [compName, compSku] = compVal.split('|');
+    const [finishName, finishCode] = finishVal.split('|');
+    const [bodyName, bodyCode] = bodyVal.split('|');
+    
+    report += `📍 ÁREA: ${area.toUpperCase()}\n`;
+    report += `• Componente: ${compName || '---'} (SKU: ${compSku || '---'})\n`;
+    report += `  ├── Cubiertas: ${finishName || '---'} (Clave: ${finishCode || '---'})\n`;
+    report += `  └── Soporte o Cuerpos: ${bodyName || '---'} (Clave: ${bodyCode || '---'})\n`;
+    report += `----------------------------------------------------------------------\n`;
+  });
+  
+  const hiddenMatriz = document.getElementById('v-matriz-data-compilada');
+  if (hiddenMatriz) hiddenMatriz.value = report;
+  
+  if (typeof autoSave === 'function') autoSave();
+};
+
+// Resizer Logic
+window.initResizers = function() {
+  const leftResizer = document.getElementById('resizer-left');
+  const rightResizer = document.getElementById('resizer-right');
+  const sidebar = document.getElementById('left-sidebar');
+  const vault = document.getElementById('vault-panel-boveda');
+  const root = document.documentElement;
+
+  if (leftResizer) {
+    let isDragging = false;
+    leftResizer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      leftResizer.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const newWidth = Math.max(180, Math.min(450, e.clientX));
+      root.style.setProperty('--sidebar-w', `${newWidth}px`);
+    });
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      leftResizer.classList.remove('dragging');
+      document.body.style.cursor = 'default';
+      document.body.style.userSelect = 'auto';
+    });
+  }
+
+  if (rightResizer) {
+    let isDragging = false;
+    rightResizer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      rightResizer.classList.add('dragging');
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const newWidth = Math.max(280, Math.min(600, window.innerWidth - e.clientX));
+      root.style.setProperty('--right-w', `${newWidth}px`);
+    });
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+      rightResizer.classList.remove('dragging');
+      document.body.style.cursor = 'default';
+      document.body.style.userSelect = 'auto';
+    });
+  }
+};
+
 // Boot
 window.onload = () => {
   renderTable();
   renderVault();
+  initResizers();
+  addMatrixRow(); // Inyecta fila inicial por defecto
   // Starts on dashboard by default as per CSS active class, but let's assure:
   goToDashboard();
 };
