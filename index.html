@@ -459,6 +459,21 @@ h1, h2, h3, h4 { margin: 0; font-weight: 600; color: var(--text-primary); }
 .mag-alert-medio .magnitude-title { color: var(--amber); }
 .mag-alert-macro .magnitude-title { color: var(--red); }
 
+.sla-badge {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+.sla-badge.ok { background: rgba(63, 185, 80, 0.1); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.2); }
+.sla-badge.critical { background: rgba(210, 153, 34, 0.1); color: #d29922; border: 1px solid rgba(210, 153, 34, 0.2); }
+.sla-badge.overdue { background: rgba(248, 81, 73, 0.1); color: #f85149; border: 1px solid rgba(248, 81, 73, 0.2); }
+
 /* Matriz Técnica Styles - Ultra Compact */
 .matrix-card {
   margin-top: 32px;
@@ -1708,6 +1723,198 @@ input[type="checkbox"]:disabled {
   font-size: 11px;
   font-weight: 900;
 }
+
+/* Dashboard Search & Filter Styles */
+.filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 32px;
+  background: var(--surface);
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.search-container {
+  position: relative;
+  width: 100%;
+}
+.search-input {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 20px 14px 44px;
+  color: var(--text-primary);
+  font-size: 15px;
+  transition: all var(--transition);
+}
+.search-input:focus {
+  border-color: var(--blue);
+  background: var(--surface-hover);
+}
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 18px;
+}
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.filter-select {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  min-width: 140px;
+}
+.filter-select:hover {
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+.btn-clear {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  transition: all var(--transition);
+}
+.btn-clear:hover {
+  background: rgba(248, 81, 73, 0.05);
+}
+.results-info {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 40px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+  z-index: 50;
+}
+.bc-link { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+.bc-link:hover { color: var(--text-primary); }
+.bc-sep { color: var(--text-muted); }
+.bc-active { color: var(--text-primary); font-weight: 600; }
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+  gap: 16px;
+  text-align: center;
+}
+.empty-icon { font-size: 56px; opacity: .3; margin-bottom: 8px; }
+.empty-title { font-size: 20px; font-weight: 600; color: var(--text-primary); margin: 0; }
+.empty-sub { font-size: 14px; color: var(--text-secondary); max-width: 340px; line-height: 1.6; margin: 0; }
+
+/* Immersive Briefing mode overrides to show the canvas builder in standard full viewport */
+body.immersive-briefing #header {
+  display: none !important;
+}
+body.immersive-briefing #left-sidebar {
+  display: none !important;
+}
+body.immersive-briefing #resizer-left {
+  display: none !important;
+}
+body.immersive-briefing #app-container {
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  height: 100vh !important;
+}
+body.immersive-briefing #screen-form {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: var(--bg) !important;
+}
+body.immersive-briefing #form-layout {
+  height: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+body.immersive-briefing .form-central {
+  height: 100% !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+body.immersive-briefing .form-central .content-header {
+  display: none !important;
+}
+body.immersive-briefing .form-central .scroll-area {
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+}
+body.immersive-briefing #pane-briefing {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 10000 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+body.immersive-briefing #pane-briefing iframe {
+  border-radius: 0 !important;
+  height: 100vh !important;
+  width: 100vw !important;
+}
+body.immersive-briefing .form-footer {
+  display: none !important;
+}
+body.immersive-briefing #vault-panel-boveda {
+  display: none !important;
+}
+body.immersive-briefing #resizer-right {
+  display: none !important;
+}
+body.immersive-briefing .breadcrumb-nav {
+  display: none !important;
+}
+
 </style>
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 </head>
@@ -1758,6 +1965,7 @@ input[type="checkbox"]:disabled {
 
   <!-- CENTRAL VIEW WRAPPER -->
   <div class="main-view-wrapper">
+    <nav id="breadcrumb-nav" class="breadcrumb-nav"></nav>
     
     <!-- ==========================================
          SCREEN 1: DASHBOARD (HOME)
@@ -1787,6 +1995,59 @@ input[type="checkbox"]:disabled {
           <div class="card p-0" style="padding:40px;">
             <div class="subtitle">Monto Pipeline (Hunter)</div>
             <div style="font-size:48px; font-family:var(--font-mono); line-height:1; margin-top:32px; font-weight:400;">$4.2<span style="font-size:24px; color:var(--text-secondary); font-family:var(--font-ui); font-weight:300;">M MXN</span></div>
+          </div>
+        </div>
+        
+        <!-- Search & Filters -->
+        <div class="filter-bar">
+          <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="dash-search" class="search-input" placeholder="Buscar por cliente, proyecto, empresa o ID Hunter..." oninput="renderTable()">
+          </div>
+          
+          <div class="filter-controls">
+            <select id="filter-magnitude" class="filter-select" onchange="renderTable()">
+              <option value="all">Todas las Magnitudes</option>
+              <option value="Micro">Pequeño (Micro)</option>
+              <option value="Medio">Mediano (Medio)</option>
+              <option value="Macro">Grande (Macro)</option>
+              <option value="Corporativo">Corporativo / Premium</option>
+            </select>
+            
+            <select id="filter-stage" class="filter-select" onchange="renderTable()">
+              <option value="all">Todas las Etapas</option>
+              <option value="Briefing">Briefing / Levantamiento</option>
+              <option value="Diseño">En Diseño</option>
+              <option value="Propuesta">Propuesta Comercial</option>
+              <option value="Cotización">Cotización</option>
+              <option value="Revisión">En Revisión</option>
+              <option value="Aprobado">Aprobado</option>
+              <option value="Producción">Producción</option>
+              <option value="Entregado">Entregado</option>
+              <option value="Cancelado">Cancelado</option>
+            </select>
+            
+            <select id="filter-month" class="filter-select" onchange="renderTable()">
+              <option value="all">Todos los Meses</option>
+              <option value="0">Enero</option>
+              <option value="1">Febrero</option>
+              <option value="2">Marzo</option>
+              <option value="3">Abril</option>
+              <option value="4">Mayo</option>
+              <option value="5">Junio</option>
+              <option value="6">Julio</option>
+              <option value="7">Agosto</option>
+              <option value="8">Septiembre</option>
+              <option value="9">Octubre</option>
+              <option value="10">Noviembre</option>
+              <option value="11">Diciembre</option>
+            </select>
+            
+            <button class="btn-clear" onclick="clearDashboardFilters()">Limpiar Filtros</button>
+            
+            <div id="results-counter" class="results-info" style="margin-left: auto;">
+              Mostrando 0 de 0 proyectos
+            </div>
           </div>
         </div>
 
@@ -2051,73 +2312,12 @@ input[type="checkbox"]:disabled {
             </div>
 
             <!-- Tab 2: Canvas / Briefing -->
-            <div id="pane-briefing" class="tab-pane">
-              <div class="card" style="padding: 40px; height: 100%; display:flex; flex-direction:column;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 32px;">
-                  <div class="subtitle">Lienzo Vectorial de Mapeo</div>
-                  <span class="badge" style="font-family:var(--font-mono); letter-spacing:0">ESCALA 1:100</span>
-                </div>
-                
-                <div class="briefing-workspace">
-                  <!-- Sidebar de Herramientas -->
-                  <div class="tool-bar">
-                    <div class="tool-btn" onclick="triggerBgUpload()" title="Subir Fondo (PDF/Img)">
-                      <span class="tool-icon">📸</span>
-                      <span class="tool-label">Fondo</span>
-                    </div>
-                    <div style="height: 1px; background: var(--border); margin: 8px 0;"></div>
-                    <div class="tool-btn" onclick="selectTool('wall', this)" title="Trazar Muros perimetrales">
-                      <span class="tool-icon">📏</span>
-                      <span class="tool-label">Muro</span>
-                    </div>
-                    <div class="tool-btn" onclick="selectTool('text', this)" title="Insertar Nota de Texto">
-                      <span class="tool-icon">💬</span>
-                      <span class="tool-label">Nota</span>
-                    </div>
-                    <div style="height: 1px; background: var(--border); margin: 8px 0;"></div>
-                    <div class="tool-btn" onclick="selectTool('privado', this)" title="Asignar: Privados">
-                      <span class="tool-icon">🛋️</span>
-                      <span class="tool-label">Priv</span>
-                    </div>
-                    <div class="tool-btn" onclick="selectTool('operativo', this)" title="Asignar: Área Operativa">
-                      <span class="tool-icon">👥</span>
-                      <span class="tool-label">Oper</span>
-                    </div>
-                    <div class="tool-btn" onclick="selectTool('juntas', this)" title="Asignar: Salas de Juntas">
-                      <span class="tool-icon">🤝</span>
-                      <span class="tool-label">Juntas</span>
-                    </div>
-                    <div style="height: 1px; background: var(--border); margin: 8px 0; border:none; flex:1;"></div>
-                    <div class="tool-btn" onclick="toggleGrid()" title="Mostrar/Ocultar Rejilla">
-                      <span class="tool-icon">🎛️</span>
-                      <span class="tool-label">Grid</span>
-                    </div>
-                    <div class="tool-btn" onclick="exportCanvas()" title="Exportar Vista en PNG">
-                      <span class="tool-icon">💾</span>
-                      <span class="tool-label">Export</span>
-                    </div>
-                    <div class="tool-btn" style="color:var(--red); border-color:rgba(248,81,73,0.3);" onclick="clearCanvas()">
-                      <span class="tool-icon">🗑️</span>
-                      <span class="tool-label">Clear</span>
-                    </div>
-                  </div>
-
-                  <!-- Canvas Responsivo (%) -->
-                  <div class="canvas-wrapper" id="canvas-area" onclick="handleCanvasClick(event)" onmousemove="handleCanvasMove(event)">
-                    <div class="canvas-grid" id="c-grid"></div>
-                    <img id="c-bg-image" class="canvas-bg-image" src="" alt="Fondo levantamiento">
-                    
-                    <!-- SVG Overlay para Muros Vectoriales -->
-                    <svg id="canvas-svg-layer">
-                      <g id="walls-group"></g>
-                      <polyline id="current-wall" points="" />
-                    </svg>
-                    
-                    <!-- Capa de Pines y Texto DOM -->
-                    <div id="pins-layer"></div>
-                  </div>
-                </div>
-              </div>
+            <div id="pane-briefing" class="tab-pane" style="padding:0; gap:0; overflow:hidden; height:calc(100vh - 220px); min-height:600px;">
+              <iframe
+                src="./cerebro-lienzo-amueblado.html"
+                style="width:100%; height:100%; border:none; display:block; border-radius:var(--radius-lg);"
+                title="Lienzo de Amueblado Interactivo"
+              ></iframe>
             </div>
 
           </div>
@@ -2384,19 +2584,19 @@ input[type="checkbox"]:disabled {
       <button class="modal-close" onclick="closeProjectModal(event, true)">✕</button>
     </div>
     
-    <!-- Selector de Pestañas del Expediente -->
+    <!-- Selector de Pestañas del Expediente (Redesign: Stepper) -->
     <div class="modal-tabs">
-      <button class="modal-tab-btn active" id="btn-tab-info" onclick="switchModalTab('info')">
-        📋 Información Original
+      <button class="modal-tab-btn active" id="mtab-resumen" onclick="switchModalTab('resumen')">
+        1. Resumen
       </button>
-      <button class="modal-tab-btn" id="btn-tab-calendario" onclick="switchModalTab('calendario')">
-        📅 Calendarización
+      <button class="modal-tab-btn" id="mtab-tecnico" onclick="switchModalTab('tecnico')">
+        2. Técnico
       </button>
-      <button class="modal-tab-btn" id="btn-tab-modificacion" onclick="switchModalTab('modificacion')">
-        🔄 Solicitud Modificación
+      <button class="modal-tab-btn" id="mtab-docs" onclick="switchModalTab('docs')">
+        3. Docs
       </button>
-      <button class="modal-tab-btn" id="btn-tab-entregables" onclick="switchModalTab('entregables')">
-        📂 Entregables & Assets
+      <button class="modal-tab-btn" id="mtab-sla" onclick="switchModalTab('sla')">
+        4. SLA
       </button>
     </div>
 
@@ -2414,8 +2614,8 @@ input[type="checkbox"]:disabled {
         </div>
       </div>
 
-      <!-- PESTAÑA 1: INFORMACIÓN ORIGINAL -->
-      <div id="modal-tab-content-info" class="modal-tab-content active">
+      <!-- PANEL 1: RESUMEN -->
+      <div id="mpanel-resumen" class="modal-tab-content active">
         <div class="modal-grid-two-col">
           <div style="display: flex; flex-direction: column; gap: 24px;">
             <div>
@@ -2443,11 +2643,11 @@ input[type="checkbox"]:disabled {
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 16px;">
                   <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" style="font-size:10px;">Fecha de Captura de Carpeta</label>
+                    <label class="form-label" style="font-size:10px;">Fecha Captura</label>
                     <input type="date" id="f-modal-fecha" class="form-input" style="font-family:var(--font-mono); font-size:13px; padding: 10px 14px; background: rgba(0,0,0,0.2);" onchange="calcModalContract()">
                   </div>
                   <div class="form-group" style="margin-bottom: 0;">
-                    <label class="form-label" style="font-size:10px;">Hora Registrada de Envío</label>
+                    <label class="form-label" style="font-size:10px;">Hora Envío</label>
                     <input type="time" id="f-modal-hora" class="form-input" style="font-family:var(--font-mono); font-size:13px; padding: 10px 14px; background: rgba(0,0,0,0.2);" onchange="calcModalContract()">
                   </div>
                 </div>
@@ -2457,10 +2657,10 @@ input[type="checkbox"]:disabled {
           
           <div>
             <div class="modal-section-title">Solicitud Original</div>
-            <p id="md-solicitud" style="font-size: 14px; line-height: 1.6; color: var(--text-secondary); background: var(--surface-2); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); border-bottom-left-radius: 0; border-bottom-right-radius: 0; margin-bottom: 0; font-style: italic;">
+            <p id="md-solicitud" style="font-size: 14px; line-height: 1.6; color: var(--text-secondary); background: var(--surface-2); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius); margin-bottom: 24px; font-style: italic;">
               No se especificaron detalles adicionales.
             </p>
-            <div style="background: var(--surface-2); border: 1px solid var(--border); border-top: none; padding: 20px; border-bottom-left-radius: var(--radius); border-bottom-right-radius: var(--radius);">
+            <div style="background: var(--surface-2); border: 1px solid var(--border); padding: 20px; border-radius: var(--radius);">
               <div class="subtitle" style="font-size: 10px; margin-bottom: 12px; color: var(--text-muted);">ARCHIVOS ADJUNTOS EN SOLICITUD</div>
               <div id="md-documentos-list-info" style="display: flex; flex-direction: column; gap: 8px;">
                 <!-- Rendered in JS -->
@@ -2470,227 +2670,123 @@ input[type="checkbox"]:disabled {
         </div>
       </div>
 
-      <!-- PESTAÑA 2: CALENDARIZACION -->
-      <div id="modal-tab-content-calendario" class="modal-tab-content" style="display:none;">
-        <div class="modal-grid-two-col">
-          <div style="display:flex; flex-direction:column; gap:24px;">
-            <div class="card deliverable-highlight" style="padding: 24px;">
-              <div class="subtitle" style="color:var(--text-secondary); font-size: 11px;">FECHA OFICIAL DE COMPROMISO</div>
-              <div class="deliverable-title" id="md-sla-entrega-fecha" style="font-size: 22px;">...</div>
-              <div style="font-family: var(--font-mono); font-size: 10px; margin-top: 8px; color:var(--text-muted)">
-                SLA VIGENTE • ENTREGA PREVISTA ANTES DE LAS 18:30 HRS
-              </div>
-            </div>
-
-            <div class="card" style="padding: 20px; border: 1px dashed var(--gold); background: rgba(201,169,110,0.03);">
-              <div class="subtitle" style="color: var(--gold); font-size: 11px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                <span>🤝 Agendar Reunión de Entrega</span>
-                <span class="badge" id="md-meeting-status-badge" style="border-color: rgba(201,169,110,0.4); color: var(--gold); font-size: 9px; min-height: auto; padding: 2px 6px;">Pendiente</span>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 10px;">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                  <div class="form-group">
-                    <label class="form-label" style="font-size: 10px; margin-bottom: 2px;">Fecha Reunión</label>
-                    <input type="date" id="f-meeting-date" class="form-input" style="font-size: 11.5px; padding: 6px 10px; color: var(--text-primary); background: var(--surface);" onchange="saveMeetingFromModal()">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" style="font-size: 10px; margin-bottom: 2px;">Hora Reunión</label>
-                    <input type="time" id="f-meeting-time" class="form-input" style="font-size: 11.5px; padding: 6px 10px; color: var(--text-primary); background: var(--surface);" onchange="saveMeetingFromModal()">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" style="font-size: 10px; margin-bottom: 2px;">Canal / Ubicación</label>
-                  <select id="f-meeting-channel" class="form-select" style="font-size: 11.5px; padding: 6px 10px; color: var(--text-primary); background: var(--surface);" onchange="saveMeetingFromModal()">
-                    <option value="Virtual (Teams / Meet)">🌐 Teams / Google Meet</option>
-                    <option value="Showroom Ventas">🏢 Showroom Ventas Gebesa</option>
-                    <option value="Planta Corporativa">🏭 Planta Corporativa</option>
-                    <option value="Oficinas Cliente">🚪 Oficinas del Cliente</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" style="font-size: 10px; margin-bottom: 2px;">Estatus Agenda</label>
-                  <select id="f-meeting-status" class="form-select" style="font-size: 11.5px; padding: 6px 10px; color: var(--text-primary); background: var(--surface);" onchange="saveMeetingFromModal()">
-                    <option value="pendiente">⏳ Por Agendar / Pendiente</option>
-                    <option value="confirmada">🤝 Reunión Confirmada</option>
-                    <option value="completada">✅ Entregado & Reunión Completada</option>
-                  </select>
-                </div>
-              </div>
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">* Sincronizado en tiempo real con la Agenda de Proyectos.</div>
-            </div>
-
-            <div class="card" style="padding: 20px;">
-              <div class="subtitle" style="margin-bottom: 12px; font-size: 11px;">Hoja de Auditoría del Contrato</div>
-              <table class="audit-details-table">
-                <tr>
-                  <td class="audit-key">Envío Original</td>
-                  <td class="audit-value" id="md-audit-original">--</td>
-                </tr>
-                <tr>
-                  <td class="audit-key">Inicio Operativo</td>
-                  <td class="audit-value" id="md-audit-ajustada" style="color: var(--blue)">--</td>
-                </tr>
-                <tr>
-                  <td class="audit-key">Responsable Técnico</td>
-                  <td class="audit-value" id="md-audit-proyectista">--</td>
-                </tr>
-                <tr>
-                  <td class="audit-key">Estatus Licencia</td>
-                  <td class="audit-value" id="md-audit-modulacion">--</td>
-                </tr>
-                <tr>
-                  <td class="audit-key">Magnitud Orden</td>
-                  <td class="audit-value" id="md-audit-magnitud" style="font-weight: 700;">--</td>
-                </tr>
-                <tr>
-                  <td class="audit-key">Plazo SLA Real</td>
-                  <td class="audit-value" id="md-audit-sla-plazo">--</td>
-                </tr>
-              </table>
-            </div>
-          </div>
-          
-          <div style="display:flex; flex-direction:column; gap:24px;">
-            <div class="card" style="padding: 24px; position: sticky; top: 0; z-index: 10;">
-              <div class="subtitle" style="font-size: 11px;">Secuenciador Diario de Hitos</div>
-              <div class="sla-timeline-container" id="md-timeline-container" style="max-height: 500px; overflow-y: auto; padding-right: 8px;">
-                <!-- Rendered sequentially via JS -->
-              </div>
-            </div>
-          </div>
+      <!-- PANEL 2: TÉCNICO -->
+      <div id="mpanel-tecnico" class="modal-tab-content" style="display:none;">
+        <div id="md-matriz-tecnica-container">
+          <!-- Se renderiza vía renderMatrizPanel -->
         </div>
-      </div>
-
-      <!-- PESTAÑA 3: SOLICITUD DE MODIFICACIÓN -->
-      <div id="modal-tab-content-modificacion" class="modal-tab-content" style="display:none;">
-        <div class="modal-grid-two-col">
-          <div>
-            <div class="modal-section-title">Historial de Revisiones</div>
-            <div id="md-modificaciones-history" style="display:flex; flex-direction:column; gap:16px; max-height: 400px; overflow-y: auto;">
-              <div style="font-size:12px; color:var(--text-muted); text-align:center; padding: 16px 0;">No metadatos.</div>
-            </div>
-          </div>
-          <div>
-            <div class="modal-section-title">Solicitar Modificación</div>
-            <div class="card" style="padding: 24px; display:flex; flex-direction:column; gap:16px; background: rgba(255,255,255,0.01);">
-              <div class="form-group">
-                <textarea class="form-input" id="mod-instrucciones" rows="3" style="height:auto; resize:vertical; padding:12px; font-size:13px;" placeholder="Instrucciones para el Ingeniero..."></textarea>
+        
+        <div style="margin-top: 32px;">
+          <div class="modal-section-title">Historial de Revisiones & Modificaciones</div>
+          <div class="modal-grid-two-col">
+            <div>
+               <div id="md-modificaciones-history" style="display:flex; flex-direction:column; gap:16px;">
+                <div style="font-size:12px; color:var(--text-muted); text-align:center; padding: 16px 0;">No hay revisiones registradas.</div>
               </div>
-              <div class="form-group">
-                <div style="border: 1px dashed var(--border-light); border-radius: var(--radius); padding: 16px; text-align:center; cursor:pointer; background: var(--surface-2); transition: background 0.2s;" onclick="triggerModFileUpload()" ondragover="event.preventDefault()" ondrop="handleModFileDrop(event)">
-                  <div style="font-size: 20px; margin-bottom: 6px;">📂</div>
-                  <div style="font-size:12px; font-weight:600; color: var(--text-primary);">Adjuntar Archivo</div>
+            </div>
+            <div>
+              <div class="card" style="padding: 24px; background: rgba(255,255,255,0.01);">
+                <div class="subtitle" style="font-size:10px; margin-bottom:12px;">SOLICITAR NUEVA REVISIÓN / CAMBIO</div>
+                <textarea class="form-input" id="mod-instrucciones" rows="3" style="height:auto; resize:vertical; padding:12px; font-size:13px; margin-bottom:16px;" placeholder="Instrucciones para el Ingeniero..."></textarea>
+                <div style="border: 1px dashed var(--border-light); border-radius: var(--radius); padding: 16px; text-align:center; cursor:pointer; background: var(--surface-2);" onclick="triggerModFileUpload()">
+                  <div style="font-size: 14px; font-weight:600; color: var(--text-primary);">+ Adjuntar Archivo</div>
                 </div>
                 <input type="file" id="mod-file-input" style="display:none;" onchange="handleModFileSelected(event)">
                 <div class="form-file-list" id="mod-files-preview-list"></div>
+                <button class="btn-solid" style="width: 100%; justify-content:center; margin-top:16px;" onclick="submitModificationRequest()">
+                  🚀 Enviar a Ingeniería
+                </button>
               </div>
-              <button class="btn-solid" style="width: 100%; justify-content:center;" onclick="submitModificationRequest()">
-                🚀 Enviar Solicitud de Modificación
-              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- PESTAÑA 4: ENTREGABLES Y ASSETS -->
-      <div id="modal-tab-content-entregables" class="modal-tab-content" style="display:none;">
+      <!-- PANEL 3: DOCS -->
+      <div id="mpanel-docs" class="modal-tab-content" style="display:none;">
         <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; align-items: start;">
-          <!-- LADO IZQUIERDO: ARCHIVOS -->
           <div style="display: flex; flex-direction: column; gap: 32px; max-height: 65vh; overflow-y: auto; padding-right: 12px;" class="custom-scrollbar">
-            
-            <!-- Archivos Solicitud Vendedor -->
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
-                <div class="modal-section-title" style="margin-bottom:0;">Archivos de Solicitud Inicial (Ventas)</div>
-                <button class="btn-solid" style="padding: 6px 12px; font-size: 11px; display:flex; align-items:center; gap:6px; background: rgba(88,166,255,0.1); color:var(--blue); border:1px solid rgba(88,166,255,0.2);" onclick="showToast('success', 'Descargando ZIP', 'Preparando archivos de la solicitud inicial...')">
-                  📦 Descargar ZIP
+              <div class="modal-section-title">Archivos Originales y Entregables</div>
+              <div id="md-documentos-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom:24px;"></div>
+              
+              <div class="modal-section-title">Entregables de Ingeniería</div>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
+                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">📐 Planos</div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-tech-docs"></div>
+                </div>
+                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">🖼️ Renders</div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-gallery"></div>
+                </div>
+                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">🧊 Modelos 3D</div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-3d"></div>
+                </div>
+                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
+                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">📄 XML</div>
+                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-xml"></div>
+                </div>
+              </div>
+
+              <div id="md-assets-modificaciones-container" style="display:none; border-top: 1px dashed var(--border); padding-top: 24px;">
+                <div class="modal-section-title">Entregables de Modificaciones</div>
+                <div id="md-assets-modificaciones-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="padding: 16px; display: flex; flex-direction: column; height: 62vh; background: var(--surface); position: relative;">
+            <div id="file-preview-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+              <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Vista Previa</div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="preview-filename" style="color: var(--text-muted); font-family: var(--font-mono); font-size: 10px;">--</span>
+                <button id="btn-fullscreen-preview" class="btn-icon" style="background: var(--surface-3); border: 1px solid var(--border); cursor: pointer; color: var(--gold); display: none; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: 600;" onclick="openFullscreenPreview()" title="Ver en pantalla completa">
+                  🔍 FULLSCREEN
                 </button>
               </div>
-              <div id="md-documentos-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
-                <!-- Rendered in JS -->
-              </div>
             </div>
-
-            <!-- Entregables Originales (Primera Entrega de Ingeniería) -->
-            <div style="border-top: 1px dashed var(--border); padding-top: 24px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px;">
-                <div class="modal-section-title" style="margin-bottom:0;">Entregables de Ingeniería (Proyecto Original)</div>
-                <div style="display:flex; gap:8px;">
-                  <button class="btn-solid" style="padding: 6px 12px; font-size: 11px; display:flex; align-items:center; gap:6px; background: rgba(201,169,110,0.1); color:var(--gold); border:1px solid rgba(201,169,110,0.2);" onclick="showToast('info', 'Generando Presentación', 'La integración con el presentador se activará aquí.')">
-                    🎞️ Crear Presentación
-                  </button>
-                  <button class="btn-solid" style="padding: 6px 12px; font-size: 11px; display:flex; align-items:center; gap:6px; background: rgba(88,166,255,0.1); color:var(--blue); border:1px solid rgba(88,166,255,0.2);" onclick="showToast('success', 'Descargando ZIP', 'Preparando entregables originales...')">
-                    📦 Descargar ZIP
-                  </button>
-                </div>
-              </div>
-              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
-                
-                <!-- Categoría: Documentos Técnicos -->
-                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
-                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                    <span>📐</span> Planos y Documentos
-                  </div>
-                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-tech-docs">
-                      <div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>
-                  </div>
-                </div>
-
-                <!-- Categoría: Galería / Renders -->
-                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
-                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                    <span>🖼️</span> Galería Renders & VR
-                  </div>
-                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-gallery">
-                     <div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>
-                  </div>
-                </div>
-
-                <!-- Categoría: Modelos 3D -->
-                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
-                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                    <span>🧊</span> Modelos 3D (.glb)
-                  </div>
-                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-3d">
-                     <div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>
-                  </div>
-                </div>
-
-                <!-- Categoría: Archivos XML -->
-                <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
-                  <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                    <span>📄</span> Archivos XML y Datos
-                  </div>
-                  <div style="display: flex; flex-direction: column; gap: 8px;" id="md-assets-xml">
-                     <div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            <!-- Archivos de Modificaciones (Iterativas) -->
-            <div id="md-assets-modificaciones-container" style="display: none; border-top: 1px dashed var(--border); padding-top: 24px;">
-              <div class="modal-section-title">Entregables de Modificaciones (Revisiones / Iteraciones)</div>
-               <div id="md-assets-modificaciones-list" style="display: flex; flex-direction: column; gap: 32px;">
-                 <!-- dynamic content: R1, R2 folders -->
-               </div>
+            <div id="file-preview-content" style="flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; border-radius: 4px; position: relative;">
+              <div style="text-align: center; color: var(--text-muted); font-size: 12px;">Selecciona un archivo para previsualizar</div>
             </div>
           </div>
-          
-          <!-- LADO DERECHO: VISOR DE PREVISUALIZACIÓN -->
-          <div class="card" style="padding: 16px; position: sticky; top: 0; display: flex; flex-direction: column; height: 65vh; background: var(--surface);">
-            <div style="font-size: 11px; font-weight: 600; margin-bottom: 12px; display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
-              <span style="color:var(--text-secondary); letter-spacing:0.5px;">VISOR DE ARCHIVOS</span>
-              <div style="display:flex; align-items:center; gap:12px;">
-                <span id="preview-filename" style="color:var(--text-primary); font-family:var(--font-mono); font-size:10px;">--</span>
-                <button id="btn-fullscreen-preview" class="btn-icon" style="background:var(--surface-3); border:1px solid var(--border); cursor:pointer; color:var(--text-secondary); display:none; padding:4px 8px; border-radius:4px; font-size:12px;" onclick="openFullscreenPreview()" title="Ver en pantalla completa">🔍 Fullscreen</button>
-              </div>
+        </div>
+      </div>
+
+      <!-- PANEL 4: SLA -->
+      <div id="mpanel-sla" class="modal-tab-content" style="display:none;">
+        <div class="modal-grid-two-col">
+          <div style="display:flex; flex-direction:column; gap:24px;">
+            <div class="card" style="padding: 32px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px;">
+              <div class="subtitle" style="font-size: 12px;">ESTADO DEL COMPROMISO (SLA)</div>
+              <div id="sla-status"></div>
+              <div style="font-size: 24px; font-weight: 700; color: var(--text-primary);" id="md-sla-entrega-fecha">...</div>
+              <p style="font-size: 13px; color: var(--text-secondary); max-width: 280px; margin: 0 auto;">
+                Este plazo es vinculante según la magnitud detectada y el flujo de diseño actual.
+              </p>
             </div>
-            <div id="file-preview-content" style="flex: 1; background: var(--surface-2); border-radius: var(--radius); border: 1px dashed var(--border-light); display: flex; align-items: center; justify-content: center; overflow: hidden; position:relative;">
-              <span style="color: var(--text-muted); font-size: 13px;">Seleccione un archivo de la lista</span>
+            
+            <div class="card" style="padding: 24px;">
+              <div class="subtitle" style="font-size: 11px; margin-bottom: 16px;">DETALLES DE AUDITORÍA</div>
+              <table class="audit-details-table">
+                <tr><td class="audit-key">Envío Hunter</td><td class="audit-value" id="md-audit-original">--</td></tr>
+                <tr><td class="audit-key">Inicio Operativo</td><td class="audit-value" id="md-audit-ajustada" style="color: var(--blue)">--</td></tr>
+                <tr><td class="audit-key">Modulación Proyectista</td><td class="audit-value" id="md-audit-modulacion">--</td></tr>
+                <tr><td class="audit-key">Magnitud</td><td class="audit-value" id="md-audit-magnitud">--</td></tr>
+                <tr><td class="audit-key">Tipo de Plazo</td><td class="audit-value" id="md-audit-sla-plazo">--</td></tr>
+                <tr style="display:none;"><td class="audit-key">Proyectista Log</td><td class="audit-value" id="md-audit-proyectista">--</td></tr>
+              </table>
             </div>
           </div>
+          <div class="card" style="padding: 24px;">
+            <div class="subtitle" style="font-size: 11px; margin-bottom: 16px;">LÍNEA DE TIEMPO TÉCNICA</div>
+            <div class="sla-timeline-container" id="md-timeline-container" style="max-height: 450px; overflow-y: auto;">
+              <!-- Timeline JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
           
         </div>
       </div>
@@ -2853,10 +2949,100 @@ function switchRoleWorkspace(role) {
 }
 
 /* --- FLUJO SPA NAVEGACIÓN --- */
+window.renderBreadcrumb = function(crumbs) {
+  const nav = document.getElementById('breadcrumb-nav');
+  if (!nav) return;
+  nav.innerHTML = crumbs.map((c, i) => {
+    const isLast = i === crumbs.length - 1;
+    if(isLast)
+      return `<span class="bc-active">${c.label}</span>`;
+    const action = c.onclick ? `onclick="${c.onclick}"` : `href="${c.href || '#'}"`;
+    return `<a ${action} class="bc-link">${c.label}</a>
+            <span class="bc-sep">/</span>`;
+  }).join('');
+};
+
+window.clearDashboardFilters = function() {
+  document.getElementById('dash-search').value = '';
+  document.getElementById('filter-magnitude').value = 'all';
+  document.getElementById('filter-stage').value = 'all';
+  document.getElementById('filter-month').value = 'all';
+  renderTable();
+};
+
 function renderTable() {
   saveProjectsToStorage();
   const tbody = document.getElementById('v-table-body');
-  tbody.innerHTML = vProjects.map(p => `
+  
+  // Case 1: Absolutely no projects in database
+  if (!vProjects || vProjects.length === 0) {
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="padding:0; border:none;">
+            <div class="empty-state">
+              <div class="empty-icon">📁</div>
+              <h3 class="empty-title">Sin proyectos activos</h3>
+              <p class="empty-sub">Registra tu primer negocio para gestionar propuestas, SLAs y entregas.</p>
+              <button class="btn-solid" style="margin-top: 8px;" onclick="goToForm(false)">
+                + Nuevo proyecto
+              </button>
+            </div>
+          </td>
+        </tr>`;
+    }
+    const counterEl = document.getElementById('results-counter');
+    if (counterEl) counterEl.textContent = "Mostrando 0 de 0 proyectos";
+    return;
+  }
+
+  const searchTerm = document.getElementById('dash-search')?.value.toLowerCase() || "";
+  const filterMagn = document.getElementById('filter-magnitude')?.value || "all";
+  const filterStage = document.getElementById('filter-stage')?.value || "all";
+  const filterMonth = document.getElementById('filter-month')?.value || "all";
+
+  const filtered = vProjects.filter(p => {
+    // Search match
+    const textFields = [p.cliente, p.id, p.solicitudOriginal].join(" ").toLowerCase();
+    const matchesSearch = !searchTerm || textFields.includes(searchTerm);
+    
+    // Magnitude match
+    const matchesMagn = filterMagn === "all" || p.magn === filterMagn;
+    
+    // Stage match
+    const matchesStage = filterStage === "all" || p.etapa.includes(filterStage);
+    
+    // Month match
+    let matchesMonth = true;
+    if (filterMonth !== "all") {
+      const date = new Date(p.fechaIngreso);
+      matchesMonth = date.getUTCMonth() === parseInt(filterMonth);
+    }
+    
+    return matchesSearch && matchesMagn && matchesStage && matchesMonth;
+  });
+
+  const counterEl = document.getElementById('results-counter');
+  if (counterEl) {
+    counterEl.textContent = `Mostrando ${filtered.length} de ${vProjects.length} proyectos`;
+  }
+
+  // Case 2: Filters returned zero results
+  if (filtered.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" style="padding: 100px 40px; text-align: center;">
+          <div style="font-size: 32px; margin-bottom: 16px; opacity: 0.5;">🔍</div>
+          <div style="font-weight: 600; font-size: 16px; color: var(--text-primary);">No se encontraron proyectos</div>
+          <div style="font-size: 13px; color: var(--text-secondary); margin-top: 8px;">Intenta cambiar los filtros o la búsqueda.</div>
+          <button class="btn-outline" style="margin-top: 24px; padding: 10px 20px;" onclick="clearDashboardFilters()">Limpiar Filtros</button>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(p => `
     <tr onclick="openProjectDetails('${p.id}')">
       <td style="padding-left:40px;">
         <div style="font-weight:600; font-size:15px; color:var(--text-primary); margin-bottom:4px;">${p.cliente}</div>
@@ -2878,11 +3064,21 @@ function renderTable() {
 function goToDashboard() {
   document.getElementById('screen-form').classList.remove('active');
   document.getElementById('screen-dashboard').classList.add('active');
+  renderBreadcrumb([
+    { label: 'CEREBRO 2.0', onclick: 'goToDashboard()' },
+    { label: 'Mis Negocios' }
+  ]);
 }
 
 function goToForm(isEdit = false) {
   document.getElementById('screen-dashboard').classList.remove('active');
   document.getElementById('screen-form').classList.add('active');
+  
+  renderBreadcrumb([
+    { label: 'CEREBRO 2.0', onclick: 'goToDashboard()' },
+    { label: 'Mis Negocios', onclick: 'goToDashboard()' },
+    { label: isEdit ? 'Editar Proyecto' : 'Nueva Solicitud' }
+  ]);
   
   if(!isEdit) {
     const hId = 'HNT-' + Math.floor(Math.random()*9000 + 1000);
@@ -2957,9 +3153,15 @@ function goToForm(isEdit = false) {
     // Reset canvas
     STATE.pins = [];
     STATE.savedWallsStrings = [];
-    document.getElementById('walls-group').innerHTML = '';
-    document.getElementById('pins-layer').innerHTML = '';
-    document.getElementById('c-bg-image').style.display = 'none';
+    
+    const wallsGroupEl = document.getElementById('walls-group');
+    if (wallsGroupEl) wallsGroupEl.innerHTML = '';
+    
+    const pinsLayerEl = document.getElementById('pins-layer');
+    if (pinsLayerEl) pinsLayerEl.innerHTML = '';
+    
+    const cBgImageEl = document.getElementById('c-bg-image');
+    if (cBgImageEl) cBgImageEl.style.display = 'none';
     
     switchTab('datos');
     mapWizardFields();
@@ -2971,51 +3173,82 @@ function goToForm(isEdit = false) {
 function switchTab(tabId) {
   document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.getElementById('t-' + tabId).classList.add('active');
-  document.getElementById('pane-' + tabId).classList.add('active');
+  
+  const tabBtn = document.getElementById('t-' + tabId);
+  const tabPane = document.getElementById('pane-' + tabId);
+  
+  if (tabBtn) tabBtn.classList.add('active');
+  if (tabPane) tabPane.classList.add('active');
   
   const vaultPanel = document.getElementById('vault-panel-boveda');
-  if(tabId === 'briefing') {
-    vaultPanel.classList.add('collapsed');
-    renderCanvasElements(); 
+  if (vaultPanel) {
+    if(tabId === 'briefing') {
+      vaultPanel.classList.add('collapsed');
+      document.body.classList.add('immersive-briefing');
+    } else {
+      vaultPanel.classList.remove('collapsed');
+      document.body.classList.remove('immersive-briefing');
+    }
   } else {
-    vaultPanel.classList.remove('collapsed');
+    if(tabId === 'briefing') {
+      document.body.classList.add('immersive-briefing');
+    } else {
+      document.body.classList.remove('immersive-briefing');
+    }
   }
 }
 
 function submitForm() {
-  const cliente = document.getElementById('f-razon').value.trim() || document.getElementById('v-cliente').value.trim() || 'Desarrollo Sin Título';
-  const monto = parseFloat(document.getElementById('v-monto').value) || 0;
-  const hId = document.getElementById('v-hunterid').value;
+  const razonEl = document.getElementById('f-razon');
+  const cliente = (razonEl ? razonEl.value.trim() : '') || 'Desarrollo Sin Título';
+  
+  const vMontoEl = document.getElementById('v-monto');
+  const monto = vMontoEl ? parseFloat(vMontoEl.value) || 0 : 0;
+  
+  const hIdEl = document.getElementById('v-hunterid');
+  const hId = hIdEl ? hIdEl.value : '';
   
   const formatter = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
   const montoStr = formatter.format(monto);
 
-  const m2 = parseFloat(document.getElementById('v-m2').value) || 0;
+  const vM2El = document.getElementById('v-m2');
+  const m2 = vM2El ? parseFloat(vM2El.value) || 0 : 0;
+  
   let magn = "Micro", magnClass = "mag-alert-micro";
   if(monto > 1000000 || m2 > 500) { magn = "Macro"; magnClass = "mag-alert-macro"; }
   else if(monto >= 200000 || m2 >= 80) { magn = "Medio"; magnClass = "mag-alert-medio"; }
 
   // Extract other technical & commercial inputs for original request
-  const contacto = document.getElementById('f-contacto').value.trim() || document.getElementById('v-contacto').value.trim() || 'Sin asignar';
-  const telefono = document.getElementById('f-tel') ? document.getElementById('f-tel').value.trim() : '';
-  const email = document.getElementById('f-email') ? document.getElementById('f-email').value.trim() : '';
-  const condicionVal = document.getElementById('v-condicion').value;
+  const contactEl = document.getElementById('f-contacto');
+  const contacto = contactEl ? contactEl.value.trim() : 'Sin asignar';
+  
+  const telEl = document.getElementById('f-tel');
+  const telefono = telEl ? telEl.value.trim() : '';
+  
+  const emailEl = document.getElementById('f-email');
+  const email = emailEl ? emailEl.value.trim() : '';
+  
+  const condEl = document.getElementById('v-condicion');
+  const condicionVal = condEl ? condEl.value : 'gris';
   const condicionLabel = condicionVal === 'gris' ? 'Obra Gris (Desde Cero)' : condicionVal === 'activo' ? 'Remodelación con Personal Activo' : 'Espacio Adaptado pero Vacío';
-  const densidad = document.getElementById('v-densidad').value || 'Mapeo modular estático';
-  const lineSelect = document.getElementById('v-linea');
-  const linea = lineSelect.options[lineSelect.selectedIndex].text;
-  const compromisoStr = document.getElementById('v-compromiso').value || '2026-05-23';
-  const restricciones = document.getElementById('v-restricciones').value || 'Sin observaciones mecánicas o eléctricas de relevancia.';
+  
+  const densEl = document.getElementById('v-densidad');
+  const densidad = densEl ? densEl.value : 'Mapeo modular estático';
+
+  const compromisoEl = document.getElementById('v-compromiso');
+  const compromisoStr = compromisoEl ? compromisoEl.value : '2026-05-23';
+  
+  const restrEl = document.getElementById('v-restricciones');
+  const restricciones = restrEl ? restrEl.value : 'Sin observaciones mecánicas o eléctricas de relevancia.';
 
   // Read checkbox values
-  const hasRenders = document.getElementById('f-renders-premium') ? document.getElementById('f-renders-premium').checked : false;
-  const hasRecorrido = hasRenders; // Premium implies renders & potential sweep
-  const hasEspecs = true; // Suggest spec generation is always active
+  const premiumEl = document.getElementById('f-renders-premium');
+  const hasRenders = premiumEl ? premiumEl.checked : false;
+  
+  const diasEntregaEl = document.getElementById('f-dias-entrega');
+  const finalSlaDias = diasEntregaEl ? parseInt(diasEntregaEl.value) || 3 : 3;
 
-  const finalSlaDias = parseInt(document.getElementById('f-dias-entrega').value) || 3;
-
-  const solicitudOriginalVal = `Responsable en obra: ${contacto}. Teléfono: ${telefono}. Email: ${email}. Condición del espacio: ${condicionLabel}. Densidad: aprox. ${densidad} puestos. Línea decorativa sugerida: ${linea}.\nFecha Registro Proyecto: ${compromisoStr}.\nEntregables solicitados: Planos Técnicos (Base)${hasRenders ? ', Renders de Alta Gama o Recorridos Virtuales (7 hábiles)' : ''}.\nObservaciones y restricciones: ${restricciones}`;
+  const solicitudOriginalVal = `Responsable en obra: ${contacto}. Teléfono: ${telefono}. Email: ${email}. Condición del espacio: ${condiciónLabel}. Densidad: aprox. ${densidad} puestos. \nFecha Registro Proyecto: ${compromisoStr}.\nEntregables solicitados: Planos Técnicos (Base)${hasRenders ? ', Renders de Alta Gama o Recorridos Virtuales (7 hábiles)' : ''}.\nObservaciones y restricciones: ${restricciones}`;
 
   // Read current draft vault files as original documents for realism
   const docOriginales = [];
@@ -3030,7 +3263,8 @@ function submitForm() {
   }
 
   const now = new Date();
-  const horaIngresoValue = document.getElementById('f-hora') ? document.getElementById('f-hora').value : (String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'));
+  const horaEl = document.getElementById('f-hora');
+  const horaIngresoValue = horaEl ? horaEl.value : (String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0'));
 
   const windowResult = evaluarVentanaOperativa(compromisoStr, horaIngresoValue);
   const fechaHoraOperativa = windowResult.ajustada.toISOString();
@@ -3156,32 +3390,73 @@ function evaluarVentanaOperativa(fechaStr, horaStr) {
   };
 }
 
-function switchModalTab(tabId) {
-  document.querySelectorAll('.modal-tab-btn').forEach(btn => btn.classList.remove('active'));
-  document.querySelectorAll('.modal-tab-content').forEach(content => content.style.display = 'none');
+const MODAL_TABS = ['resumen','tecnico','docs','sla'];
+
+function switchModalTab(tab) {
+  MODAL_TABS.forEach(t => {
+    const btn = document.getElementById('mtab-'+t);
+    const panel = document.getElementById('mpanel-'+t);
+    if (btn) btn.classList.toggle('active', t===tab);
+    if (panel) panel.style.display = t===tab ? 'block' : 'none';
+  });
   
-  const activeTabBtn = document.getElementById(`btn-tab-${tabId}`);
-  const activeTabContent = document.getElementById(`modal-tab-content-${tabId}`);
-  
-  if (activeTabBtn) activeTabBtn.classList.add('active');
-  if (activeTabContent) activeTabContent.style.display = 'block';
-  
-  if (tabId === 'calendario') {
+  if (tab === 'sla') {
     calcModalContract();
+    renderSlaPanel(activeProjectForMod);
   }
+  if (tab === 'tecnico') {
+    if (typeof renderMatrizPanel === 'function') renderMatrizPanel();
+  }
+}
+
+function updateSlaStatusBadge(entregaDate) {
+  const el = document.getElementById('sla-status');
+  if (!el) return;
+
+  const hoy = new Date();
+  const diffMs = entregaDate - hoy;
+  const diffH = Math.round(diffMs / 36e5);
+
+  if (diffH < 0) {
+    el.innerHTML = `<div class="sla-badge overdue">Vencido hace ${Math.abs(diffH)}h</div>`;
+  } else if (diffH < 24) {
+    el.innerHTML = `<div class="sla-badge critical">${diffH}h restantes — URGENTE</div>`;
+  } else {
+    const dias = Math.floor(diffH / 24);
+    el.innerHTML = `<div class="sla-badge ok">${dias} días hábiles restantes</div>`;
+  }
+}
+
+function renderSlaPanel(proj) {
+  if (!proj) return;
+  calcModalContract(); // This will call updateSlaStatusBadge
 }
 
 function calcModalContract() {
   if (!activeProjectForMod) return;
 
-  const fFecha = document.getElementById('f-modal-fecha').value;
-  const fHora = document.getElementById('f-modal-hora').value;
-  const fMonto = parseFloat(document.getElementById('f-modal-monto').value) || 0;
-  const fM2 = parseFloat(document.getElementById('f-modal-m2').value) || 0;
-  const fProyectistaId = document.getElementById('f-modal-proyectista').value;
-  const fRenders = document.getElementById('f-modal-renders').checked;
+  const elFecha = document.getElementById('f-modal-fecha');
+  const elHora = document.getElementById('f-modal-hora');
+  const elMonto = document.getElementById('f-modal-monto');
+  const elM2 = document.getElementById('f-modal-m2');
+  const elProyectista = document.getElementById('f-modal-proyectista');
+  const elRenders = document.getElementById('f-modal-renders');
   const inputDias = document.getElementById('f-modal-dias');
   const lockIndicator = document.getElementById('modal-lock-indicator');
+
+  const fFecha = elFecha ? elFecha.value : activeProjectForMod.fechaIngreso;
+  const fHora = elHora ? elHora.value : activeProjectForMod.horaIngreso;
+  
+  let fMonto = 0;
+  if (elMonto) {
+    fMonto = parseFloat(elMonto.value) || 0;
+  } else {
+    fMonto = parseFloat(activeProjectForMod.monto.replace(/[^0-9.]/g, '')) || 0;
+  }
+
+  const fM2 = elM2 ? (parseFloat(elM2.value) || 0) : (activeProjectForMod.m2 || 0);
+  const fProyectistaId = elProyectista ? elProyectista.value : 'unassigned';
+  const fRenders = elRenders ? elRenders.checked : (activeProjectForMod.renders || false);
 
   if (!fFecha || !fHora) return;
 
@@ -3194,7 +3469,8 @@ function calcModalContract() {
   activeProjectForMod.monto = formatterMXN.format(fMonto);
 
   // Sincronizar UI del Expediente
-  document.getElementById('md-monto').textContent = activeProjectForMod.monto;
+  const mdMontoEl = document.getElementById('md-monto');
+  if (mdMontoEl) mdMontoEl.textContent = activeProjectForMod.monto;
 
   // Evaluar ventana operativa
   const windowCheck = evaluarVentanaOperativa(fFecha, fHora);
@@ -3219,20 +3495,26 @@ function calcModalContract() {
 
   // Sincronizar badge de magnitud
   const mdMagnitudEl = document.getElementById('md-magnitud');
-  mdMagnitudEl.textContent = activeProjectForMod.magn;
-  mdMagnitudEl.className = `badge ${magnClass.split('-')[2]}`;
+  if (mdMagnitudEl) {
+    mdMagnitudEl.textContent = activeProjectForMod.magn;
+    mdMagnitudEl.className = `badge ${magnClass.split('-')[2]}`;
+  }
 
   // Rule #2: Blindaje 3D (ZONA MACRO)
-  let finalSlaDias = parseInt(inputDias.value) || 5;
+  let finalSlaDias = (inputDias ? (parseInt(inputDias.value) || 5) : 5);
   if (isMacro && fRenders) {
     finalSlaDias = 7;
-    inputDias.value = 7;
-    inputDias.readOnly = true;
-    inputDias.classList.add('locked');
+    if (inputDias) {
+      inputDias.value = 7;
+      inputDias.readOnly = true;
+      inputDias.classList.add('locked');
+    }
     if (lockIndicator) lockIndicator.style.display = 'inline';
   } else {
-    inputDias.readOnly = false;
-    inputDias.classList.remove('locked');
+    if (inputDias) {
+      inputDias.readOnly = false;
+      inputDias.classList.remove('locked');
+    }
     if (lockIndicator) lockIndicator.style.display = 'none';
   }
   activeProjectForMod.diasSla = finalSlaDias;
@@ -3241,33 +3523,40 @@ function calcModalContract() {
   const p = CLINIC_PROYECTISTAS[fProyectistaId];
   let suplenteBackupName = "";
   
+  const elBanner = document.getElementById('modal-override-banner');
+  const elAuditMod = document.getElementById('md-audit-modulacion');
+
   if (fProyectistaId === 'unassigned') {
-    document.getElementById('modal-override-banner').classList.add('hidden');
-    document.getElementById('md-audit-modulacion').innerHTML = `<span class="text-green">Bolsa de Trabajo Activa (Disponible)</span>`;
+    if (elBanner) elBanner.classList.add('hidden');
+    if (elAuditMod) elAuditMod.innerHTML = `<span class="text-green">Bolsa de Trabajo Activa (Disponible)</span>`;
     activeProjectForMod.proyectista = "Sin Asignar - Bolsa de Trabajo";
   } else if (p && p.enVacaciones) {
-    document.getElementById('modal-override-banner').classList.remove('hidden');
+    if (elBanner) elBanner.classList.remove('hidden');
     const suplente = CLINIC_PROYECTISTAS[p.suplenteId];
     suplenteBackupName = suplente ? suplente.nombre : "Rodrigo Vergara";
     
-    document.getElementById('modal-override-banner-text').textContent = 
-      `🌴 ALERTA CRUZADA MWM: El diseñador asignado original (${p.nombre}) se encuentra ausente por periodo vacacional. La orden de trabajo fue interceptada por el sistema y redirigida al panel Master para balanceo inmediato con su suplente designado (${suplenteBackupName}). Tu fecha de entrega permanece blindada.`;
+    const elBannerText = document.getElementById('modal-override-banner-text');
+    if (elBannerText) {
+      elBannerText.textContent = 
+        `🌴 ALERTA CRUZADA MWM: El diseñador asignado original (${p.nombre}) se encuentra ausente por periodo vacacional. La orden de trabajo fue interceptada por el sistema y redirigida al panel Master para balanceo inmediato con su suplente designado (${suplenteBackupName}). Tu fecha de entrega permanece blindada.`;
+    }
     
-    document.getElementById('md-audit-modulacion').innerHTML = `<span class="text-red">Ausente (Ruta suplente)</span>`;
+    if (elAuditMod) elAuditMod.innerHTML = `<span class="text-red">Ausente (Ruta suplente)</span>`;
     activeProjectForMod.proyectista = `${p.nombre} (Backup: ${suplenteBackupName})`;
 
     if (activeProjectForMod.lastSelectedDropdownId !== fProyectistaId) {
       showToast('warning', 'Alerta Cruzada MWM', `Redirigiendo proyecto de ${p.nombre} a ${suplenteBackupName} por vacaciones.`);
     }
   } else {
-    document.getElementById('modal-override-banner').classList.add('hidden');
-    document.getElementById('md-audit-modulacion').innerHTML = `<span class="text-green">Disponible (Asignado Directo)</span>`;
+    if (elBanner) elBanner.classList.add('hidden');
+    if (elAuditMod) elAuditMod.innerHTML = `<span class="text-green">Disponible (Asignado Directo)</span>`;
     activeProjectForMod.proyectista = p ? p.nombre : "Karen Tovar";
   }
   activeProjectForMod.lastSelectedDropdownId = fProyectistaId;
   
   // Sincronizar en pestaña comercial
-  document.getElementById('md-proyectista').textContent = activeProjectForMod.proyectista;
+  const mdProyectistaEl = document.getElementById('md-proyectista');
+  if (mdProyectistaEl) mdProyectistaEl.textContent = activeProjectForMod.proyectista;
 
   // Sincronizar en la tabla de negocios general
   renderTable();
@@ -3358,24 +3647,39 @@ function calcModalContract() {
   // UI Updates for the SLA Delivery Panel
   const finalDelDateValue = finalMilestone.date;
   const formattedFinalDateStr = textDateStyle.format(finalDelDateValue);
-  document.getElementById('md-sla-entrega-fecha').textContent = formattedFinalDateStr;
+  const slaFechaEl = document.getElementById('md-sla-entrega-fecha');
+  if (slaFechaEl) slaFechaEl.textContent = formattedFinalDateStr;
+
+  // Update SLA Status Badge
+  updateSlaStatusBadge(finalDelDateValue);
 
   // Hoja de auditoría
   const fmtTime = {hour:'2-digit', minute:'2-digit'};
-  document.getElementById('md-audit-original').textContent = 
-    `${windowCheck.original.toLocaleDateString('es-MX')} ${windowCheck.original.toLocaleTimeString('es-MX', fmtTime)} hrs`;
+  const elAuditOriginal = document.getElementById('md-audit-original');
+  if (elAuditOriginal) {
+    elAuditOriginal.textContent = `${windowCheck.original.toLocaleDateString('es-MX')} ${windowCheck.original.toLocaleTimeString('es-MX', fmtTime)} hrs`;
+  }
   
-  document.getElementById('md-audit-ajustada').textContent = 
-    `${windowCheck.ajustada.toLocaleDateString('es-MX')} ${windowCheck.ajustada.toLocaleTimeString('es-MX', fmtTime)} hrs`;
+  const elAuditAjustada = document.getElementById('md-audit-ajustada');
+  if (elAuditAjustada) {
+    elAuditAjustada.textContent = `${windowCheck.ajustada.toLocaleDateString('es-MX')} ${windowCheck.ajustada.toLocaleTimeString('es-MX', fmtTime)} hrs`;
+  }
   
-  document.getElementById('md-audit-proyectista').textContent = activeProjectForMod.proyectista;
+  const elAuditProyectista = document.getElementById('md-audit-proyectista');
+  if (elAuditProyectista) elAuditProyectista.textContent = activeProjectForMod.proyectista;
   
-  document.getElementById('md-audit-magnitud').textContent = magnitud;
-  document.getElementById('md-audit-sla-plazo').textContent = `${finalSlaDias} Días Hábiles (${isMacro && fRenders ? 'BLINDADO 3D' : 'ORDINARIO'})`;
+  const elAuditMagnitud = document.getElementById('md-audit-magnitud');
+  if (elAuditMagnitud) elAuditMagnitud.textContent = magnitud;
+
+  const elAuditSla = document.getElementById('md-audit-sla-plazo');
+  if (elAuditSla) {
+    elAuditSla.textContent = `${finalSlaDias} Días Hábiles (${isMacro && fRenders ? 'BLINDADO 3D' : 'ORDINARIO'})`;
+  }
 
   // Draw timeline steps
   const mTimelineContainer = document.getElementById('md-timeline-container');
-  mTimelineContainer.innerHTML = timelineItems.map((item, i) => {
+  if (mTimelineContainer) {
+    mTimelineContainer.innerHTML = timelineItems.map((item, i) => {
     let typeClass = "";
     let icon = "⚪";
     if (item.isStart) {
@@ -3408,6 +3712,7 @@ function calcModalContract() {
       </div>
     `;
   }).join('');
+  }
 }
 
 function openProjectDetails(pId) {
@@ -3441,8 +3746,8 @@ function openProjectDetails(pId) {
   // Render Original Documents list
   const docsListAssets = document.getElementById('md-documentos-list');
   const docsListInfo = document.getElementById('md-documentos-list-info');
-  docsListAssets.innerHTML = '';
-  docsListInfo.innerHTML = '';
+  if (docsListAssets) docsListAssets.innerHTML = '';
+  if (docsListInfo) docsListInfo.innerHTML = '';
 
   if (proj.documentosOriginales && proj.documentosOriginales.length > 0) {
     proj.documentosOriginales.forEach(doc => {
@@ -3455,29 +3760,43 @@ function openProjectDetails(pId) {
           <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Protocolo de descarga para ${doc.name}')" title="Descargar original">⬇</button>
         </div>
       `;
-      docsListAssets.innerHTML += docMarkup;
-      docsListInfo.innerHTML += docMarkup;
+      if (docsListAssets) docsListAssets.innerHTML += docMarkup;
+      if (docsListInfo) docsListInfo.innerHTML += docMarkup;
     });
   } else {
     const emptyMsg = `<div style="font-size:12px; color:var(--text-muted); text-align:center; padding:12px 0;">No se asociaron planos o levantamientos originales.</div>`;
-    docsListAssets.innerHTML = emptyMsg;
-    docsListInfo.innerHTML = emptyMsg;
+    if (docsListAssets) docsListAssets.innerHTML = emptyMsg;
+    if (docsListInfo) docsListInfo.innerHTML = emptyMsg;
   }
 
   // Render Revision History
   renderModificationsHistory();
-  renderEngineeringDeliveries();
+  renderMatrizPanel();
+
+  // Preview first document by default if exists
+  if (proj.documentosOriginales && proj.documentosOriginales.length > 0) {
+    const first = proj.documentosOriginales[0];
+    setTimeout(() => {
+      window.previewFile(first.name, first.ext);
+    }, 100);
+  }
 
   // Inicialización del Contrato Digital de SLA
   const montoNum = parseFloat(proj.monto.replace(/[^0-9.]/g, '')) || 0;
   
-  document.getElementById('f-modal-id-display').textContent = proj.id;
-  document.getElementById('f-modal-cliente').value = proj.cliente;
-  document.getElementById('f-modal-monto').value = Math.round(montoNum);
+  const elIdDisplay = document.getElementById('f-modal-id-display');
+  if (elIdDisplay) elIdDisplay.textContent = proj.id;
+
+  const elCliente = document.getElementById('f-modal-cliente');
+  if (elCliente) elCliente.value = proj.cliente;
+
+  const elMonto = document.getElementById('f-modal-monto');
+  if (elMonto) elMonto.value = Math.round(montoNum);
   
   // Derivar superficie m2 si no existe
   let initialM2 = proj.m2 || (proj.magn === 'Macro' ? 560 : proj.magn === 'Medio' ? 120 : 40);
-  document.getElementById('f-modal-m2').value = initialM2;
+  const elM2 = document.getElementById('f-modal-m2');
+  if (elM2) elM2.value = initialM2;
   proj.m2 = initialM2;
   
   // Derivar proyectistaId
@@ -3496,7 +3815,8 @@ function openProjectDetails(pId) {
   
   // Renders checkbox
   let showRenders = proj.renders === undefined ? (proj.cliente.includes('Sigma') ? true : false) : proj.renders;
-  document.getElementById('f-modal-renders').checked = showRenders;
+  const elRenders = document.getElementById('f-modal-renders');
+  if (elRenders) elRenders.checked = showRenders;
   proj.renders = showRenders;
   
   // Fecha y hora del sistema para el envío
@@ -3507,21 +3827,33 @@ function openProjectDetails(pId) {
   const systemDate = `${yyyy}-${mm}-${dd}`;
   const systemTime = String(ahora.getHours()).padStart(2, '0') + ':' + String(ahora.getMinutes()).padStart(2, '0');
   
-  document.getElementById('f-modal-fecha').value = proj.fechaIngreso || systemDate;
-  document.getElementById('f-modal-hora').value = proj.horaIngreso || systemTime;
+  const elFecha = document.getElementById('f-modal-fecha');
+  if (elFecha) elFecha.value = proj.fechaIngreso || systemDate;
+
+  const elHora = document.getElementById('f-modal-hora');
+  if (elHora) elHora.value = proj.horaIngreso || systemTime;
   
   // Días de SLA habituales
-  document.getElementById('f-modal-dias').value = proj.diasSla || 5;
+  const elDias = document.getElementById('f-modal-dias');
+  if (elDias) elDias.value = proj.diasSla || 5;
 
   // Inicialización de campos de reunión
-  document.getElementById('f-meeting-date').value = proj.meetingDate || '';
-  document.getElementById('f-meeting-time').value = proj.meetingTime || '';
-  document.getElementById('f-meeting-channel').value = proj.meetingChannel || 'Virtual (Teams / Meet)';
-  document.getElementById('f-meeting-status').value = proj.meetingStatus || 'pendiente';
+  const elMeetingDate = document.getElementById('f-meeting-date');
+  if (elMeetingDate) elMeetingDate.value = proj.meetingDate || '';
+
+  const elMeetingTime = document.getElementById('f-meeting-time');
+  if (elMeetingTime) elMeetingTime.value = proj.meetingTime || '';
+
+  const elMeetingChannel = document.getElementById('f-meeting-channel');
+  if (elMeetingChannel) elMeetingChannel.value = proj.meetingChannel || 'Virtual (Teams / Meet)';
+
+  const elMeetingStatus = document.getElementById('f-meeting-status');
+  if (elMeetingStatus) elMeetingStatus.value = proj.meetingStatus || 'pendiente';
+  
   updateMeetingStatusBadge(proj.meetingStatus || 'pendiente');
 
-  // Resetear siempre a la pestaña de Ficha Comercial al abrir el expediente
-  switchModalTab('info');
+  // Resetear siempre a la pestaña de Resumen al abrir el expediente
+  switchModalTab('resumen');
 
   // Show Modal
   document.getElementById('project-detail-modal').classList.add('active');
@@ -3547,17 +3879,23 @@ function updateMeetingStatusBadge(status) {
 
 function saveMeetingFromModal() {
   if (!activeProjectForMod) return;
-  activeProjectForMod.meetingDate = document.getElementById('f-meeting-date').value;
-  activeProjectForMod.meetingTime = document.getElementById('f-meeting-time').value;
-  activeProjectForMod.meetingChannel = document.getElementById('f-meeting-channel').value;
-  activeProjectForMod.meetingStatus = document.getElementById('f-meeting-status').value;
-  updateMeetingStatusBadge(activeProjectForMod.meetingStatus);
+  const elDate = document.getElementById('f-meeting-date');
+  const elTime = document.getElementById('f-meeting-time');
+  const elChannel = document.getElementById('f-meeting-channel');
+  const elStatus = document.getElementById('f-meeting-status');
+
+  if (elDate) activeProjectForMod.meetingDate = elDate.value;
+  if (elTime) activeProjectForMod.meetingTime = elTime.value;
+  if (elChannel) activeProjectForMod.meetingChannel = elChannel.value;
+  if (elStatus) activeProjectForMod.meetingStatus = elStatus.value;
+  
+  if (elStatus) updateMeetingStatusBadge(activeProjectForMod.meetingStatus);
   saveProjectsToStorage();
 }
 
 function renderModificationsHistory() {
   const historyContainer = document.getElementById('md-modificaciones-history');
-  historyContainer.innerHTML = '';
+  if (historyContainer) historyContainer.innerHTML = '';
   
   if (activeProjectForMod && activeProjectForMod.modificaciones && activeProjectForMod.modificaciones.length > 0) {
     activeProjectForMod.modificaciones.forEach((mod, index) => {
@@ -3586,7 +3924,7 @@ function renderModificationsHistory() {
   }
 }
 
-function renderEngineeringDeliveries() {
+function renderMatrizPanel() {
   const techDocs = document.getElementById('md-assets-tech-docs');
   const galleryDocs = document.getElementById('md-assets-gallery');
   const d3Docs = document.getElementById('md-assets-3d');
@@ -3604,12 +3942,12 @@ function renderEngineeringDeliveries() {
 
   // Clear previous state
   const noMeta = `<div style="font-size:11px; color:var(--text-muted); text-align:center; padding: 12px 0;">No metadatos.</div>`;
-  techDocs.innerHTML = noMeta;
-  galleryDocs.innerHTML = noMeta;
-  d3Docs.innerHTML = noMeta;
-  xmlDocs.innerHTML = noMeta;
-  modContainer.style.display = 'none';
-  modList.innerHTML = '';
+  if (techDocs) techDocs.innerHTML = noMeta;
+  if (galleryDocs) galleryDocs.innerHTML = noMeta;
+  if (d3Docs) d3Docs.innerHTML = noMeta;
+  if (xmlDocs) xmlDocs.innerHTML = noMeta;
+  if (modContainer) modContainer.style.display = 'none';
+  if (modList) modList.innerHTML = '';
 
   if (!activeProjectForMod) return;
 
@@ -3620,7 +3958,7 @@ function renderEngineeringDeliveries() {
 
   // Let's create some dummy files for 'original' delivery
   if (isSigma || isDesarrollo) {
-    techDocs.innerHTML = `
+    if (techDocs) techDocs.innerHTML = `
       <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('planos_arquitectonicos_v1.pdf', 'PDF')">
         <div style="display:flex; align-items:center; gap:6px;">
           <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">PDF</span>
@@ -3629,7 +3967,7 @@ function renderEngineeringDeliveries() {
         <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Archivo descargado')" title="Descargar">⬇</button>
       </div>
     `;
-    xmlDocs.innerHTML = `
+    if (xmlDocs) xmlDocs.innerHTML = `
       <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('metadata_proyecto.xml', 'XML')">
         <div style="display:flex; align-items:center; gap:6px;">
           <span style="font-family:var(--font-mono); font-size:10px; color:var(--gold); font-weight:600; border:1px solid rgba(201,169,110,0.2); padding:1px 3px; border-radius:3px;">XML</span>
@@ -3641,7 +3979,7 @@ function renderEngineeringDeliveries() {
   }
 
   if (activeProjectForMod.renders || isSigma) {
-    galleryDocs.innerHTML = `
+    if (galleryDocs) galleryDocs.innerHTML = `
       <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('render_vista_1.jpg', 'JPG')">
         <div style="display:flex; align-items:center; gap:6px;">
           <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">JPG</span>
@@ -3650,7 +3988,7 @@ function renderEngineeringDeliveries() {
         <button class="btn-icon" style="background:none; border:none; cursor:pointer;" onclick="event.stopPropagation(); showToast('success', 'Descarga Registrada', 'Archivo descargado')" title="Descargar">⬇</button>
       </div>
     `;
-    d3Docs.innerHTML = `
+    if (d3Docs) d3Docs.innerHTML = `
       <div class="form-file-item file-clickable" style="padding: 6px 10px; cursor:pointer;" onclick="previewFile('modelo_oficinas_magna.glb', 'GLB')">
         <div style="display:flex; align-items:center; gap:6px;">
           <span style="font-family:var(--font-mono); font-size:10px; color:var(--blue); font-weight:600; border:1px solid rgba(88,166,255,0.2); padding:1px 3px; border-radius:3px;">GLB</span>
@@ -3663,7 +4001,7 @@ function renderEngineeringDeliveries() {
 
   // Handle Modifications (Iterative Deliverables)
   if (activeProjectForMod.modificaciones && activeProjectForMod.modificaciones.length > 0) {
-    modContainer.style.display = 'block';
+    if (modContainer) modContainer.style.display = 'block';
 
     activeProjectForMod.modificaciones.forEach((mod, idx) => {
       // Mock some returned files for each modification
@@ -3760,10 +4098,11 @@ function renderEngineeringDeliveries() {
 }
 
 function closeProjectModal(e, force = false) {
-  if (e.target === document.getElementById('project-detail-modal') || force) {
+  if (force || (e && e.target === document.getElementById('project-detail-modal'))) {
     document.getElementById('project-detail-modal').classList.remove('active');
   }
 }
+window.closeProjectModal = closeProjectModal;
 
 /* --- SOLICITAR NUEVO CAMBIO / REPORTE DE ARCHIVOS --- */
 function triggerModFileUpload() {
@@ -4103,165 +4442,37 @@ function calcApproxDeliveryDate() {
   recalcularCalibracion();
 }
 
-/* --- CANVAS VECTORIAL INTERACTIVO --- */
-function selectTool(id, el) {
-  if(STATE.activeTool === id) {
-    // Deselect
-    STATE.activeTool = null;
-    el.classList.remove('active');
-    document.getElementById('canvas-area').style.cursor = 'default';
-    if(STATE.drawingWall) finishWall();
-  } else {
-    if(STATE.drawingWall) finishWall();
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    STATE.activeTool = id;
-    
-    if(id === 'wall') document.getElementById('canvas-area').style.cursor = 'crosshair';
-    else if(id === 'text') document.getElementById('canvas-area').style.cursor = 'text';
-    else document.getElementById('canvas-area').style.cursor = 'crosshair';
-  }
-}
+/* --- CANVAS VECTORIAL INTERACTIVO (DEPRECATED - MOVED TO IFRAME/REACT) --- */
+// Logic for canvas interaction in Step 2 is now handled by either LienzoBriefInteractivo.tsx or cerebro-lienzo-amueblado.html inside the iframe.
+// We keep empty function stubs to prevent reference errors if they are called elsewhere.
 
-function handleCanvasClick(e) {
-  if(!STATE.activeTool) return;
-  
-  const wrapper = document.getElementById('canvas-area');
-  const rect = wrapper.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const xPercent = (x / rect.width) * 100;
-  const yPercent = (y / rect.height) * 100;
+function selectTool(id, el) {}
+function handleCanvasClick(e) {}
+function handleCanvasMove(e) {}
+function finishWall() {}
+function spawnTextBox(xP, yP) {}
+function renderCanvasElements() {}
+function triggerBgUpload() {}
+function handleFileSelected(event) {}
+function toggleGrid() {}
+function exportCanvas() {}
+function clearCanvas() {}
 
-  // OUT OF BOUNDS check (margins)
-  if(xPercent < 0 || xPercent > 100 || yPercent < 0 || yPercent > 100) return;
-
-  if (STATE.activeTool === 'wall') {
-    // Vectorial Polyline points
-    STATE.drawingWall = true;
-    STATE.currentWallPoints.push(`${x},${y}`);
-    document.getElementById('current-wall').setAttribute('points', STATE.currentWallPoints.join(' '));
-  } else if (STATE.activeTool === 'text') {
-    spawnTextBox(xPercent, yPercent);
-    selectTool(null, document.querySelector('.tool-btn.active')); // drop tool
-  } else {
-    // Pin logic
-    const usersCount = prompt("¿Aforo estimado (personas) para esta zona?", "4");
-    if(usersCount !== null) {
-      STATE.pins.push({ x: xPercent, y: yPercent, type: STATE.activeTool, users: parseInt(usersCount)||0 });
-      renderCanvasElements();
-      showToast('success', 'Mapeo Registrado', 'Pin vectorial sincronizado.');
-    }
-  }
-}
-
-function handleCanvasMove(e) {
-  if(!STATE.drawingWall) return;
-  const wrapper = document.getElementById('canvas-area');
-  const rect = wrapper.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  
-  let ptsStr = STATE.currentWallPoints.join(' ') + ` ${x},${y}`;
-  document.getElementById('current-wall').setAttribute('points', ptsStr);
-}
-
-// Complete line on double click or pressing esc
+// Remove key listeners for canvas if they exist globally
 window.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape' && STATE.drawingWall) finishWall();
-  if(e.key === 'Escape' && STATE.activeTool) {
-    const el = document.querySelector('.tool-btn.active');
-    if(el) selectTool(STATE.activeTool, el); // deactivate
+  if (e.key === 'Escape') {
+      // Modals
+      const fsModal = document.getElementById('fullscreen-preview-modal');
+      const projectModal = document.getElementById('project-detail-modal');
+      
+      if (fsModal && fsModal.classList.contains('active')) {
+        window.closeFullscreenPreview(null, true);
+      } else if (projectModal && projectModal.classList.contains('active')) {
+        window.closeProjectModal(null, true);
+      }
   }
 });
-document.getElementById('canvas-area').addEventListener('dblclick', (e) => {
-  if(STATE.drawingWall) { e.preventDefault(); e.stopPropagation(); finishWall(); }
-});
 
-function finishWall() {
-  if(STATE.currentWallPoints.length > 1) {
-    const pts = STATE.currentWallPoints.join(' ');
-    const polyStr = `<polyline points="${pts}" />`;
-    STATE.savedWallsStrings.push(polyStr);
-    document.getElementById('walls-group').innerHTML += polyStr;
-  }
-  STATE.currentWallPoints = [];
-  STATE.drawingWall = false;
-  document.getElementById('current-wall').setAttribute('points', '');
-}
-
-function spawnTextBox(xP, yP) {
-  const layer = document.getElementById('pins-layer');
-  const div = document.createElement('div');
-  div.className = 'canvas-floating-text';
-  div.style.left = xP + '%';
-  div.style.top = yP + '%';
-  div.innerHTML = 'Anotación técnica...';
-  // Standard content editable behaviour
-  div.setAttribute('contenteditable', 'true');
-  layer.appendChild(div);
-  
-  setTimeout(() => { div.focus(); document.execCommand('selectAll',false,null); }, 50);
-}
-
-function renderCanvasElements() {
-  // Walls are handled directly in SVG DOM. 
-  // Pins must be rendered dynamically ensuring % constraints remain
-  const layer = document.getElementById('pins-layer');
-  // keep texts, clear pins
-  Array.from(layer.children).forEach(c => {
-    if(c.classList.contains('blueprint-pin')) c.remove();
-  });
-
-  STATE.pins.forEach(pin => {
-    const el = document.createElement('div');
-    el.className = 'blueprint-pin';
-    el.style.left = pin.x + '%';
-    el.style.top = pin.y + '%';
-    el.innerHTML = `
-      <div class="pin-circle">${TOOL_ICONS[pin.type] || '📌'}</div>
-      ${pin.users > 0 ? `<div class="pin-users">${pin.users}</div>` : ''}
-    `;
-    layer.appendChild(el);
-  });
-}
-
-function triggerBgUpload() {
-  document.getElementById('hidden-file-input').click();
-}
-function handleFileSelected(event) {
-  const file = event.target.files[0];
-  if (file) {
-    const url = URL.createObjectURL(file);
-    document.getElementById('c-bg-image').src = url;
-    document.getElementById('c-bg-image').style.display = 'block';
-    showToast('success', 'Fondo Sincronizado', 'La imagen vectorizada está lista como base.');
-  }
-}
-
-function toggleGrid() {
-  const g = document.getElementById('c-grid');
-  g.style.display = g.style.display === 'none' ? 'block' : 'none';
-}
-
-function exportCanvas() {
-  if(STATE.activeTool) selectTool(STATE.activeTool, document.querySelector('.tool-btn.active')); // drop tool
-  showToast('info', 'Motor Rasterizador', 'Generando vista de alta calidad (PNG)...');
-  setTimeout(() => {
-    showToast('success', 'Exportación Exitosa', 'El archivo ha sido guardado en sus descargas locales.');
-  }, 1500);
-}
-
-function clearCanvas() {
-  if(confirm("Atención: Se eliminarán todos los trazos vectoriales, notas y pines. ¿Proceder?")) {
-    STATE.pins = [];
-    STATE.savedWallsStrings = [];
-    document.getElementById('walls-group').innerHTML = '';
-    document.getElementById('pins-layer').innerHTML = '';
-    document.getElementById('c-bg-image').style.display = 'none';
-    showToast('info', 'Lienzo Purgado', 'El entorno ha sido restablecido a ceros.');
-  }
-}
 
 /* --- VAULT (BÓVEDA) RENDERING --- */
 function renderVault() {
@@ -4474,14 +4685,13 @@ window.previewFile = function(filename, ext) {
 
   // Highlight active
   document.querySelectorAll('.file-clickable').forEach(el => el.style.background = '');
-  if (event && event.currentTarget) {
+  if (typeof event !== 'undefined' && event && event.currentTarget) {
     event.currentTarget.style.background = 'var(--surface-3)';
   }
 
   if (['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(ext)) {
     previewEl.innerHTML = `<img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800" style="width:100%; height:100%; object-fit:cover; background:#000;" alt="Preview">`;
   } else if (ext === 'pdf') {
-    // Note: a real app would use the actual PDF source url. We use a placeholder image representation in demo since actual PDF viewing can be tricky in an iframe without a real valid URL.
     previewEl.innerHTML = `
       <div style="width:100%; height:100%; display:flex; flex-direction:column; background:var(--surface);">
         <div style="padding: 12px; background: rgba(88,166,255,0.05); border-bottom:1px solid var(--border); display:flex; gap:12px; align-items:center;">
@@ -4500,10 +4710,21 @@ window.previewFile = function(filename, ext) {
       </div>
     `;
   } else if (ext === 'glb') {
-    previewEl.innerHTML = `<div style="position:absolute; top:0; left:0; width:100%; height:100%;"><model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" poster="https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&w=800&q=80" alt="Preview 3D" auto-rotate camera-controls style="width:100%; height:100%; display:block; background:transparent;"></model-viewer></div>`;
+    previewEl.innerHTML = `
+      <div style="width:100%; height:100%; background:#000; border-radius:4px; overflow:hidden; position:relative;">
+        <model-viewer 
+          src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
+          poster="https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?auto=format&fit=crop&w=800&q=80" 
+          alt="Preview 3D" 
+          auto-rotate 
+          camera-controls 
+          style="width:100%; height:100%; background:transparent; display:block;"
+        ></model-viewer>
+        <button onclick="openFullscreenPreview()" style="position:absolute; top:12px; right:12px; background: rgba(0,0,0,0.5); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:6px 12px; border-radius:4px; cursor:pointer; font-size:10px; z-index:10;">🔍 Pantalla Completa</button>
+      </div>`;
   } else if (ext === 'xml') {
     const defaultXml = `<?xml version="1.0" encoding="UTF-8"?>
-<proyecto id="${activeProjectForMod ? activeProjectForMod.hunterID : 'HNT-000'}">
+<proyecto id="${activeProjectForMod ? activeProjectForMod.id : 'HNT-000'}">
   <metadatos>
     <estado>Aprobado</estado>
     <origen>Bóveda Hunter CRM</origen>
@@ -4545,7 +4766,7 @@ window.openFullscreenPreview = function() {
 };
 
 window.closeFullscreenPreview = function(e, force = false) {
-  if (force || e.target.id === 'fullscreen-preview-modal') {
+  if (force || (e && e.target && e.target.id === 'fullscreen-preview-modal')) {
     document.getElementById('fullscreen-preview-modal').classList.remove('active');
     document.getElementById('fs-preview-content').innerHTML = ''; // release resources
   }

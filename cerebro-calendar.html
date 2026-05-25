@@ -655,6 +655,24 @@ header {
   font-family: var(--font-mono);
   font-weight: 700;
 }
+
+/* Breadcrumb Styles */
+.breadcrumb-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 40px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  flex-shrink: 0;
+}
+.bc-link { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+.bc-link:hover { color: var(--text-primary); }
+.bc-sep { color: var(--text-muted); }
+.bc-active { color: var(--text-primary); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -668,6 +686,8 @@ header {
     <a href="/index.html" class="btn-back">✕ Volver a Mis Negocios</a>
   </div>
 </header>
+
+<nav id="breadcrumb-nav" class="breadcrumb-nav"></nav>
 
 <div class="main-content">
   <!-- Top Intro Section -->
@@ -901,6 +921,11 @@ function saveProjects() {
 }
 
 function initCalendar() {
+  renderBreadcrumb([
+    { label: 'CEREBRO 2.0', href: '/index.html' },
+    { label: 'Mis negocios', href: '/index.html' },
+    { label: 'Calendario de entregas' },
+  ]);
   renderCalendarGrid();
   renderProjectSideList();
   updateKPIs();
@@ -1134,6 +1159,18 @@ function updateKPIs() {
   
   const pendingCount = vProjects.filter(p => !p.meetingDate || p.meetingStatus === 'pendiente').length;
   document.getElementById('kpi-reuniones-pendientes').textContent = pendingCount;
+}
+
+function renderBreadcrumb(crumbs) {
+  const nav = document.getElementById('breadcrumb-nav');
+  if (!nav) return;
+  nav.innerHTML = crumbs.map((c, i) => {
+    const isLast = i === crumbs.length - 1;
+    if(isLast)
+      return `<span class="bc-active">${c.label}</span>`;
+    return `<a href="${c.href || '#'}" class="bc-link">${c.label}</a>
+            <span class="bc-sep">/</span>`;
+  }).join('');
 }
 
 /* ============================================================
