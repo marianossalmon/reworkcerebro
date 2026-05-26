@@ -27,8 +27,8 @@
   --radius:8px;
   --radius-lg:12px;
   --header-h:56px;
-  --left-w:260px;
-  --right-w:320px;
+  --left-w:220px;
+  --right-w:260px;
   --font-ui:'IBM Plex Sans',system-ui,sans-serif;
   --font-display:'Playfair Display',serif;
   --font-mono:'IBM Plex Mono',monospace;
@@ -125,10 +125,10 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-ui);background:var(
 .furniture-item:hover{border-color:var(--border-light);background:var(--surface-hover);transform:translateY(-1px)}
 .furniture-item:active{cursor:grabbing;transform:scale(0.97)}
 .furniture-item.selected-furniture{border-color:var(--gold);background:var(--gold-d)}
-.fi-icon{font-size:28px;line-height:1}
-.fi-svg{width:48px;height:36px;display:flex;align-items:center;justify-content:center}
+.fi-icon{font-size:20px;line-height:1}
+.fi-svg{width:32px;height:24px;display:flex;align-items:center;justify-content:center}
 .fi-svg svg{width:100%;height:100%}
-.fi-name{font-size:10px;font-weight:600;text-align:center;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;line-height:1.3}
+.fi-name{font-size:9px;font-weight:600;text-align:center;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px;line-height:1.2}
 .fi-capacity{
   position:absolute;top:6px;right:6px;
   font-size:9px;font-family:var(--font-mono);font-weight:600;
@@ -159,11 +159,11 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-ui);background:var(
   box-shadow:0 8px 24px rgba(0,0,0,0.6);
 }
 .tool-btn{
-  width:38px;height:38px;border-radius:var(--radius);
+  width:32px;height:32px;border-radius:var(--radius);
   border:1px solid transparent;background:transparent;
   color:var(--text-secondary);cursor:pointer;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  transition:all var(--transition);font-size:18px;gap:2px;
+  transition:all var(--transition);font-size:14px;gap:2px;
 }
 .tool-btn:hover{background:var(--surface-2);color:var(--text-primary);border-color:var(--border)}
 .tool-btn.active{
@@ -247,8 +247,95 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-ui);background:var(
   width:var(--right-w);flex-shrink:0;
   background:var(--bg);border-left:1px solid var(--border);
   display:flex;flex-direction:column;overflow:hidden;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), border 0.4s;
 }
-#right-panel.collapsed{width:0;border:none}
+#right-panel.collapsed{
+  width:0 !important;
+  border-left:none !important;
+}
+
+.sleek-toggle-tab {
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #161a22 0%, #0d0f14 100%);
+  border: 1.5px solid var(--border);
+  border-right: none;
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+  padding: 22px 8px;
+  cursor: pointer;
+  box-shadow: -8px 8px 24px rgba(0, 0, 0, 0.7);
+  transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  user-select: none;
+  min-width: 32px;
+}
+.sleek-toggle-tab:hover {
+  background: linear-gradient(135deg, #1f242e 0%, #11141b 100%);
+  border-color: var(--gold);
+}
+.sleek-toggle-tab:active {
+  transform: translateY(-50%) scale(0.95);
+}
+.sleek-toggle-tab.collapsed {
+  right: 0px !important;
+}
+
+.sleek-toggle-tab .toggle-indicator-bar {
+  width: 4px;
+  height: 24px;
+  background: var(--gold);
+  border-radius: 2px;
+  margin-bottom: 2px;
+  box-shadow: 0 0 10px rgba(201, 169, 110, 0.6);
+  transition: transform 0.4s ease, background-color 0.3s;
+}
+.sleek-toggle-tab.collapsed .toggle-indicator-bar {
+  background: #2ea44f;
+  box-shadow: 0 0 10px rgba(46, 164, 79, 0.6);
+}
+
+.vertical-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-weight: 800;
+  font-size: 10px;
+  color: #c9a96e;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.vertical-text span {
+  display: block;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.pull-label {
+  font-family: var(--font-ui);
+  font-size: 7.5px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+.sleek-toggle-tab:hover .pull-label {
+  opacity: 1;
+  color: #fff;
+}
 
 .rp-header{
   padding:16px;border-bottom:1px solid var(--border);
@@ -293,9 +380,9 @@ html,body{height:100%;overflow:hidden;font-family:var(--font-ui);background:var(
 .kpi-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
 .kpi-mini{
   background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);
-  padding:10px;text-align:center;
+  padding:6px;text-align:center;
 }
-.kpi-mini-val{font-size:22px;font-weight:700;color:var(--text-primary);font-family:var(--font-mono)}
+.kpi-mini-val{font-size:18px;font-weight:700;color:var(--text-primary);font-family:var(--font-mono)}
 .kpi-mini-label{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 
 /* Selected item properties */
@@ -587,6 +674,21 @@ body.tool-pan:active #main-canvas{cursor:grabbing}
 
     <!-- Hint bar -->
     <div id="hint-bar" class="hidden">Selecciona una herramienta para comenzar</div>
+
+    <!-- Sleek Toggle Tab for Resumen de Amueblado -->
+    <button id="right-panel-toggle-btn" onclick="toggleRightPanel()" class="sleek-toggle-tab" title="Mostrar/ocultar Resumen">
+      <div class="toggle-indicator-bar"></div>
+      <div class="vertical-text">
+        <span>R</span>
+        <span>E</span>
+        <span>S</span>
+        <span>U</span>
+        <span>M</span>
+        <span>E</span>
+        <span>N</span>
+      </div>
+      <span class="pull-label">Jálale</span>
+    </button>
   </div>
 
   <!-- ══ RIGHT PANEL ══ -->
@@ -2539,6 +2641,32 @@ try {
 
 // Setup baseline history
 saveHistory();
+
+window.toggleRightPanel = function() {
+  const rp = document.getElementById('right-panel');
+  const btn = document.getElementById('right-panel-toggle-btn');
+  if (rp) {
+    const isCollapsed = rp.classList.contains('collapsed');
+    if (isCollapsed) {
+      rp.classList.remove('collapsed');
+      if (btn) {
+        btn.classList.remove('collapsed');
+        btn.title = 'Ocultar Resumen';
+      }
+    } else {
+      rp.classList.add('collapsed');
+      if (btn) {
+        btn.classList.add('collapsed');
+        btn.title = 'Mostrar Resumen';
+      }
+    }
+    // Resize the canvas container to fit if necessary (since parent changed)
+    setTimeout(() => {
+      if (typeof resizeCanvas === 'function') resizeCanvas();
+      if (typeof render === 'function') render();
+    }, 450);
+  }
+};
 
 render();
 showToast('Lienzo listo — importa un plano o dibuja desde cero', '🗺️');

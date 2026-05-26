@@ -22,9 +22,21 @@
   --color-teal-500: #10b981;
 }
 
+html {
+  zoom: 80%;
+  width: 100% !important;
+  height: 125vh !important;
+  overflow: hidden;
+}
+
+body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-  background-color: var(--color-bg);
-  color: var(--color-text-main);
   @apply font-sans text-[13px] antialiased leading-relaxed;
 }
 
