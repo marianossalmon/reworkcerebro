@@ -237,7 +237,7 @@ header {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(5, 120px);
+  grid-auto-rows: 120px;
   gap: 8px;
 }
 
@@ -248,9 +248,11 @@ header {
   padding: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   transition: all var(--transition);
   cursor: pointer;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .calendar-cell:hover {
@@ -862,7 +864,7 @@ const defaultProjects = [
     cliente: "Corporativo Sigma / Torres del Valle", 
     id: "HNT-0418", 
     monto: "$1,850,000", 
-    magn: "Macro", 
+    magn: "Grande", 
     magnClass: "mag-alert-macro", 
     proyectista: "Karen Tovar", 
     etapa: "En Diseño (Arquitectura)",
@@ -880,7 +882,7 @@ const defaultProjects = [
     cliente: "Oficinas Regionales OXXO", 
     id: "HNT-0391", 
     monto: "$480,000", 
-    magn: "Medio", 
+    magn: "Mediano", 
     magnClass: "mag-alert-medio", 
     proyectista: "Karen Tovar", 
     etapa: "Validación Hunter",
@@ -898,7 +900,7 @@ const defaultProjects = [
     cliente: "Consultorio Especialidades Médicas", 
     id: "HNT-0405", 
     monto: "$85,000", 
-    magn: "Micro", 
+    magn: "Pequeño", 
     magnClass: "mag-alert-micro", 
     proyectista: "Susana Ortiz", 
     etapa: "Cotización Exprés",
@@ -922,8 +924,8 @@ function saveProjects() {
 
 function initCalendar() {
   renderBreadcrumb([
-    { label: 'CEREBRO 2.0', href: '/index.html' },
-    { label: 'Mis negocios', href: '/index.html' },
+    { label: 'CEREBRO 2.0', href: '/cerebro.html' },
+    { label: 'Mis negocios', href: '/cerebro.html' },
     { label: 'Calendario de entregas' },
   ]);
   renderCalendarGrid();
@@ -1051,6 +1053,8 @@ function renderCalendarGrid() {
 
       // Check events in cell (Deliveries and meetings)
       let eventsHtml = '';
+      let slaIndicatorsHtml = '';
+      
       vProjects.forEach(p => {
         // Calculate Technical Commitment Date
         const delDate = calcularEntrega(p);
@@ -1061,12 +1065,9 @@ function renderCalendarGrid() {
 
         if (delDateStr === cellDateStr) {
           // It's delivery commitment day!
-          const magClass = p.magn === 'Macro' ? 'type-delivery-macro' : (p.magn === 'Medio' ? 'type-delivery-medio' : 'type-delivery-micro');
-          eventsHtml += `
-            <div class="cell-event ${magClass}" title="Entrega de Diseño: ${p.cliente}">
-              🏁 ${p.id} ${labelName}
-            </div>
-          `;
+          // We no longer show this as a big button unless it's scheduled. We show an SLA indicator in the header instead.
+          const magColor = p.magn === 'Grande' ? 'var(--red)' : (p.magn === 'Mediano' ? 'var(--blue)' : 'var(--green)');
+          slaIndicatorsHtml += `<span title="Límite SLA: ${p.id}" style="color:${magColor}; font-size:12px; margin-left: 4px;">🎯</span>`;
         }
 
         // Check if there is a meeting on this date
@@ -1085,9 +1086,14 @@ function renderCalendarGrid() {
 
       cell.innerHTML = `
         <div class="cell-header">
-          <span class="cell-day-num">${cellIndex}</span>
-          ${isHoliday ? '<span class="cell-indicator-bullet text-gold" title="Día Festivo Feriado">🎗️</span>' : ''}
-          ${isToday ? '<span class="badge gold" style="font-size:8px; padding:1px 4px;">Hoy</span>' : ''}
+          <div>
+             <span class="cell-day-num">${cellIndex}</span>
+             ${slaIndicatorsHtml}
+          </div>
+          <div style="display: flex; gap: 4px;">
+            ${isHoliday ? '<span class="cell-indicator-bullet text-gold" title="Día Festivo Feriado">🎗️</span>' : ''}
+            ${isToday ? '<span class="badge gold" style="font-size:8px; padding:1px 4px;">Hoy</span>' : ''}
+          </div>
         </div>
         <div class="cell-items-wrapper">
           ${eventsHtml}

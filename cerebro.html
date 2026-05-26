@@ -599,7 +599,7 @@ input[type="checkbox"]:disabled {
 
 /* Form Footer */
 .form-footer {
-  padding: 24px 56px;
+  padding: 24px 56px 48px 56px;
   background: var(--surface);
   border-top: 1px solid var(--border);
   display: flex;
@@ -2087,14 +2087,13 @@ body.immersive-briefing .breadcrumb-nav {
           <div class="filter-controls">
             <select id="filter-magnitude" class="filter-select" onchange="renderTable()">
               <option value="all">Todas las Magnitudes</option>
-              <option value="Micro">Pequeño (Micro)</option>
-              <option value="Medio">Mediano (Medio)</option>
-              <option value="Macro">Grande (Macro)</option>
-              <option value="Corporativo">Corporativo / Premium</option>
+              <option value="Pequeño">Pequeño</option>
+              <option value="Mediano">Mediano</option>
+              <option value="Grande">Grande</option>
             </select>
             
             <select id="filter-stage" class="filter-select" onchange="renderTable()">
-              <option value="all">Todas las Etapas</option>
+              <option value="all">Todos los Estatus</option>
               <option value="Briefing">Briefing / Levantamiento</option>
               <option value="Diseño">En Diseño</option>
               <option value="Propuesta">Propuesta Comercial</option>
@@ -2140,7 +2139,7 @@ body.immersive-briefing .breadcrumb-nav {
                 <th>Monto (MXN)</th>
                 <th>Magnitud</th>
                 <th>Proyectista Asignado</th>
-                <th>Etapa Pipeline</th>
+                <th>Estatus de Proyecto</th>
               </tr>
             </thead>
             <tbody id="v-table-body">
@@ -2163,7 +2162,7 @@ body.immersive-briefing .breadcrumb-nav {
             <h1 class="display-title" style="font-size:36px;">Expediente Técnico</h1>
             <div class="tabs-nav" style="margin-top:32px;">
               <a class="tab-link active" id="t-datos" onclick="switchTab('datos')">1. Datos Generales & Alcance</a>
-              <a class="tab-link" id="t-briefing" onclick="switchTab('briefing')">2. Lienzo de Briefing Interactivo</a>
+              <a class="tab-link" id="t-briefing" onclick="switchTab('briefing')">2. Lienzo</a>
             </div>
           </div>
 
@@ -2193,17 +2192,20 @@ body.immersive-briefing .breadcrumb-nav {
               <div class="wizard-card active" id="step-card-1" style="background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
                 <div class="section-title">📝 Datos Generales del Cliente</div>
                 <div class="form-grid">
-                  <div class="form-group col-span-2">
+                  <div class="form-group">
                     <label class="form-label">Razón Social del Cliente <span style="color: var(--gold);">*</span></label>
                     <input type="text" class="form-input" id="f-razon" placeholder="Ej. Grupo Industrial Torreón S.A." oninput="recalcularCalibracion(); autoSave();">
                   </div>
-                  <div class="form-group col-span-2">
-                    <label class="form-label">ID de Proyecto (En caso de cliente recurrente)</label>
-                    <input type="text" class="form-input" placeholder="Ej. PRJ-2026-X" id="f-tel">
+                  <div class="form-group">
+                    <label class="form-label">Tipo de Cliente</label>
+                    <select class="form-select" id="f-tipo-cliente">
+                      <option value="B2B">B2B (Empresa)</option>
+                      <option value="B2P">B2P (Particular)</option>
+                    </select>
                   </div>
                   <div class="form-group">
-                    <label class="form-label">Hunter ID</label>
-                    <input type="text" class="form-input" id="f-hunter" placeholder="HNT-2026-0000" readonly>
+                    <label class="form-label">ID de Proyecto (En caso de cliente recurrente)</label>
+                    <input type="text" class="form-input" placeholder="Ej. PRJ-2026-X" id="f-tel">
                   </div>
                   <div class="form-group">
                     <label class="form-label">Unidad Nacional</label>
@@ -2214,7 +2216,11 @@ body.immersive-briefing .breadcrumb-nav {
                       <option value="cdmx">CDMX</option>
                     </select>
                   </div>
-                  <div class="form-group col-span-2">
+                  <div class="form-group">
+                    <label class="form-label">Hunter ID</label>
+                    <input type="text" class="form-input" id="f-hunter" placeholder="HNT-2026-0000" readonly>
+                  </div>
+                  <div class="form-group">
                     <label class="form-label">Email / Datos del Vendedor</label>
                     <input type="email" class="form-input" placeholder="Ej. vendedor@gebesa.com" id="f-email">
                   </div>
@@ -2268,7 +2274,7 @@ body.immersive-briefing .breadcrumb-nav {
                     </label>
                     <label style="margin: 0; padding: 14px 8px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.01); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; min-height: 90px; text-align: center;">
                       <span style="font-size: 11px; font-weight: 600;">🎥 Recorrido</span>
-                      <input type="checkbox" id="v-entregable-recorrido" onchange="recalcularCalibracion();">
+                      <input type="checkbox" id="f-recorrido" onchange="recalcularCalibracion();">
                     </label>
                     <label style="margin: 0; padding: 14px 8px; border: 1px solid var(--border); border-radius: 8px; background: rgba(255,255,255,0.01); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; min-height: 90px; text-align: center;">
                       <span style="font-size: 11px; font-weight: 600;">📋 Despiece</span>
@@ -2393,9 +2399,10 @@ body.immersive-briefing .breadcrumb-nav {
             <!-- Tab 2: Canvas / Briefing -->
             <div id="pane-briefing" class="tab-pane" style="padding:0; gap:0; overflow:hidden; height:calc(100vh - 220px); min-height:600px;">
               <iframe
+                id="briefing-iframe"
                 src="./cerebro-lienzo-amueblado.html"
                 style="width:100%; height:100%; border:none; display:block; border-radius:var(--radius-lg);"
-                title="Lienzo de Amueblado Interactivo"
+                title="Lienzo de Diseño"
               ></iframe>
             </div>
 
@@ -2548,13 +2555,13 @@ body.immersive-briefing .breadcrumb-nav {
       <a class="nav-item active">
         <div>
           <div style="font-weight:600; font-size:14px; margin-bottom:4px; color:var(--text-primary);">Corporativo Sigma</div>
-          <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted);">HNT-0418 • Macro</div>
+          <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted);">HNT-0418 • Grande</div>
         </div>
       </a>
       <a class="nav-item">
         <div>
           <div style="font-weight:600; font-size:14px; margin-bottom:4px;">Regionales OXXO</div>
-          <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted);">HNT-0391 • Medio</div>
+          <div style="font-size:12px; font-family:var(--font-mono); color:var(--text-muted);">HNT-0391 • Mediano</div>
         </div>
       </a>
       <div style="border-top: 1px solid var(--border); margin-top: auto; padding: 24px 32px 0;">
@@ -2696,7 +2703,7 @@ body.immersive-briefing .breadcrumb-nav {
         1. Resumen
       </button>
       <button class="modal-tab-btn" id="mtab-tecnico" onclick="switchModalTab('tecnico')">
-        2. Técnico
+        2. Modificaciones
       </button>
       <button class="modal-tab-btn" id="mtab-docs" onclick="switchModalTab('docs')">
         3. Docs
@@ -2743,10 +2750,57 @@ body.immersive-briefing .breadcrumb-nav {
                   <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Proyectista Asignado:</span>
                   <span id="md-proyectista" style="font-size: 14px; font-weight: 500; color: var(--text-primary);">--</span>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Etapa Pipeline:</span>
-                  <span class="badge" id="md-etapa" style="border-color: rgba(255,255,255,0.1);">--</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Tipo de Cliente:</span>
+                  <span class="badge" id="md-tipo-cliente" style="background: rgba(201, 169, 110, 0.1); color: var(--gold); border: 1px solid rgba(201, 169, 110, 0.3); font-family: var(--font-sans); font-weight: 600;">--</span>
                 </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Estatus Comercial:</span>
+                  <span class="badge" id="md-etapa-comercial" style="border-color: rgba(255,255,255,0.1); font-size: 12px; font-weight: 600;">--</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Estatus Técnico:</span>
+                  <span class="badge" id="md-etapa-tecnica" style="border-color: rgba(255,255,255,0.1); font-size: 12px; font-weight: 600;">--</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 13px; color: var(--text-secondary); font-weight: 500;">Flujo Anterior (Eje):</span>
+                  <span class="badge" id="md-etapa" style="border-color: rgba(255,255,255,0.1); font-size: 11px; opacity: 0.6;">--</span>
+                </div>
+
+                <!-- Dual Pipeline Visual Map -->
+                <div style="border-top: 1px dashed var(--border); margin-top: 14px; padding-top: 14px; display: flex; flex-direction: column; gap: 12px;">
+                  <div style="font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">🛡️ Monitoreo de Pipelines Multi-Fase</div>
+                  
+                  <!-- Track 1: Sales pipeline -->
+                  <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-weight: 600;">
+                      <span>1. Embudo Ventas (Comercial)</span>
+                      <span id="md-pipeline-comercial-pct" style="color:var(--blue); font-weight: 700;">0%</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; height: 6px;">
+                      <div id="step-com-1" style="border-radius:2px; background:var(--border);" title="Prospecto / Calificación."></div>
+                      <div id="step-com-2" style="border-radius:2px; background:var(--border);" title="Propuesta Comercial en curso."></div>
+                      <div id="step-com-3" style="border-radius:2px; background:var(--border);" title="En Cotización y Negociación."></div>
+                      <div id="step-com-4" style="border-radius:2px; background:var(--border);" title="Cerrado Ganado."></div>
+                    </div>
+                  </div>
+
+                  <!-- Track 2: Technical pipeline -->
+                  <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); font-weight: 600;">
+                      <span>2. Ciclo de Diseño y SLA (Técnico)</span>
+                      <span id="md-pipeline-tecnico-pct" style="color:var(--green); font-weight: 700;">0%</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; height: 6px;">
+                      <div id="step-tec-1" style="border-radius:2px; background:var(--border);" title="Ingreso a Cola Técnica."></div>
+                      <div id="step-tec-2" style="border-radius:2px; background:var(--border);" title="En Diseño e Ingeniería."></div>
+                      <div id="step-tec-3" style="border-radius:2px; background:var(--border);" title="En Revisión / QA del Plan."></div>
+                      <div id="step-tec-4" style="border-radius:2px; background:var(--border);" title="Aprobado para Producción Física."></div>
+                      <div id="step-tec-5" style="border-radius:2px; background:var(--border);" title="Instalado y Entregado."></div>
+                    </div>
+                  </div>
+                </div>
+
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 12px; border-top: 1px dashed var(--border); padding-top: 16px;">
                   <div class="form-group" style="margin-bottom: 0;">
                     <label class="form-label" style="font-size:10px;">Fecha Captura</label>
@@ -2793,9 +2847,31 @@ body.immersive-briefing .breadcrumb-nav {
             <div>
               <div class="card" style="padding: 24px; background: rgba(255,255,255,0.01);">
                 <div class="subtitle" style="font-size:10px; margin-bottom:12px;">SOLICITAR NUEVA REVISIÓN / CAMBIO</div>
-                <textarea class="form-input" id="mod-instrucciones" rows="3" style="height:auto; resize:vertical; padding:12px; font-size:13px; margin-bottom:16px;" placeholder="Instrucciones para el Ingeniero..."></textarea>
-                <div style="border: 1px dashed var(--border-light); border-radius: var(--radius); padding: 16px; text-align:center; cursor:pointer; background: var(--surface-2);" onclick="triggerModFileUpload()">
-                  <div style="font-size: 14px; font-weight:600; color: var(--text-primary);">+ Adjuntar Archivo</div>
+                <div style="margin-bottom:16px;">
+                  <div style="display: flex; gap: 12px; padding: 12px 20px; background: var(--surface-3); border: 1px solid var(--border-light); border-bottom: none; border-radius: var(--radius) var(--radius) 0 0; align-items:center;">
+                    <div style="display: flex; gap: 4px;">
+                      <button type="button" class="rtf-btn" onclick="document.execCommand('bold', false, null)" title="Negrita">B</button>
+                      <button type="button" class="rtf-btn" style="font-style: italic;" onclick="document.execCommand('italic', false, null)" title="Cursiva">I</button>
+                      <button type="button" class="rtf-btn" style="text-decoration: underline;" onclick="document.execCommand('underline', false, null)" title="Subrayado">U</button>
+                    </div>
+                    <div style="width:1px; height:24px; background:var(--border); margin:0 8px;"></div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px;">Color Texto:</span>
+                      <input type="color" onchange="document.execCommand('foreColor', false, this.value)" style="border:none; width:28px; height:28px; padding:0; background:none; cursor:pointer;" title="Color de Texto">
+                    </div>
+                  </div>
+                  <div id="mod-instrucciones-rtf" contenteditable="true" style="min-height: 200px; width: 100%; padding: 16px; background: rgba(0,0,0,0.15); border: 1px solid var(--border-light); border-radius: 0 0 var(--radius) var(--radius); color: var(--text-primary); outline: none; line-height: 1.6; font-size: 14px; overflow-y: auto; resize: vertical; display: block;" oninput="document.getElementById('mod-instrucciones').value = this.innerHTML;" placeholder="Instrucciones para el Ingeniero..."></div>
+                  <textarea id="mod-instrucciones" style="display:none;"></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  <div style="border: 1.5px dashed var(--border-light); border-radius: var(--radius); padding: 14px 10px; text-align:center; cursor:pointer; background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;" onclick="triggerModFileUpload()" title="Cargar un archivo existente (PDF, Imagen, DWG)">
+                    <span style="font-size: 16px;">📎</span>
+                    <div style="font-size: 12px; font-weight:600; color: var(--text-primary);">Adjuntar Archivo</div>
+                  </div>
+                  <div style="border: 1.5px dashed var(--gold); border-radius: var(--radius); padding: 14px 10px; text-align:center; cursor:pointer; background: var(--gold-d); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;" onclick="openCanvasFromModifications()" title="Abrir lienzo para dibujar anotaciones">
+                    <span style="font-size: 16px;">🎨</span>
+                    <div style="font-size: 12px; font-weight:600; color: var(--gold);">Dibujar / Anotar</div>
+                  </div>
                 </div>
                 <input type="file" id="mod-file-input" style="display:none;" onchange="handleModFileSelected(event)">
                 <div class="form-file-list" id="mod-files-preview-list"></div>
@@ -2956,7 +3032,7 @@ const defaultProjects = [
     cliente: "Corporativo Sigma / Torres del Valle", 
     id: "HNT-0418", 
     monto: "$1,850,000", 
-    magn: "Macro", 
+    magn: "Grande", 
     magnClass: "mag-alert-macro", 
     proyectista: "Karen Tovar", 
     etapa: "En Diseño (Arquitectura)",
@@ -2974,13 +3050,14 @@ const defaultProjects = [
     fechaIngreso: "2026-05-22",
     horaIngreso: "14:15",
     diasSla: 7,
-    fechaHoraOperativa: "2026-05-22T14:15:00.000Z"
+    fechaHoraOperativa: "2026-05-22T14:15:00.000Z",
+    tipoCliente: "B2B"
   },
   { 
     cliente: "Oficinas Regionales OXXO", 
     id: "HNT-0391", 
     monto: "$480,000", 
-    magn: "Medio", 
+    magn: "Mediano", 
     magnClass: "mag-alert-medio", 
     proyectista: "Karen Tovar", 
     etapa: "Validación Hunter",
@@ -2994,13 +3071,14 @@ const defaultProjects = [
     fechaIngreso: "2026-05-20",
     horaIngreso: "11:00",
     diasSla: 5,
-    fechaHoraOperativa: "2026-05-20T11:00:00.000Z"
+    fechaHoraOperativa: "2026-05-20T11:00:00.000Z",
+    tipoCliente: "B2B"
   },
   { 
     cliente: "Consultorio Especialidades Médicas", 
     id: "HNT-0405", 
     monto: "$85,000", 
-    magn: "Micro", 
+    magn: "Pequeño", 
     magnClass: "mag-alert-micro", 
     proyectista: "Susana Ortiz", 
     etapa: "Cotización Exprés",
@@ -3014,7 +3092,8 @@ const defaultProjects = [
     fechaIngreso: "2026-05-18",
     horaIngreso: "09:30",
     diasSla: 4,
-    fechaHoraOperativa: "2026-05-18T09:30:00.000Z"
+    fechaHoraOperativa: "2026-05-18T09:30:00.000Z",
+    tipoCliente: "B2P"
   }
 ];
 
@@ -3342,9 +3421,9 @@ function submitForm() {
   const vM2El = document.getElementById('v-m2');
   const m2 = vM2El ? parseFloat(vM2El.value) || 0 : 0;
   
-  let magn = "Micro", magnClass = "mag-alert-micro";
-  if(monto > 1000000 || m2 > 500) { magn = "Macro"; magnClass = "mag-alert-macro"; }
-  else if(monto >= 200000 || m2 >= 80) { magn = "Medio"; magnClass = "mag-alert-medio"; }
+  let magn = "Pequeño", magnClass = "mag-alert-micro";
+  if(monto > 1000000 || m2 > 500) { magn = "Grande"; magnClass = "mag-alert-macro"; }
+  else if(monto >= 200000 || m2 >= 80) { magn = "Mediano"; magnClass = "mag-alert-medio"; }
 
   // Extract other technical & commercial inputs for original request
   const contactEl = document.getElementById('f-contacto');
@@ -3397,6 +3476,9 @@ function submitForm() {
   const windowResult = evaluarVentanaOperativa(compromisoStr, horaIngresoValue);
   const fechaHoraOperativa = windowResult.ajustada.toISOString();
 
+  const tipoClienteEl = document.getElementById('f-tipo-cliente');
+  const tipoClienteVal = tipoClienteEl ? tipoClienteEl.value : 'B2B';
+
   vProjects.unshift({
     cliente,
     id: hId,
@@ -3413,7 +3495,8 @@ function submitForm() {
     fechaIngreso: compromisoStr,
     horaIngreso: horaIngresoValue,
     diasSla: finalSlaDias,
-    fechaHoraOperativa: fechaHoraOperativa
+    fechaHoraOperativa: fechaHoraOperativa,
+    tipoCliente: tipoClienteVal
   });
 
   renderTable();
@@ -3424,6 +3507,139 @@ function submitForm() {
 /* --- CONEXIONES EXPEDIENTES / MODALES --- */
 let activeProjectForMod = null;
 let selectedModFiles = [];
+
+let canvasModificationContext = {
+  active: false,
+  projectId: null,
+  savedRtfContent: '',
+  savedInstructions: '',
+  savedSelectedFiles: []
+};
+
+function openCanvasFromModifications() {
+  if (!activeProjectForMod) return;
+  
+  canvasModificationContext.active = true;
+  canvasModificationContext.projectId = activeProjectForMod.id;
+  
+  const rtfEl = document.getElementById('mod-instrucciones-rtf');
+  const instEl = document.getElementById('mod-instrucciones');
+  
+  canvasModificationContext.savedRtfContent = rtfEl ? rtfEl.innerHTML : '';
+  canvasModificationContext.savedInstructions = instEl ? instEl.value : '';
+  canvasModificationContext.savedSelectedFiles = [...selectedModFiles];
+
+  // Show the Screen Form (where the Canvas tab is)
+  const dashboardScreen = document.getElementById('screen-dashboard');
+  const formScreen = document.getElementById('screen-form');
+  
+  if (dashboardScreen) dashboardScreen.classList.remove('active');
+  if (formScreen) formScreen.classList.add('active');
+  
+  // Render nice breadcrumb
+  renderBreadcrumb([
+    { label: 'CEREBRO 2.0', onclick: 'goToDashboard()' },
+    { label: 'Mis Negocios', onclick: 'goToDashboard()' },
+    { label: 'Edición de Proyecto', onclick: 'cancelCanvasModificationMode()' },
+    { label: 'Anotaciones en Lienzo' }
+  ]);
+
+  // Switch to Canvas tab
+  switchTab('briefing');
+
+  // Hide the project detail modal
+  const detailModal = document.getElementById('project-detail-modal');
+  if (detailModal) detailModal.classList.remove('active');
+
+  // Notify the iframe that modification context is active!
+  const iframe = document.getElementById('briefing-iframe');
+  if (iframe && iframe.contentWindow) {
+    if (typeof iframe.contentWindow.initModificationMode === 'function') {
+      iframe.contentWindow.initModificationMode(activeProjectForMod.id);
+    } else {
+      // Reload iframe if needed, or we can let it read top context on initialize
+      iframe.src = iframe.src;
+    }
+  }
+}
+
+function cancelCanvasModificationMode() {
+  canvasModificationContext.active = false;
+  
+  // Switch back to dashboard
+  goToDashboard();
+
+  // Re-open project details modal
+  const pId = canvasModificationContext.projectId;
+  if (pId) {
+    openProjectDetails(pId);
+    
+    // Switch modal tab back to Modificaciones
+    switchModalTab('tecnico');
+
+    // Restore saved RTF state
+    const rtfEl = document.getElementById('mod-instrucciones-rtf');
+    if (rtfEl) rtfEl.innerHTML = canvasModificationContext.savedRtfContent;
+    const instEl = document.getElementById('mod-instrucciones');
+    if (instEl) instEl.value = canvasModificationContext.savedInstructions;
+    
+    // Restore and re-render selected files list
+    selectedModFiles = [];
+    const listEl = document.getElementById('mod-files-preview-list');
+    if (listEl) listEl.innerHTML = '';
+    
+    canvasModificationContext.savedSelectedFiles.forEach(f => {
+      addModFileToList(f, "Adjunto");
+    });
+  }
+}
+
+function attachCanvasImageToModification(dataUrl) {
+  // Let's create a mockup electronic file from the image
+  const fileName = `modificacion_anotada_${canvasModificationContext.projectId || 'HNT'}_${Math.floor(Math.random()*900 + 100)}.png`;
+  
+  // Set context to inactive
+  canvasModificationContext.active = false;
+
+  // Let's print a happy toast
+  showToast('success', 'Anotación Adjuntada', 'La imagen anotada del lienzo se ha incorporado a tu solicitud de cambio.');
+
+  // Automatically switch back to the project details modal, on the modifications tab!
+  const pId = canvasModificationContext.projectId;
+  
+  // Transition back
+  goToDashboard();
+  
+  if (pId) {
+    openProjectDetails(pId);
+    switchModalTab('tecnico');
+    
+    // Restore saved RTF state
+    const rtfEl = document.getElementById('mod-instrucciones-rtf');
+    if (rtfEl) rtfEl.innerHTML = canvasModificationContext.savedRtfContent;
+    const instEl = document.getElementById('mod-instrucciones');
+    if (instEl) instEl.value = canvasModificationContext.savedInstructions;
+    
+    const currentOnes = [...canvasModificationContext.savedSelectedFiles, fileName]; 
+    
+    // Reset selectedModFiles to let addModFileToList rebuild it properly without duplicates
+    selectedModFiles = [];
+    const listEl = document.getElementById('mod-files-preview-list');
+    if (listEl) listEl.innerHTML = '';
+    
+    currentOnes.forEach(f => {
+      if (f === fileName) {
+        addModFileToList(f, "~840 KB (PNG)");
+      } else {
+        addModFileToList(f, "Adjunto");
+      }
+    });
+  }
+}
+
+window.openCanvasFromModifications = openCanvasFromModifications;
+window.cancelCanvasModificationMode = cancelCanvasModificationMode;
+window.attachCanvasImageToModification = attachCanvasImageToModification;
 
 /* --- CONTENIDO CONTRATO DIGITAL (SLA) SOPORTE --- */
 const HOLIDAYS = [
@@ -3618,7 +3834,7 @@ function calcModalContract() {
     magnClass = "mag-alert-medio";
   }
 
-  activeProjectForMod.magn = isMacro ? "Macro" : (fMonto >= 200000 || fM2 >= 80 ? "Medio" : "Micro");
+  activeProjectForMod.magn = isMacro ? "Grande" : (fMonto >= 200000 || fM2 >= 80 ? "Mediano" : "Pequeño");
   activeProjectForMod.magnClass = magnClass;
 
   // Sincronizar badge de magnitud
@@ -3867,6 +4083,143 @@ function openProjectDetails(pId) {
   etapaEl.textContent = proj.etapa;
   etapaEl.style.borderColor = proj.etapa.includes('Cola') ? 'var(--red)' : proj.etapa.includes('Diseño') ? 'var(--blue)' : 'rgba(255,255,255,0.1)';
 
+  // Set Tipo de Cliente
+  const tipoClienteEl = document.getElementById('md-tipo-cliente');
+  if (tipoClienteEl) {
+    tipoClienteEl.textContent = proj.tipoCliente || "B2B";
+  }
+
+  // Dual stages computation
+  let etapaComercial = "Calificación Leads";
+  let etapaTecnica = "En Cola Técnica";
+  let comPct = "25%";
+  let tecPct = "20%";
+
+  const lowerEtapa = proj.etapa.toLowerCase();
+
+  // Reset steps style
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById(`step-com-${i}`);
+    if (el) el.style.background = 'var(--border)';
+  }
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`step-tec-${i}`);
+    if (el) el.style.background = 'var(--border)';
+  }
+
+  // Highlight based on current stages
+  // Step 1 is always active
+  const elStepCom1 = document.getElementById('step-com-1');
+  const elStepTec1 = document.getElementById('step-tec-1');
+  if (elStepCom1) elStepCom1.style.background = 'var(--blue)';
+  if (elStepTec1) elStepTec1.style.background = 'var(--green)';
+
+  if (lowerEtapa.includes('cola')) {
+    etapaComercial = "Contacto Inicial 📞";
+    etapaTecnica = "En Cola de Asignación 📥";
+    comPct = "25%";
+    tecPct = "20%";
+  } else if (lowerEtapa.includes('diseño') || lowerEtapa.includes('diseã±o')) {
+    etapaComercial = "Propuesta Técnica ⚡";
+    etapaTecnica = "En Modelado Estructural 💻";
+    comPct = "50%";
+    tecPct = "40%";
+    
+    const elCom2 = document.getElementById('step-com-2');
+    const elTec2 = document.getElementById('step-tec-2');
+    if (elCom2) elCom2.style.background = 'var(--blue)';
+    if (elTec2) elTec2.style.background = 'var(--green)';
+  } else if (lowerEtapa.includes('propuesta') || lowerEtapa.includes('revisión') || lowerEtapa.includes('revisiã³n')) {
+    etapaComercial = "Presentación de Propuesta 📃";
+    etapaTecnica = "QA / Revisión con Cliente 🛠️";
+    comPct = "75%";
+    tecPct = "60%";
+
+    const elCom2 = document.getElementById('step-com-2');
+    const elCom3 = document.getElementById('step-com-3');
+    const elTec2 = document.getElementById('step-tec-2');
+    const elTec3 = document.getElementById('step-tec-3');
+    if (elCom2) elCom2.style.background = 'var(--blue)';
+    if (elCom3) elCom3.style.background = 'var(--blue)';
+    if (elTec2) elTec2.style.background = 'var(--green)';
+    if (elTec3) elTec3.style.background = 'var(--green)';
+  } else if (lowerEtapa.includes('cotización') || lowerEtapa.includes('hunter')) {
+    etapaComercial = "Negociación & Cotización 💵";
+    etapaTecnica = "SLA Calibrado, Listo para Firma 📋";
+    comPct = "75%";
+    tecPct = "60%";
+
+    const elCom2 = document.getElementById('step-com-2');
+    const elCom3 = document.getElementById('step-com-3');
+    const elTec2 = document.getElementById('step-tec-2');
+    const elTec3 = document.getElementById('step-tec-3');
+    if (elCom2) elCom2.style.background = 'var(--blue)';
+    if (elCom3) elCom3.style.background = 'var(--blue)';
+    if (elTec2) elTec2.style.background = 'var(--green)';
+    if (elTec3) elTec3.style.background = 'var(--green)';
+  } else if (lowerEtapa.includes('aprobado') || lowerEtapa.includes('producción') || lowerEtapa.includes('producciã³n')) {
+    etapaComercial = "Cerrado Ganado 🤝";
+    etapaTecnica = "Fábrica / Producción Activa 🏭";
+    comPct = "100%";
+    tecPct = "80%";
+
+    const elCom2 = document.getElementById('step-com-2');
+    const elCom3 = document.getElementById('step-com-3');
+    const elCom4 = document.getElementById('step-com-4');
+    const elTec2 = document.getElementById('step-tec-2');
+    const elTec3 = document.getElementById('step-tec-3');
+    const elTec4 = document.getElementById('step-tec-4');
+    if (elCom2) elCom2.style.background = 'var(--blue)';
+    if (elCom3) elCom3.style.background = 'var(--blue)';
+    if (elCom4) elCom4.style.background = 'var(--blue)';
+    if (elTec2) elTec2.style.background = 'var(--green)';
+    if (elTec3) elTec3.style.background = 'var(--green)';
+    if (elTec4) elTec4.style.background = 'var(--green)';
+  } else if (lowerEtapa.includes('entregado')) {
+    etapaComercial = "Cerrado Ganado 🤝";
+    etapaTecnica = "Entregado & Cerrado ✅";
+    comPct = "100%";
+    tecPct = "100%";
+
+    const elCom2 = document.getElementById('step-com-2');
+    const elCom3 = document.getElementById('step-com-3');
+    const elCom4 = document.getElementById('step-com-4');
+    const elTec2 = document.getElementById('step-tec-2');
+    const elTec3 = document.getElementById('step-tec-3');
+    const elTec4 = document.getElementById('step-tec-4');
+    const elTec5 = document.getElementById('step-tec-5');
+    if (elCom2) elCom2.style.background = 'var(--blue)';
+    if (elCom3) elCom3.style.background = 'var(--blue)';
+    if (elCom4) elCom4.style.background = 'var(--blue)';
+    if (elTec2) elTec2.style.background = 'var(--green)';
+    if (elTec3) elTec3.style.background = 'var(--green)';
+    if (elTec4) elTec4.style.background = 'var(--green)';
+    if (elTec5) elTec5.style.background = 'var(--green)';
+  } else if (lowerEtapa.includes('cancelado')) {
+    etapaComercial = "Cancelado ❌";
+    etapaTecnica = "Cancelado ❌";
+    comPct = "0%";
+    tecPct = "0%";
+    
+    if (elStepCom1) elStepCom1.style.background = 'var(--red)';
+    if (elStepTec1) elStepTec1.style.background = 'var(--red)';
+  } else {
+    etapaComercial = "Contacto Inicial 📞";
+    etapaTecnica = "En Cola Técnica 📥";
+    comPct = "25%";
+    tecPct = "20%";
+  }
+
+  const etComEl = document.getElementById('md-etapa-comercial');
+  if (etComEl) etComEl.textContent = etapaComercial;
+  const etTecEl = document.getElementById('md-etapa-tecnica');
+  if (etTecEl) etTecEl.textContent = etapaTecnica;
+  
+  const pctComEl = document.getElementById('md-pipeline-comercial-pct');
+  if (pctComEl) pctComEl.textContent = comPct;
+  const pctTecEl = document.getElementById('md-pipeline-tecnico-pct');
+  if (pctTecEl) pctTecEl.textContent = tecPct;
+
   // Render Solicitud Original
   const solText = proj.solicitudOriginal || 'No se especificaron detalles adicionales.';
   document.getElementById('md-solicitud').textContent = solText;
@@ -3922,7 +4275,7 @@ function openProjectDetails(pId) {
   if (elMonto) elMonto.value = Math.round(montoNum);
   
   // Derivar superficie m2 si no existe
-  let initialM2 = proj.m2 || (proj.magn === 'Macro' ? 560 : proj.magn === 'Medio' ? 120 : 40);
+  let initialM2 = proj.m2 || (proj.magn === 'Grande' ? 560 : proj.magn === 'Mediano' ? 120 : 40);
   const elM2 = document.getElementById('f-modal-m2');
   if (elM2) elM2.value = initialM2;
   proj.m2 = initialM2;
@@ -4155,12 +4508,14 @@ function renderMatrizPanel() {
 
       const revisionMarkup = `
         <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+          <div style="display:flex; justify-content:space-between; align-items:center; cursor: pointer; padding: 4px 0;" onclick="const el = document.getElementById('r-content-${rNum}'); const icon = document.getElementById('r-icon-${rNum}'); if(el.style.display === 'none') { el.style.display = 'grid'; icon.textContent = '▼'; } else { el.style.display = 'none'; icon.textContent = '▶'; }">
             <div style="display:flex; align-items:center; gap:12px;">
-              <div style="font-size: 13px; font-weight: 600; color:var(--text-primary);">
-                <span class="badge" style="background: rgba(88,166,255,0.1); color: var(--blue);">R${rNum}</span> Iteración ${rNum}
+              <div style="font-size: 13px; font-weight: 600; color:var(--text-primary); display: flex; align-items: center; gap: 8px;">
+                <span id="r-icon-${rNum}" style="font-size: 10px; color: var(--gold); transition: transform 0.2s; width: 12px; display: inline-block;">▼</span>
+                <span class="badge" style="background: rgba(88,166,255,0.1); color: var(--blue);">R${rNum}</span> 
+                <span style="user-select: none;">Iteración ${rNum}</span>
               </div>
-              <div style="display:flex; align-items:center; gap:8px;">
+              <div style="display:flex; align-items:center; gap:8px;" onclick="event.stopPropagation()">
                 <button class="btn-solid" style="padding: 4px 8px; font-size: 10px; display:flex; align-items:center; gap:6px; background: rgba(201,169,110,0.1); color:var(--gold); border:1px solid rgba(201,169,110,0.2);" onclick="showToast('info', 'Generando Presentación', 'Iniciando plugin de presentación para Iteración R${rNum}...')">
                   🎞️ Crear Presentación
                 </button>
@@ -4169,9 +4524,9 @@ function renderMatrizPanel() {
                 </button>
               </div>
             </div>
-            <div style="font-size:11px; color:var(--text-muted);">Entregado: ${mod.fecha} (Simulado)</div>
+            <div style="font-size:11px; color:var(--text-muted); user-select: none;">Entregado: ${mod.fecha} (Simulado)</div>
           </div>
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+          <div id="r-content-${rNum}" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
             <div class="card" style="padding: 16px; background: rgba(255,255,255,0.01);">
                 <div style="font-size: 11px; font-weight: 600; color: var(--gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
                   <span>📐</span> Planos y Documentos
@@ -4433,6 +4788,7 @@ function recalcularCalibracion() {
   const fStr = document.getElementById('f-fecha').value;
   const hStr = document.getElementById('f-hora').value;
   const solicitaRender = document.getElementById('f-render').checked;
+  const solicitaRecorrido = (document.getElementById('f-recorrido') && document.getElementById('f-recorrido').checked);
   
   if (!fStr || !hStr) return;
 
@@ -4441,17 +4797,15 @@ function recalcularCalibracion() {
 
   if (m2 > 500 || mxn > 1000000) {
     mag = 'grande';
-    dias = 4;
   } else if (m2 > 80 || mxn > 200000) {
     mag = 'mediano';
-    dias = 2;
   }
 
   const inputDias = document.getElementById('f-dias');
   const lockNote = document.getElementById('lock-note');
 
   // Blindaje 3D discreto
-  if (mag === 'grande' && solicitaRender) {
+  if (mag === 'grande' && (solicitaRender || solicitaRecorrido)) {
     dias = 7;
     inputDias.value = 7;
     inputDias.readOnly = true;
@@ -4470,17 +4824,22 @@ function recalcularCalibracion() {
     }
     
     // Modify days of delivery manually or suggest based on category
-    let suggestedDays = 3;
+    let suggestedDays = 1; // base Planos es más breve (1 día)
     if (mag === 'grande') {
-      suggestedDays = 5;
+      suggestedDays = 2;
     } else if (mag === 'mediano') {
-      suggestedDays = 4;
-    }
-    if (solicitaRender) {
-      suggestedDays += 3;
+      suggestedDays = 2;
     }
     
-    if (inputDias && (!inputDias.value || inputDias.value === '1' || inputDias.value === '2' || inputDias.value === '3' || inputDias.value === '4' || inputDias.value === '7' || inputDias.value === '5')) {
+    if (solicitaRender) {
+      suggestedDays = Math.max(suggestedDays, 3);
+    }
+    
+    if (solicitaRecorrido) {
+      suggestedDays = Math.max(suggestedDays, 7);
+    }
+    
+    if (inputDias && (!inputDias.value || ['1','2','3','4','5','6','7'].includes(inputDias.value))) {
       inputDias.value = suggestedDays;
     }
     dias = inputDias ? (parseInt(inputDias.value) || suggestedDays) : suggestedDays;
@@ -4522,7 +4881,7 @@ function recalcularCalibracion() {
   const vEntregableRendersEl = document.getElementById('v-entregable-renders');
   if (vEntregableRendersEl) vEntregableRendersEl.checked = solicitaRender;
   const vEntregableRecorridosEl = document.getElementById('v-entregable-recorrido');
-  if (vEntregableRecorridosEl) vEntregableRecorridosEl.checked = solicitaRender;
+  if (vEntregableRecorridosEl) vEntregableRecorridosEl.checked = solicitaRecorrido;
 
   // Render option results
   const resultOptions = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -4546,7 +4905,7 @@ function recalcularCalibracion() {
 
   const lblComplexity = document.getElementById('lbl-complejidad');
   if (lblComplexity) {
-    lblComplexity.textContent = (mag === 'grande' ? 'Grande (Macro)' : mag === 'mediano' ? 'Mediana (Medio)' : 'Chica (Micro)') + ` (${totalDays} días hábiles)`;
+    lblComplexity.textContent = (mag === 'grande' ? 'Grande' : mag === 'mediano' ? 'Mediana' : 'Pequeña') + ` (${totalDays} días hábiles)`;
   }
 
   // Insignias discretas inline
@@ -4703,7 +5062,7 @@ function populateSummaryInfo() {
   if (document.getElementById('f-render') && document.getElementById('f-render').checked) {
     deliverables.push('✨ Renders de Alta Gama (3D)');
   }
-  if (document.getElementById('v-entregable-recorrido') && document.getElementById('v-entregable-recorrido').checked) {
+  if (document.getElementById('f-recorrido') && document.getElementById('f-recorrido').checked) {
     deliverables.push('🎥 Recorrido Virtual 3D');
   }
   if (document.getElementById('v-entregable-especs') && document.getElementById('v-entregable-especs').checked) {

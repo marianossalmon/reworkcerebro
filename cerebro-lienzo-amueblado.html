@@ -643,8 +643,8 @@ body.tool-pan:active #main-canvas{cursor:grabbing}
       <div id="autocad-bar" style="position: absolute; background: #161b22; border: 1.5px solid var(--gold); border-radius: 8px; padding: 6px 10px; display: none; align-items: center; gap: 8px; z-index: 1000; box-shadow: 0 8px 30px rgba(0,0,0,0.65); font-family: 'IBM Plex Mono', var(--font-mono), monospace; pointer-events: auto;">
         <span style="font-size:14px; line-height: 1;" title="AutoCAD precisión">📐</span>
         <div style="display:flex; flex-direction:column; gap:1px;">
-          <span style="color:var(--text-muted); font-size:8px; text-transform:uppercase; font-weight:700; letter-spacing:0.3px;">Largo (m)</span>
-          <input type="number" id="ac-length" placeholder="3.0" step="0.5" min="0.1" value="3.0" style="width:60px; background:#0d1117; border:1px solid var(--border); color:#fff; border-radius:4px; padding:3px 6px; font-size:11px; outline:none;" onkeydown="if(event.key==='Enter') applyAutoCadWall()">
+          <span style="color:var(--text-muted); font-size:8px; text-transform:uppercase; font-weight:700; letter-spacing:0.3px;">Largo (cm)</span>
+          <input type="number" id="ac-length" placeholder="300" step="10" min="1" value="300" style="width:60px; background:#0d1117; border:1px solid var(--border); color:#fff; border-radius:4px; padding:3px 6px; font-size:11px; outline:none;" onkeydown="if(event.key==='Enter') applyAutoCadWall()">
         </div>
         <div style="display:flex; flex-direction:column; gap:1px;">
           <span style="color:var(--text-muted); font-size:8px; text-transform:uppercase; font-weight:700; letter-spacing:0.3px;">Ángulo (°)</span>
@@ -976,11 +976,13 @@ const state = {
   wallDrawing: false,
   wallPoints: [],
   nextId: 1,
+  orthoMode: false,
   clipboard: null,             // element clipboard
   selectedWallIndex: null,      // index of currently selected wall segment
   _dragWallIndex: null,         // wall segment index being dragged
   _dragWallStartPoints: null,  // starting points of the dragged wall
   _dragWallStartPos: null,     // mouse starting position on drag
+  _dragConnectedPoints: null,  // endpoints of walls connected to the dragged wall
 };
 
 // ═══════════════════════════════════════════════
@@ -1267,25 +1269,163 @@ function drawWallLineDashed(p1, p2) {
   ctx.restore();
 }
 
+function getWallPolygon(p1, p2, allWalls, thickness) {
+  const dx = p2.x - p1.x;
+  const dy = p2.y - p1.y;
+  const len = Math.hypot(dx, dy);
+  if (len === 0) return null;
+  const nx = -dy / len;
+  const ny = dx / len;
+
+  const getMiterEnd = (P, otherP) => {
+    let otherD = null;
+    for (let w of allWalls) {
+      if (w.points && w.points.length >= 2) {
+        const wp1 = w.points[0];
+        const wp2 = w.points[1];
+        if (Math.hypot(wp1.x - P.x, wp1.y - P.y) < 0.1 && Math.hypot(wp2.x - otherP.x, wp2.y - otherP.y) > 0.1) {
+          otherD = { x: wp2.x - P.x, y: wp2.y - P.y }; break;
+        }
+        if (Math.hypot(wp2.x - P.x, wp2.y - P.y) < 0.1 && Math.hypot(wp1.x - otherP.x, wp1.y - otherP.y) > 0.1) {
+          otherD = { x: wp1.x - P.x, y: wp1.y - P.y }; break;
+        }
+      }
+    }
+    
+    // Default flat cap
+    const left = { x: P.x - nx * thickness / 2, y: P.y - ny * thickness / 2 };
+    const right = { x: P.x + nx * thickness / 2, y: P.y + ny * thickness / 2 };
+    
+    if (otherD) {
+      const len2 = Math.hypot(otherD.x, otherD.y);
+      if (len2 > 0) {
+        // d1 is vector from P pointing OUTWARDS along our segment, which is towards otherP
+        const d1 = { x: (otherP.x - P.x)/len, y: (otherP.y - P.y)/len };
+        const d2 = { x: otherD.x / len2, y: otherD.y / len2 };
+        
+        // n1 is the standard normal of our segment (d1 rotated 90 deg right)
+        const n1 = { x: -d1.y, y: d1.x };
+        
+        let t = { x: d1.x + d2.x, y: d1.y + d2.y };
+        const tLen = Math.hypot(t.x, t.y);
+        
+        if (tLen > 0.001) {
+          t = { x: t.x / tLen, y: t.y / tLen };
+          const dot = t.x * n1.x + t.y * n1.y;
+          if (Math.abs(dot) > 0.001) {
+            let mDist = (thickness/2) / dot;
+            if (mDist > thickness * 5) mDist = thickness * 5;
+            if (mDist < -thickness * 5) mDist = -thickness * 5;
+            
+            const mc1 = { x: P.x + t.x * mDist, y: P.y + t.y * mDist };
+            const mc2 = { x: P.x - t.x * mDist, y: P.y - t.y * mDist };
+            
+            // To figure out which goes to "right", we compare to the default
+            // Notice: right is +nx, +ny. That matches n1 if we go from p1 to p2.
+            // If we are at p2 (otherP = p1), then d1 is opposite, so n1 is opposite to nx,ny.
+            // So we just check distance to the global default right.
+            const dist1 = Math.hypot(mc1.x - right.x, mc1.y - right.y);
+            const dist2 = Math.hypot(mc2.x - right.x, mc2.y - right.y);
+            
+            if (dist1 < dist2) {
+              return { left: mc2, right: mc1 };
+            } else {
+              return { left: mc1, right: mc2 };
+            }
+          }
+        }
+      }
+    }
+    return { left, right };
+  };
+
+  const start = getMiterEnd(p1, p2);
+  const end = getMiterEnd(p2, p1);
+
+  return [start.left, start.right, end.right, end.left];
+}
+
 function drawWalls() {
   state.walls.forEach((wall, i) => {
     const isSelected = (i === state.selectedWallIndex);
-    for (let j = 0; j < wall.points.length - 1; j++) {
-      drawWallLine(wall.points[j], wall.points[j+1], isSelected);
-    }
+    
+    if (!wall.points || wall.points.length < 2) return;
+    
+    const p1 = wall.points[0];
+    const p2 = wall.points[1];
+    const thickness = 8;
+    const poly = getWallPolygon(p1, p2, state.walls, thickness);
+    if (!poly) return;
+
+    ctx.save();
+    ctx.lineJoin = 'miter';
+    ctx.lineCap = 'butt';
+    
+    ctx.beginPath();
+    ctx.moveTo(poly[0].x, poly[0].y);
+    ctx.lineTo(poly[1].x, poly[1].y);
+    ctx.lineTo(poly[2].x, poly[2].y);
+    ctx.lineTo(poly[3].x, poly[3].y);
+    ctx.closePath();
+    
+    // Fill
+    ctx.fillStyle = isSelected ? 'rgba(88, 166, 255, 0.45)' : '#4b5563';
+    ctx.fill();
+    
+    // Stroke forms the exterior border and inner division
+    ctx.lineWidth = (isSelected ? 2.5 : 1.5) / state.scale;
+    ctx.strokeStyle = isSelected ? '#58a6ff' : '#c9d1d9';
+    ctx.stroke();
+    
+    ctx.restore();
   });
 }
 
 function drawCurrentWall() {
-  for (let j = 0; j < state.wallPoints.length - 1; j++) {
-    const p1 = state.wallPoints[j];
-    const p2 = state.wallPoints[j+1];
-    drawWallLineDashed(p1, p2);
+  if (state.wallPoints.length === 0) return;
+  
+  const points = [...state.wallPoints];
+  if (state._wallPreview) {
+    points.push(state._wallPreview);
   }
-  if (state._wallPreview && state.wallPoints.length > 0) {
-    const p1 = state.wallPoints[state.wallPoints.length - 1];
-    drawWallLineDashed(p1, state._wallPreview);
+  
+  if (points.length < 2) return;
+  
+  const tempSegments = [];
+  for (let j = 0; j < points.length - 1; j++) {
+     tempSegments.push({ points: [ points[j], points[j+1] ] });
   }
+  
+  const thickness = 8;
+  ctx.save();
+  ctx.lineJoin = 'miter';
+  ctx.lineCap = 'butt';
+  ctx.setLineDash([5 / state.scale, 5 / state.scale]);
+
+  tempSegments.forEach((wall) => {
+    const p1 = wall.points[0];
+    const p2 = wall.points[1];
+    const poly = getWallPolygon(p1, p2, tempSegments, thickness);
+    if (!poly) return;
+    
+    ctx.beginPath();
+    ctx.moveTo(poly[0].x, poly[0].y);
+    ctx.lineTo(poly[1].x, poly[1].y);
+    ctx.lineTo(poly[2].x, poly[2].y);
+    ctx.lineTo(poly[3].x, poly[3].y);
+    ctx.closePath();
+    
+    // Fill
+    ctx.fillStyle = 'rgba(88, 166, 255, 0.25)';
+    ctx.fill();
+    
+    // Stroke
+    ctx.lineWidth = 1.5 / state.scale;
+    ctx.strokeStyle = '#58a6ff';
+    ctx.stroke();
+  });
+  
+  ctx.restore();
 }
 
 function drawFurnitureItem(item, isSelected) {
@@ -1473,7 +1613,7 @@ function applyAutoCadWall() {
   }
   
   const angle = parseInt(document.getElementById('ac-angle').value);
-  const pxLen = lenValue * 40; // 40px per meter
+  const pxLen = lenValue * 0.4; // 1m (100cm) = 40px, so 1cm = 0.4px
   
   let startX = 0;
   let startY = 0;
@@ -1492,23 +1632,18 @@ function applyAutoCadWall() {
   const endX = startX + pxLen * Math.cos(rad);
   const endY = startY + pxLen * Math.sin(rad);
   
-  // Create single wall segment
-  const newWallSegment = {
-    id: 'wall-' + state.nextId++,
-    points: [ { x: startX, y: startY }, { x: endX, y: endY } ]
-  };
-  state.walls.push(newWallSegment);
-  
-  saveHistory();
-  
   if (state.wallPoints.length > 0) {
     state.wallPoints.push({ x: endX, y: endY });
-  } else if (state.wallDrawing) {
+  } else {
+    state.wallDrawing = true;
     state.wallPoints = [{ x: startX, y: startY }, { x: endX, y: endY }];
   }
   
+  // Reset inputValue as requested for the next wall length
+  lenInput.value = '';
+  
   render();
-  showToast(`Muro: ${lenValue}m a ${angle}° dibujado`, '📐');
+  showToast(`Muro: ${lenValue}cm a ${angle}° dibujado`, '📐');
 }
 
 canvas.addEventListener('mousedown', e => {
@@ -1533,7 +1668,7 @@ canvas.addEventListener('mousedown', e => {
     clickPos.x = snapResult.x;
     clickPos.y = snapResult.y;
 
-    if (state.wallDrawing && state.wallPoints.length > 0 && e.shiftKey) {
+    if (state.wallDrawing && state.wallPoints.length > 0 && (e.shiftKey || state.orthoMode)) {
       clickPos = snapOrthogonal(clickPos, state.wallPoints[state.wallPoints.length - 1]);
     }
     handleWallClick(clickPos);
@@ -1561,6 +1696,25 @@ canvas.addEventListener('mousedown', e => {
       state._dragWallIndex = hitWall.wallIndex;
       state._dragWallStartPoints = JSON.parse(JSON.stringify(wall.points));
       state._dragWallStartPos = { ...pos };
+      
+      state._dragConnectedPoints = [];
+      const threshold = 0.1;
+      state.walls.forEach((w, wIndex) => {
+        if (wIndex === hitWall.wallIndex) return;
+        if (!w.points) return;
+        w.points.forEach((p, pIndex) => {
+           wall.points.forEach((dragP, dragPIndex) => {
+               if (Math.hypot(p.x - dragP.x, p.y - dragP.y) < threshold) {
+                   state._dragConnectedPoints.push({
+                       wallIndex: wIndex,
+                       pointIndex: pIndex,
+                       startPos: { x: p.x, y: p.y }
+                   });
+               }
+           });
+        });
+      });
+      
       render();
       return;
     }
@@ -1640,6 +1794,17 @@ canvas.addEventListener('mousemove', e => {
           p.y = state._dragWallStartPoints[index].y + dy;
         }
       });
+      
+      if (state._dragConnectedPoints) {
+          state._dragConnectedPoints.forEach(conn => {
+              const connectedWall = state.walls[conn.wallIndex];
+              if (connectedWall && connectedWall.points[conn.pointIndex]) {
+                  connectedWall.points[conn.pointIndex].x = conn.startPos.x + dx;
+                  connectedWall.points[conn.pointIndex].y = conn.startPos.y + dy;
+              }
+          });
+      }
+      
       render();
     }
     return;
@@ -1655,7 +1820,7 @@ canvas.addEventListener('mousemove', e => {
 
     if (state.wallDrawing && state.wallPoints.length > 0) {
       let previewPos = pos;
-      if (e.shiftKey) {
+      if (e.shiftKey || state.orthoMode) {
         previewPos = snapOrthogonal(previewPos, state.wallPoints[state.wallPoints.length - 1]);
       }
       state._wallPreview = previewPos;
@@ -1664,7 +1829,7 @@ canvas.addEventListener('mousemove', e => {
       const last = state.wallPoints[state.wallPoints.length - 1];
       let angleDeg = Math.round(Math.atan2(previewPos.y - last.y, previewPos.x - last.x) * 180 / Math.PI);
       if (angleDeg < 0) angleDeg += 360;
-      if (e.shiftKey) {
+      if (e.shiftKey || state.orthoMode) {
         angleDeg = Math.round(angleDeg / 90) * 90 % 360;
       }
       
@@ -2536,6 +2701,14 @@ document.addEventListener('keydown', e => {
     return;
   }
 
+  // Ortho mode
+  if (e.key === 'F8') {
+    e.preventDefault();
+    state.orthoMode = !state.orthoMode;
+    showToast(`Ortho Mode: ${state.orthoMode ? 'ACTIVADO' : 'DESACTIVADO'}`, '📐');
+    return;
+  }
+
   // AutoCAD dynamic numeral keyboard input tracking when wall tool is selected
   if (state.currentTool === 'wall' && e.target.tagName !== 'INPUT') {
     if (/^[0-9.]$/.exec(e.key)) {
@@ -2670,6 +2843,75 @@ window.toggleRightPanel = function() {
 
 render();
 showToast('Lienzo listo — importa un plano o dibuja desde cero', '🗺️');
+
+// Function to handle modification mode context
+function checkModificationContext() {
+  if (window.parent && window.parent.canvasModificationContext && window.parent.canvasModificationContext.active) {
+    // 1. Rename existing "Volver a Datos" button
+    const actionsContainer = document.querySelector('.header-actions');
+    if (actionsContainer) {
+      // Find the first button which is usually "Volver a Datos"
+      const backBtn = actionsContainer.querySelector('button');
+      if (backBtn && !backBtn.dataset.modified) {
+        backBtn.innerHTML = '<span style="font-size: 13px;">⬅</span> Volver al Expediente';
+        backBtn.dataset.modified = "true";
+        backBtn.onclick = () => {
+          if (window.parent.cancelCanvasModificationMode) {
+            window.parent.cancelCanvasModificationMode();
+          }
+        };
+      }
+      
+      // Check if the gold submit button is already present
+      let attachBtn = document.getElementById('attach-to-mod-btn');
+      if (!attachBtn) {
+        attachBtn = document.createElement('button');
+        attachBtn.className = 'btn-sm primary';
+        attachBtn.id = 'attach-to-mod-btn';
+        attachBtn.style.background = 'var(--gold)';
+        attachBtn.style.color = '#0d1117';
+        attachBtn.style.border = '1px solid var(--gold)';
+        attachBtn.style.fontWeight = '700';
+        attachBtn.innerHTML = '✨ Adjuntar Anotaciones a Modificación';
+        attachBtn.onclick = () => {
+          // Temporarily clear selection for perfect export
+          const prev = state.selectedItem;
+          state.selectedItem = null;
+          render();
+          
+          const dataUrl = canvas.toDataURL('image/png');
+          
+          state.selectedItem = prev;
+          render();
+
+          if (window.parent.attachCanvasImageToModification) {
+            window.parent.attachCanvasImageToModification(dataUrl);
+          }
+        };
+        actionsContainer.appendChild(attachBtn);
+      }
+      
+      // Also, we can hide standard "Siguiente" step button because they should use our new submit button
+      const nextBtn = Array.from(actionsContainer.querySelectorAll('.btn-sm'))
+        .find(b => b.innerText.includes('Siguiente') || (b.classList.contains('primary') && b.id !== 'attach-to-mod-btn'));
+      if (nextBtn) {
+        nextBtn.style.display = 'none';
+      }
+    }
+    
+    // Customize page title breadcrumbs
+    const activeBc = document.querySelector('.bc-active');
+    if (activeBc) activeBc.textContent = 'Anotación de Cambios';
+  }
+}
+
+// Register global handle
+window.initModificationMode = function(projectId) {
+  checkModificationContext();
+};
+
+// Check immediately on load too
+setTimeout(checkModificationContext, 500);
 </script>
 </body>
 </html>
