@@ -1,6 +1,16 @@
-import React from 'react';
-import { GebesaShell } from './components/GebesaShell';
+import React, { useState } from 'react';
+import { GebesaShell, ProyectistaSubView } from './components/GebesaShell';
 
 export default function App() {
-  return <GebesaShell />;
+  const [currentView, setCurrentView] = useState<string>('Ventas');
+  const [proyectistaSubView, setProyectistaSubView] = useState<ProyectistaSubView>('projects');
+
+  return (
+    <GebesaShell
+      currentView={currentView}
+      onViewChange={setCurrentView}
+      proyectistaSubView={proyectistaSubView}
+      onProyectistaSubViewChange={setProyectistaSubView}
+    />
+  );
 }

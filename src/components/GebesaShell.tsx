@@ -1,19 +1,116 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Home, Briefcase, Settings, Target, Users, LayoutDashboard, ChevronRight, ChevronDown, Sun, Plus, LayoutGrid, X } from 'lucide-react';
 
-export function GebesaShell() {
-  const [iframeSrc, setIframeSrc] = useState('/cerebro.html');
-  const [activeSubNav, setActiveSubNav] = useState('Mis Negocios (Home)');
+export type ProyectistaSubView =
+  | 'projects'
+  | 'inbox'
+  | 'solicitudes'
+  | 'chat'
+  | 'calendar'
+  | 'entregables'
+  | 'boveda'
+  | 'vacaciones';
 
-  const handleNavClick = (label: string, url: string) => {
-    setActiveSubNav(label);
-    setIframeSrc(url);
+interface GebesaShellProps {
+  currentView: string;
+  onViewChange: (view: string) => void;
+  proyectistaSubView: ProyectistaSubView;
+  onProyectistaSubViewChange: (view: ProyectistaSubView) => void;
+  children?: React.ReactNode;
+}
+
+export function GebesaShell({
+  currentView,
+  onViewChange,
+  proyectistaSubView,
+  onProyectistaSubViewChange,
+  children
+}: GebesaShellProps) {
+  // Local active subnav state for Ventas view only
+  const [ventasActiveSubNav, setVentasActiveSubNav] = useState('Mis Negocios (Home)');
+  const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Sync iframe role when currentView changes
+  useEffect(() => {
+    if (!isIframeLoaded || !iframeRef.current || !iframeRef.current.contentWindow) return;
+    
+    let targetRole = 'ventas';
+    if (currentView === 'Proyectos') targetRole = 'proyectista';
+    else if (currentView === 'Direccion') targetRole = 'master';
+    
+    iframeRef.current.contentWindow.postMessage({ type: 'SWITCH_ROLE', role: targetRole }, '*');
+  }, [currentView, isIframeLoaded]);
+
+  // Sync iframe section when proyectistaSubView changes
+  useEffect(() => {
+    if (!isIframeLoaded || !iframeRef.current || !iframeRef.current.contentWindow) return;
+    if (currentView === 'Proyectos') {
+      let targetSection = 'proyectos';
+      if (proyectistaSubView === 'inbox') targetSection = 'inbox';
+      else if (proyectistaSubView === 'projects') targetSection = 'proyectos';
+      else if (proyectistaSubView === 'solicitudes') targetSection = 'solicitudes';
+      else if (proyectistaSubView === 'chat') targetSection = 'chat';
+      else if (proyectistaSubView === 'calendar') targetSection = 'calendar';
+      else if (proyectistaSubView === 'entregables') targetSection = 'entregables';
+      else if (proyectistaSubView === 'boveda') targetSection = 'boveda';
+      else if (proyectistaSubView === 'vacaciones') targetSection = 'vacaciones';
+      
+      iframeRef.current.contentWindow.postMessage({ type: 'NAVIGATE_SECTION', section: targetSection }, '*');
+    }
+  }, [proyectistaSubView, currentView, isIframeLoaded]);
+
+  // Hear message back from inside the iframe (e.g. role-selector changes inside)
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (!event.data) return;
+      if (event.data.type === 'ENV_CHANGE') {
+        const env = event.data.environment;
+        if (env === 'Proyectista' && currentView !== 'Proyectos') {
+          onViewChange('Proyectos');
+        } else if (env === 'Ventas' && currentView !== 'Ventas') {
+          onViewChange('Ventas');
+        } else if (env === 'Direccion' && currentView !== 'Direccion') {
+          onViewChange('Direccion');
+        }
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [currentView, onViewChange]);
+
+  const handleIframeLoad = () => {
+    setIsIframeLoaded(true);
+    // Give document a tiny fraction to prepare listeners
+    setTimeout(() => {
+      if (!iframeRef.current || !iframeRef.current.contentWindow) return;
+      
+      // 1. Sync active role
+      let targetRole = 'ventas';
+      if (currentView === 'Proyectos') targetRole = 'proyectista';
+      else if (currentView === 'Direccion') targetRole = 'master';
+      iframeRef.current.contentWindow.postMessage({ type: 'SWITCH_ROLE', role: targetRole }, '*');
+
+      // 2. Sync open sections if we are in Proyectos
+      if (currentView === 'Proyectos') {
+        let targetSection = 'proyectos';
+        if (proyectistaSubView === 'inbox') targetSection = 'inbox';
+        else if (proyectistaSubView === 'projects') targetSection = 'proyectos';
+        else if (proyectistaSubView === 'solicitudes') targetSection = 'solicitudes';
+        else if (proyectistaSubView === 'chat') targetSection = 'chat';
+        else if (proyectistaSubView === 'calendar') targetSection = 'calendar';
+        else if (proyectistaSubView === 'entregables') targetSection = 'entregables';
+        else if (proyectistaSubView === 'boveda') targetSection = 'boveda';
+        else if (proyectistaSubView === 'vacaciones') targetSection = 'vacaciones';
+        iframeRef.current.contentWindow.postMessage({ type: 'NAVIGATE_SECTION', section: targetSection }, '*');
+      }
+    }, 80);
   };
 
   return (
     <div className="flex h-full w-full bg-[#f8f9fa] overflow-hidden text-gray-800 font-sans">
       {/* Gebesa Sidebar */}
-      <div className="w-[260px] bg-white border-r border-gray-200 flex flex-col shrink-0 relative z-20">
+      <div className="w-[260px] bg-white border-r border-gray-200 flex flex-col shrink-0 relative z-20 animate-in slide-in-from-left duration-300">
         
         {/* Logo Area */}
         <div className="h-[72px] px-6 flex items-center justify-between border-b border-transparent shrink-0">
@@ -35,21 +132,83 @@ export function GebesaShell() {
           <div className="mt-2 flex flex-col">
             <NavItem icon={<Target className="w-[18px] h-[18px]"/>} label="Cerebro" hasChevron expanded isFolder />
             <div className="flex flex-col ml-4 mt-1 space-y-1 border-l pl-2">
-               <SubNavItem 
-                 label="Mis Negocios (Home)" 
-                 active={activeSubNav === 'Mis Negocios (Home)'}
-                 onClick={() => handleNavClick('Mis Negocios (Home)', '/cerebro.html')} 
-               />
-               <SubNavItem 
-                 label="Mis Presentaciones" 
-                 active={activeSubNav === 'Mis Presentaciones'}
-                 onClick={() => handleNavClick('Mis Presentaciones', '/cerebro.html')} 
-               />
-               <SubNavItem 
-                 label="Agenda de Proyectos" 
-                 active={activeSubNav === 'Agenda de Proyectos'}
-                 onClick={() => handleNavClick('Agenda de Proyectos', '/cerebro-calendar.html')} 
-               />
+              {currentView === 'Ventas' ? (
+                <>
+                  <SubNavItem 
+                    label="Mis Negocios (Home)" 
+                    active={ventasActiveSubNav === 'Mis Negocios (Home)'} 
+                    onClick={() => {
+                      setVentasActiveSubNav('Mis Negocios (Home)');
+                      onViewChange('Ventas');
+                    }} 
+                  />
+                  <SubNavItem 
+                    label="Mis Presentaciones" 
+                    active={ventasActiveSubNav === 'Mis Presentaciones'} 
+                    onClick={() => {
+                      setVentasActiveSubNav('Mis Presentaciones');
+                      onViewChange('Ventas');
+                    }} 
+                  />
+                  <SubNavItem 
+                    label="Agenda de Proyectos" 
+                    active={ventasActiveSubNav === 'Agenda de Proyectos'} 
+                    onClick={() => {
+                      setVentasActiveSubNav('Agenda de Proyectos');
+                      onViewChange('Ventas');
+                    }} 
+                  />
+                </>
+              ) : currentView === 'Proyectos' ? (
+                <>
+                  <div className="text-[10px] text-gray-400 mt-2 ml-2 font-bold uppercase tracking-wider">Recibir</div>
+                  <SubNavItem 
+                    label="Bandeja de proyectos nuevos" 
+                    active={proyectistaSubView === 'inbox'} 
+                    onClick={() => onProyectistaSubViewChange('inbox')} 
+                  />
+                  
+                  <div className="text-[10px] text-gray-400 mt-2 ml-2 font-bold uppercase tracking-wider">Trabajar</div>
+                  <SubNavItem 
+                    label="Mis Proyectos" 
+                    active={proyectistaSubView === 'projects'} 
+                    onClick={() => onProyectistaSubViewChange('projects')} 
+                  />
+                  <SubNavItem 
+                    label="Solicitudes entrantes" 
+                    active={proyectistaSubView === 'solicitudes'} 
+                    onClick={() => onProyectistaSubViewChange('solicitudes')} 
+                  />
+                  <SubNavItem 
+                    label="Chat coordinación" 
+                    active={proyectistaSubView === 'chat'} 
+                    onClick={() => onProyectistaSubViewChange('chat')} 
+                  />
+                  
+                  <div className="text-[10px] text-gray-400 mt-2 ml-2 font-bold uppercase tracking-wider">Entregar</div>
+                  <SubNavItem 
+                    label="Mi Calendario" 
+                    active={proyectistaSubView === 'calendar'} 
+                    onClick={() => onProyectistaSubViewChange('calendar')} 
+                  />
+                  <SubNavItem 
+                    label="Bóveda técnica" 
+                    active={proyectistaSubView === 'boveda'} 
+                    onClick={() => onProyectistaSubViewChange('boveda')} 
+                  />
+                  
+                  <div className="text-[10px] text-gray-400 mt-2 ml-2 font-bold uppercase tracking-wider">Gestión</div>
+                  <SubNavItem 
+                    label="Modo Vacaciones" 
+                    active={proyectistaSubView === 'vacaciones'} 
+                    onClick={() => onProyectistaSubViewChange('vacaciones')} 
+                  />
+                </>
+              ) : (
+                <div className="text-[11px] text-gray-400 ml-2 py-2">
+                  Dirección General Activo
+                </div>
+              )}
             </div>
           </div>
 
@@ -60,10 +219,15 @@ export function GebesaShell() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#f0f2f5]">
-        
-        {/* Inner layout (Cerebro App embed) */}
-        <div className="flex-1 overflow-hidden relative flex bg-bg text-text-main m-4 mt-6 rounded-b-xl border border-border shadow-2xl rounded-t-lg">
-           <iframe src={iframeSrc} className="w-full h-full border-none bg-[#0d1117]" title="Cerebro App" />
+        {/* Inner layout wrapper (Embedded Iframe pointing to fully styled cerebro.html) */}
+        <div className="flex-1 overflow-hidden relative flex bg-bg text-text-main m-4 rounded-b-xl border border-border shadow-2xl rounded-t-lg">
+           <iframe 
+             ref={iframeRef} 
+             src="/cerebro.html" 
+             className="w-full h-full border-none bg-[#0d1117]" 
+             title="Cerebro App" 
+             onLoad={handleIframeLoad}
+           />
         </div>
       </div>
     </div>
@@ -86,12 +250,12 @@ function SubNavItem({ label, active, onClick }: any) {
   return (
     <button 
       onClick={onClick}
-      className={`w-full flex items-center gap-3 px-4 py-2.5 text-[13px] rounded-md transition-colors ${active ? 'bg-teal-500 text-white font-medium shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium'}`}
+      className={`w-full flex items-center gap-3 px-4 py-2.5 text-[13.2px] rounded-md transition-colors ${active ? 'bg-teal-500 text-white font-semibold shadow-sm' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 font-medium'}`}
     >
       <div className={`w-2 h-2 rounded-full border-[1.5px] ${active ? 'border-white bg-transparent' : 'border-gray-400 bg-transparent'}`}></div>
-      {label}
+      <span>{label}</span>
     </button>
-  )
+  );
 }
 
 function Tab({ label, active }: any) {

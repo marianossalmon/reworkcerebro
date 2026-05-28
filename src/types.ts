@@ -76,4 +76,35 @@ export interface Project {
   requests: Request[];
   comments: Comment[];
   images: string[];
+  deliveryDeadline: string;       // Fecha calculada "Vie 30 Mayo"
+  startDate: string;              // Cuando se aceptó el proyecto
+  completenessScore: number;      // 0-100
+  pendingInfoItems: string[];     // ["planos de planta", "referencias visuales"]
+  pointsValue: number;            // 3 | 2 | 1 según magnitud
+  requiresVirtualTour: boolean;
+  requiresRenders: boolean;
+  renderCount?: number;
+  deliveryHistory: DeliveryEvent[];
+  isInInbox: boolean;             // true = está en bandeja sin aceptar
+}
+
+export interface DeliveryEvent {
+  id: string;
+  date: string;
+  author: string;
+  description: string;
+  items: string[];              // ["planos DWG", "renders 3D"]
+  status: 'delivered' | 'pending-revision';
+}
+
+export interface InboxProject extends Project {
+  inboxAssignedBy: string;      // "Ariadna Ladrón"
+  inboxAssignedAt: string;      // "Ingresado hace 2h"
+}
+
+export interface LoadCapacity {
+  projectistId: string;
+  currentPoints: number;
+  maxPoints: number;
+  breakdown: { projectId: string; projectCode: string; points: number; magnitude: ProjectMagnitude }[];
 }
