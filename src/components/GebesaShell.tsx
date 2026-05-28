@@ -28,6 +28,7 @@ export function GebesaShell({
 }: GebesaShellProps) {
   // Local active subnav state for Ventas view only
   const [ventasActiveSubNav, setVentasActiveSubNav] = useState('Mis Negocios (Home)');
+  const [direccionSubView, setDireccionSubView] = useState('dashboard');
   const [isIframeLoaded, setIsIframeLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -40,6 +41,22 @@ export function GebesaShell({
     else if (currentView === 'Direccion') targetRole = 'master';
     
     iframeRef.current.contentWindow.postMessage({ type: 'SWITCH_ROLE', role: targetRole }, '*');
+
+    // Also sync current subviews immediately upon role change
+    if (currentView === 'Proyectos') {
+      let targetSection = 'proyectos';
+      if (proyectistaSubView === 'inbox') targetSection = 'inbox';
+      else if (proyectistaSubView === 'projects') targetSection = 'proyectos';
+      else if (proyectistaSubView === 'solicitudes') targetSection = 'solicitudes';
+      else if (proyectistaSubView === 'chat') targetSection = 'chat';
+      else if (proyectistaSubView === 'calendar') targetSection = 'calendar';
+      else if (proyectistaSubView === 'entregables') targetSection = 'entregables';
+      else if (proyectistaSubView === 'boveda') targetSection = 'boveda';
+      else if (proyectistaSubView === 'vacaciones') targetSection = 'vacaciones';
+      iframeRef.current.contentWindow.postMessage({ type: 'NAVIGATE_SECTION', section: targetSection }, '*');
+    } else if (currentView === 'Direccion') {
+      iframeRef.current.contentWindow.postMessage({ type: 'NAVIGATE_SECTION', section: direccionSubView }, '*');
+    }
   }, [currentView, isIframeLoaded]);
 
   // Sync iframe section when proyectistaSubView changes
@@ -59,6 +76,14 @@ export function GebesaShell({
       iframeRef.current.contentWindow.postMessage({ type: 'NAVIGATE_SECTION', section: targetSection }, '*');
     }
   }, [proyectistaSubView, currentView, isIframeLoaded]);
+
+  // Sync iframe section when direccionSubView changes
+  useEffect(() => {
+    if (!isIframeLoaded || !iframeRef.current || !iframeRef.current.contentWindow) return;
+    if (currentView === 'Direccion') {
+      iframeRef.current.contentWindow.postMessage({ type: 'NAVIGATE_SECTION', section: direccionSubView }, '*');
+    }
+  }, [direccionSubView, currentView, isIframeLoaded]);
 
   // Hear message back from inside the iframe (e.g. role-selector changes inside)
   useEffect(() => {
@@ -91,7 +116,7 @@ export function GebesaShell({
       else if (currentView === 'Direccion') targetRole = 'master';
       iframeRef.current.contentWindow.postMessage({ type: 'SWITCH_ROLE', role: targetRole }, '*');
 
-      // 2. Sync open sections if we are in Proyectos
+      // 2. Sync open sections if we are in Proyectos or Direccion
       if (currentView === 'Proyectos') {
         let targetSection = 'proyectos';
         if (proyectistaSubView === 'inbox') targetSection = 'inbox';
@@ -103,6 +128,8 @@ export function GebesaShell({
         else if (proyectistaSubView === 'boveda') targetSection = 'boveda';
         else if (proyectistaSubView === 'vacaciones') targetSection = 'vacaciones';
         iframeRef.current.contentWindow.postMessage({ type: 'NAVIGATE_SECTION', section: targetSection }, '*');
+      } else if (currentView === 'Direccion') {
+        iframeRef.current.contentWindow.postMessage({ type: 'NAVIGATE_SECTION', section: direccionSubView }, '*');
       }
     }, 80);
   };
@@ -205,9 +232,33 @@ export function GebesaShell({
                   />
                 </>
               ) : (
-                <div className="text-[11px] text-gray-400 ml-2 py-2">
-                  Dirección General Activo
-                </div>
+                <>
+                  <SubNavItem 
+                    label="📊 Dashboard Ejecutivo" 
+                    active={direccionSubView === 'dashboard'} 
+                    onClick={() => setDireccionSubView('dashboard')} 
+                  />
+                  <SubNavItem 
+                    label="📈 Semáforo de Ocupación" 
+                    active={direccionSubView === 'semaforo'} 
+                    onClick={() => setDireccionSubView('semaforo')} 
+                  />
+                  <SubNavItem 
+                    label="📋 Kanban" 
+                    active={direccionSubView === 'kanban'} 
+                    onClick={() => setDireccionSubView('kanban')} 
+                  />
+                  <SubNavItem 
+                    label="🏗️ Gestión de Proyectos" 
+                    active={direccionSubView === 'proyectos'} 
+                    onClick={() => setDireccionSubView('proyectos')} 
+                  />
+                  <SubNavItem 
+                    label="🧑‍🤝‍🧑 Gestión de Equipo" 
+                    active={direccionSubView === 'equipo'} 
+                    onClick={() => setDireccionSubView('equipo')} 
+                  />
+                </>
               )}
             </div>
           </div>

@@ -3535,89 +3535,20 @@ body.immersive-briefing .breadcrumb-nav {
        ============================================== -->
   <div id="role-master" class="role-container">
     
-    <!-- LEFT SIDEBAR MASTER -->
-    <aside class="sidebar" id="left-sidebar-master" style="width: var(--sidebar-w);">
+    <!-- LEFT SIDEBAR MASTER (Hidden because functionality is moved to outer Gebesa Shell) -->
+    <aside class="sidebar" id="left-sidebar-master" style="width: var(--sidebar-w); display: none !important;">
       <div class="subtitle" style="padding: 0 40px 24px;">Dirección General</div>
-      <a class="nav-item active">📊 Dashboard Ejecutivo</a>
-      <a class="nav-item">📈 Semáforo de Ocupación</a>
-      <a class="nav-item">📋 Kanban</a>
-      <a class="nav-item">🏗️ Gestión de Proyectos</a>
-      <a class="nav-item">🧑‍🤝‍🧑 Gestión de Equipo</a>
+      <a class="nav-item active" onclick="switchMasterSection('dashboard', this)">📊 Dashboard Ejecutivo</a>
+      <a class="nav-item" onclick="switchMasterSection('semaforo', this)">📈 Semáforo de Ocupación</a>
+      <a class="nav-item" onclick="switchMasterSection('kanban', this)">📋 Kanban</a>
+      <a class="nav-item" onclick="switchMasterSection('proyectos', this)">🏗️ Gestión de Proyectos</a>
+      <a class="nav-item" onclick="switchMasterSection('equipo', this)">🧑‍🤝‍🧑 Gestión de Equipo</a>
     </aside>
 
-    <div class="resizer" id="resizer-left-master"></div>
+    <div class="resizer" id="resizer-left-master" style="display: none !important;"></div>
 
-    <div class="main-view-wrapper">
-      <div class="content-header">
-        <div style="display:flex; justify-content:space-between; align-items:flex-end;">
-          <div>
-            <h1 class="display-title">Dashboard Analítico Ejecutivo</h1>
-            <div class="subtitle" style="margin-top: 16px; color: var(--text-muted);">Centro de Mandos y Métricas de Alto Nivel</div>
-          </div>
-          <div>
-             <select class="form-select" style="padding: 10px 16px;">
-               <option>Región Norte</option>
-               <option>Región Sur</option>
-               <option>Nacional</option>
-             </select>
-          </div>
-        </div>
-      </div>
-      <div class="scroll-area">
-         <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr);">
-           <div class="card p-0" style="padding:32px;">
-             <div class="subtitle">Tiempo de Ciclo Técnico (TCT)</div>
-             <div style="font-size:36px; font-family:var(--font-mono); line-height:1; margin-top:24px; color:var(--text-primary);">2.4</div>
-             <div class="badge green" style="margin-top:16px;">Promedio Óptimo</div>
-           </div>
-           <div class="card p-0" style="padding:32px;">
-             <div class="subtitle">Índice de Retrabajo</div>
-             <div style="font-size:36px; font-family:var(--font-mono); line-height:1; margin-top:24px; color:var(--text-primary);">12%</div>
-             <div class="badge amber" style="margin-top:16px;">De re-diseños técnicos</div>
-           </div>
-           <div class="card p-0" style="padding:32px;">
-             <div class="subtitle">Hit-Rate Financiero</div>
-             <div style="font-size:36px; font-family:var(--font-mono); line-height:1; margin-top:24px; color:var(--text-primary);">68%</div>
-             <div class="badge" style="margin-top:16px; border-color:rgba(255,255,255,0.1)">De proyectos cerrados</div>
-           </div>
-           <div class="card p-0" style="padding:32px;">
-             <div class="subtitle">Estancados en Ventas</div>
-             <div style="font-size:36px; font-family:var(--font-mono); line-height:1; margin-top:24px; color:var(--text-primary);">4</div>
-             <div class="badge red" style="margin-top:16px;">Alertas Críticas</div>
-           </div>
-         </div>
-
-         <!-- Master Table -->
-         <div class="card p-0">
-           <table class="data-table">
-             <thead>
-               <tr>
-                 <th style="padding-left:40px;">Región / Sucursal</th>
-                 <th>ID Hunter</th>
-                 <th>Volumen</th>
-                 <th>Alarma Operativa</th>
-                 <th>Desviación</th>
-               </tr>
-             </thead>
-             <tbody>
-               <tr>
-                 <td style="padding-left:40px; font-weight:600;">OXXO Corporativo Monterrey</td>
-                 <td style="font-family:var(--font-mono);">HNT-0391</td>
-                 <td style="font-family:var(--font-mono);">$480,000</td>
-                 <td><span class="badge red">Alerta Tiempos</span></td>
-                 <td style="font-family:var(--font-mono); color:var(--red);">+ 4.2 días</td>
-               </tr>
-               <tr>
-                 <td style="padding-left:40px; font-weight:600;">Sigma Torres del Valle</td>
-                 <td style="font-family:var(--font-mono);">HNT-0418</td>
-                 <td style="font-family:var(--font-mono);">$1,850,000</td>
-                 <td><span class="badge green">Sano</span></td>
-                 <td style="font-family:var(--font-mono); color:var(--text-secondary);">En parámetros</td>
-               </tr>
-             </tbody>
-           </table>
-         </div>
-      </div>
+    <div class="main-view-wrapper" id="master-main-wrapper">
+      <!-- Dynamic workspace content in Dirección role rendered here -->
     </div>
   </div><!-- FIN ROLE MASTER -->
 
@@ -3892,19 +3823,544 @@ body.immersive-briefing .breadcrumb-nav {
       
       <!-- 6. VIEW: BÓVEDA TÉCNICA -->
       <div class="proy-view" id="pv-boveda">
+        <style>
+          /* Exclusive Bóveda Styles */
+          .bov-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+            background: rgba(22, 27, 34, 0.4);
+            padding: 16px 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+          }
+          .bov-search-container {
+            position: relative;
+            min-width: 280px;
+          }
+          .bov-search-input {
+            width: 100%;
+            background: #0d1117;
+            border: 1px solid var(--border);
+            padding: 10px 16px 10px 40px;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            transition: all 0.2s;
+          }
+          .bov-search-input:focus {
+            border-color: var(--active-branch-color, var(--blue));
+            box-shadow: 0 0 10px var(--active-branch-glow, rgba(88,166,255,0.15));
+          }
+          .bov-tab-btn {
+            background: #161b22;
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-secondary);
+            border-radius: 20px;
+            padding: 8px 18px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+          }
+          .bov-tab-btn:hover {
+            color: #fff;
+            background: #21262d;
+            border-color: rgba(255,255,255,0.15);
+          }
+          .bov-tab-btn.active.bov-laguna { background: rgba(16,185,129,0.12); border-color: #10b981; color: #3fb950; box-shadow: 0 0 10px rgba(16,185,129,0.15); }
+          .bov-tab-btn.active.bov-queretaro { background: rgba(249,115,22,0.12); border-color: #f97316; color: #f97316; box-shadow: 0 0 10px rgba(249,115,22,0.15); }
+          .bov-tab-btn.active.bov-cdmx { background: rgba(236,72,153,0.12); border-color: #ec4899; color: #ec4899; box-shadow: 0 0 10px rgba(236,72,153,0.15); }
+          .bov-tab-btn.active.bov-metropoli { background: rgba(139,92,246,0.12); border-color: #8b5cf6; color: #c09fff; box-shadow: 0 0 10px rgba(139,92,246,0.15); }
+          .bov-tab-btn.active.bov-puebla { background: rgba(6,182,212,0.12); border-color: #06b6d4; color: #00d2d3; box-shadow: 0 0 10px rgba(6,182,212,0.15); }
+          .bov-tab-btn.active.bov-guadalajara { background: rgba(251,191,36,0.12); border-color: #fbbf24; color: #fecb3e; box-shadow: 0 0 10px rgba(251,191,36,0.15); }
+
+          /* Rich project card containers inside Central Bóveda */
+          .bov-project-card {
+            background: rgba(22, 27, 34, 0.45);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+          .bov-project-card:hover {
+            border-color: rgba(255,255,255,0.14);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+          }
+          .bov-project-card.active-expanded {
+            border-color: var(--active-branch-color, var(--blue));
+            box-shadow: 0 12px 36px rgba(0,0,0,0.45), 0 0 15px var(--active-branch-glow, rgba(88,166,255,0.1));
+            background: rgba(22, 27, 34, 0.7);
+          }
+          .bov-project-header {
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+            background: rgba(13, 17, 23, 0.4);
+            transition: background 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+          .bov-project-header:hover {
+            background: rgba(22, 27, 34, 0.85);
+          }
+          .bov-project-primary-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-grow: 1;
+            min-width: 0;
+          }
+          .bov-project-icon-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            color: var(--active-branch-color, #fff);
+          }
+          .bov-project-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+          }
+          .bov-project-id-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .bov-project-id-badge {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 1px 6px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--active-branch-color, #fff);
+            text-shadow: 0 0 4px var(--active-branch-glow, transparent);
+            text-transform: uppercase;
+          }
+          .bov-project-client {
+            font-size: 14px;
+            font-weight: 750;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .bov-project-sub {
+            font-size: 11px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          .bov-project-right-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+          }
+          .bov-project-stage-badge {
+            font-size: 10px;
+            font-weight: 850;
+            letter-spacing: 0.5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+          }
+          .bov-project-file-count {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font-mono);
+          }
+          .bov-project-toggle-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 11px;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+          }
+          .bov-project-toggle-btn:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+          }
+          .bov-project-card.active-expanded .bov-project-toggle-btn {
+            transform: rotate(180deg);
+            color: #fff;
+            background: var(--active-branch-color, var(--blue));
+            border-color: transparent;
+            box-shadow: 0 0 10px var(--active-branch-glow, transparent);
+          }
+          .bov-project-content {
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(10, 14, 20, 0.6);
+            padding: 24px;
+            display: none;
+          }
+          .bov-project-card.active-expanded .bov-project-content {
+            display: block;
+          }
+          
+          .bov-subcategory-header {
+            font-family: var(--font-sans);
+            font-size: 10.5px;
+            font-weight: 850;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin: 28px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            padding-bottom: 6px;
+          }
+          .bov-subcategory-header:first-of-type {
+            margin-top: 0;
+          }
+
+          .bov-category-block {
+            background: rgba(22, 27, 34, 0.4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 24px;
+            position: relative;
+          }
+          .bov-category-title-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 10px;
+          }
+          .bov-grid-system {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 16px;
+          }
+
+          /* Micro Elegant Cards */
+          .bov-item-card {
+            background: #161b22;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 18px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+          .bov-item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-accent-border, var(--blue));
+            opacity: 0.6;
+            transition: opacity 0.25s;
+          }
+          .bov-item-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--card-accent-border, var(--blue));
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45), 0 2px 10px var(--card-glow-color, rgba(88,166,255,0.1));
+          }
+          .bov-item-card:hover::before {
+            opacity: 1;
+          }
+          .bov-item-badge-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          .bov-item-ext-tag {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+          }
+          .bov-item-size-txt {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+          }
+          .bov-item-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.4;
+            margin: 10px 0 6px 0;
+            word-break: break-all;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 36px;
+          }
+          
+          /* Relationship panel linking directly to projects */
+          .bov-item-link-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 6px;
+            padding: 6px 10px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+          }
+          .bov-item-link-box:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+          }
+          .bov-item-link-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 9.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--gold);
+          }
+          .bov-item-link-title {
+            font-size: 10.5px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+          }
+
+          /* Actions strip */
+          .bov-item-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 10px;
+            margin-top: auto;
+          }
+          .bov-item-creator-lbl {
+            font-size: 10px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 110px;
+          }
+          .bov-item-actions-box {
+            display: flex;
+            gap: 6px;
+          }
+          .bov-action-round-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-secondary);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 11px;
+            outline: none;
+          }
+          .bov-action-round-btn:hover {
+            background: var(--surface-hover);
+            color: #fff;
+            transform: scale(1.08);
+          }
+          .bov-action-round-btn.bov-btn-view:hover {
+            background: rgba(88,166,255,0.15);
+            border-color: rgba(88,166,255,0.3);
+            color: var(--blue);
+            box-shadow: 0 0 8px rgba(88,166,255,0.2);
+          }
+          .bov-action-round-btn.bov-btn-download:hover {
+            background: rgba(16,185,129,0.15);
+            border-color: rgba(16,185,129,0.3);
+            color: #3fb950;
+            box-shadow: 0 0 8px rgba(16,185,129,0.2);
+          }
+          .bov-action-round-btn::after {
+            content: attr(title);
+            position: absolute;
+            bottom: 34px;
+            left: 50%;
+            transform: translateX(-50%) translateY(5px);
+            background: #000;
+            color: #fff;
+            font-size: 9px;
+            font-weight: 600;
+            padding: 3px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.15s;
+            border: 1px solid rgba(255,255,255,0.08);
+          }
+          .bov-action-round-btn:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+          }
+        </style>
+
         <div class="proy-header">
           <div>
-            <h1>Bóveda Técnica Global</h1>
-            <p>Repositorio maestro de planos, bloques CAD y renders en alta resolución.</p>
+            <h1>Bóveda Técnica Central</h1>
+            <p>Repositorio Inteligente unificado por sucursal, ligado automáticamente a entregables y carpetas de proyectos.</p>
           </div>
         </div>
+
         <div class="pbody">
-          <div class="upload-zone" style="margin-bottom: 16px;" onclick="document.getElementById('file-upload-bov').click()">
-            📂 Haz clic aquí para subir archivos de levantamiento, texturas o bloques CAD (.dwg, .skp, .pdf, .jpg)
-            <input type="file" id="file-upload-bov" style="display: none;" onchange="proyUploadToBovedaGlobal(this)">
+          <!-- Filter Panel & Search -->
+          <div class="bov-panel-header">
+            <!-- Access folders by Branch -->
+            <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="boveda-branch-selector">
+              <button class="bov-tab-btn active bov-laguna" onclick="bovedaSetActiveBranch('Laguna')">
+                <span class="dot-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                Laguna
+              </button>
+              <button class="bov-tab-btn bov-queretaro" onclick="bovedaSetActiveBranch('Queretaro')">
+                <span class="dot-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #f97316; display: inline-block;"></span>
+                Querétaro
+              </button>
+              <button class="bov-tab-btn bov-cdmx" onclick="bovedaSetActiveBranch('CDMX')">
+                <span class="dot-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #ec4899; display: inline-block;"></span>
+                CDMX
+              </button>
+              <button class="bov-tab-btn bov-metropoli" onclick="bovedaSetActiveBranch('Metropoli')">
+                <span class="dot-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #8b5cf6; display: inline-block;"></span>
+                Metrópoli
+              </button>
+              <button class="bov-tab-btn bov-puebla" onclick="bovedaSetActiveBranch('Puebla')">
+                <span class="dot-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #06b6d4; display: inline-block;"></span>
+                Puebla
+              </button>
+              <button class="bov-tab-btn bov-guadalajara" onclick="bovedaSetActiveBranch('Guadalajara')">
+                <span class="dot-indicator" style="width: 8px; height: 8px; border-radius: 50%; background: #fbbf24; display: inline-block;"></span>
+                Guadalajara
+              </button>
+            </div>
+
+            <!-- Instant Search Engine -->
+            <div class="bov-search-container">
+              <span style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); font-size: 13px;">🔍</span>
+              <input type="text" id="boveda-search-bar" class="bov-search-input" placeholder="Buscar por plano, entregable, ID..." oninput="renderProyectistaBoveda()">
+            </div>
           </div>
-          <div class="bov-grid" id="proy-global-boveda">
-            <!-- Planos master grid -->
+
+          <!-- Hidden file input for project-level uploads -->
+          <input type="file" id="file-upload-bov" style="display: none;" onchange="proyUploadToBovedaGlobal(this)">
+
+          <!-- MODAL DE CLASIFICACIÓN DE ENTREGABLES MMW -->
+          <div class="modal-overlay" id="boveda-upload-classification-modal" onclick="document.getElementById('boveda-upload-classification-modal').style.display = 'none'" style="display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 99999; padding: 20px; transition: opacity 0.25s;">
+            <div class="modal-card" style="width: 100%; max-width: 480px; background: #0f1217; border: 1px solid var(--border, rgba(255,255,255,0.08)); border-radius: 8px; padding: 24px; box-shadow: var(--shadow-lg);" onclick="event.stopPropagation()">
+              
+              <!-- Modal Title -->
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
+                <h3 style="font-size: 15px; font-weight: bold; color: #fff; margin: 0; display: flex; align-items: center; gap: 8px;">
+                  <span>📤 Clasificar Entregable Técnico</span>
+                </h3>
+                <button onclick="document.getElementById('boveda-upload-classification-modal').style.display='none'" style="background: none; border: none; color: var(--text-muted, #768390); cursor: pointer; font-size: 16px;">✕</button>
+              </div>
+              
+              <!-- Project info -->
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 12px; color: var(--text-secondary, #768390); margin-bottom: 8px;">Proyecto de la Bóveda:</label>
+                <div id="bov-up-project-info" style="font-family: var(--font-mono, monospace); font-size: 13px; color: #fff; background: rgba(255,255,255,0.02); padding: 10px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.06); font-weight: bold;">
+                  -
+                </div>
+              </div>
+
+              <!-- Selection -->
+              <div style="margin-bottom: 20px;">
+                <label style="display: block; font-size: 12px; color: var(--text-secondary, #768390); margin-bottom: 8px;">¿A qué sección pertenece el archivo?</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                  
+                  <!-- Option Originales -->
+                  <div id="opt-bov-orig" onclick="bovedaSelectUploadType('original')" style="border: 2px solid var(--active-branch-color, #10b981); background: rgba(16, 185, 129, 0.05); padding: 14px; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s;">
+                    <div style="font-size: 22px; margin-bottom: 6px;">📋</div>
+                    <div style="font-size: 13px; font-weight: bold; color: #fff;">Original</div>
+                    <div style="font-size: 10px; color: var(--text-secondary, #768390); margin-top: 4px; line-height: 1.3;">Plano base, cotización o levantamiento inicial</div>
+                  </div>
+                  
+                  <!-- Option Modificaciones -->
+                  <div id="opt-bov-mod" onclick="bovedaSelectUploadType('modificacion')" style="border: 2px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.01); padding: 14px; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s;">
+                    <div style="font-size: 22px; margin-bottom: 6px;">🔄</div>
+                    <div style="font-size: 13px; font-weight: bold; color: #fff;">Modificación / R</div>
+                    <div style="font-size: 10px; color: var(--text-secondary, #768390); margin-top: 4px; line-height: 1.3;">Revisión nueva, cambio solicitado R1, R2, Rx</div>
+                  </div>
+                  
+                </div>
+              </div>
+
+              <!-- Extra field for revision label if Modificacion is selected -->
+              <div id="bov-mod-details-box" style="display: none; margin-bottom: 20px;">
+                <label style="display: block; font-size: 12px; color: var(--text-secondary, #768390); margin-bottom: 8px;">Asociar a la Revisión:</label>
+                <select id="bov-up-mod-select" class="form-input" style="width: 100%; background: #161a22; border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 10px; border-radius: 6px; font-size: 12.5px; outline: none;">
+                  <!-- Filled dynamically -->
+                </select>
+              </div>
+
+              <!-- Button actions -->
+              <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
+                <button type="button" onclick="document.getElementById('boveda-upload-classification-modal').style.display='none'" class="btn-clean" style="padding: 10px 18px; border-radius: 6px; font-size: 12.5px; color: var(--text-secondary, #768390); background: none; border: 1px solid rgba(255,255,255,0.08); cursor: pointer;">Cancelar</button>
+                <button type="button" onclick="bovedaTriggerFileSelect()" style="padding: 10px 20px; border-radius: 6px; font-size: 12.5px; font-weight: bold; background: var(--active-branch-color, #10b981); color: #000; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px;">Siguiente ➔</button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Master Files Directory Rendered via JS -->
+          <div id="proy-global-boveda">
+            <!-- Rendered by JavaScript grouped by (IMG/Video, DWG, SKP, XML, GLB, etc.) -->
           </div>
         </div>
       </div>
@@ -4479,6 +4935,75 @@ body.immersive-briefing .breadcrumb-nav {
   </div>
 </div>
 
+<!-- INTERACTIVE BOVEDA PREVIEW MODAL -->
+<div class="modal-overlay" id="boveda-preview-modal" onclick="bovedaClosePreview(event)" style="display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); z-index: 99999; padding: 20px; transition: opacity 0.25s;">
+  <div class="modal-card" style="width: 90vw; max-width: 1100px; height: 85vh; background: #0f1217; border: 1px solid var(--border); border-radius: var(--radius-lg); display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--shadow-md); outline: none;" onclick="event.stopPropagation()">
+    
+    <!-- Modal Header -->
+    <div style="padding: 16px 24px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between; background: #161a22;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span id="bprev-icon-type" style="font-size: 24px;">🔧</span>
+        <div>
+          <h2 id="bprev-title" style="margin: 0; font-size: 16px; font-weight: 700; color: #fff;">Vista Previa Técnica</h2>
+          <p id="bprev-subinfo" style="margin: 2px 0 0 0; font-size: 11px; color: var(--text-secondary);"></p>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <button id="bprev-download-btn" class="btn-solid" style="padding: 8px 14px; font-size: 12.5px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); color: #20c997;" onclick="bovedaDownloadCurrentFile()">
+          <span>⬇️</span> Descargar original
+        </button>
+        <button style="background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 18px; outline: none; padding: 4px;" onclick="bovedaClosePreview(null, true)">✕</button>
+      </div>
+    </div>
+    
+    <!-- Modal Body -->
+    <div style="flex: 1; display: flex; overflow: hidden; background: #0b0d11; flex-direction: row;" class="bprev-modal-flex-container">
+      <!-- Main view sandbox (Left side - 70%) -->
+      <div id="bprev-visualizer" style="flex: 7; height: 100%; display: flex; align-items: center; justify-content: center; background: #060709; overflow: hidden; position: relative; border-right: 1px solid rgba(255,255,255,0.08);">
+        <!-- Active simulator injected here -->
+      </div>
+      
+      <!-- Metadata and properties (Right side - 30%) -->
+      <div style="flex: 3; height: 100%; overflow-y: auto; background: #11141a; padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+        <div>
+          <h4 style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 0.8px; margin-bottom: 12px;">ESPECIFICACIONES DEL ENTREGABLE</h4>
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div style="display: flex; justify-content: space-between; font-size: 12.5px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px;">
+              <span style="color: var(--text-muted);">Proyecto Relacionado</span>
+              <strong id="bprev-meta-project" style="color: #fff; max-width: 150px; text-align: right; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">-</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12.5px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px;">
+              <span style="color: var(--text-muted);">Entregable / Categoría</span>
+              <strong id="bprev-meta-deliverable" style="color: #fff; max-width: 150px; text-align: right; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">-</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12.5px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px;">
+              <span style="color: var(--text-muted);">Sucursal Emisora</span>
+              <span id="bprev-meta-branch" class="badge" style="padding: 2px 8px; font-size: 10px; border-radius: 10px; background: rgba(88, 166, 255, 0.1); color: #58a6ff; font-weight: bold; border: none;">Laguna</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12.5px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px;">
+              <span style="color: var(--text-muted);">Creador Técnico</span>
+              <strong id="bprev-meta-creator" style="color: #fff;">-</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12.5px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px;">
+              <span style="color: var(--text-muted);">Fecha de Registro</span>
+              <strong id="bprev-meta-date" style="color: #fff;">-</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 12.5px; border-bottom: 1px solid rgba(255,255,255,0.04); padding-bottom: 6px;">
+              <span style="color: var(--text-muted);">Tamaño del Archivo</span>
+              <strong id="bprev-meta-size" style="color: #fff; font-family: var(--font-mono);">-</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Sidebar Controls Area for rendering engines -->
+        <div id="bprev-controls-container" style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
+          <!-- Custom tool inputs depend on active extension (e.g., CAD Layers toggles or 3D rotations) -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============================================================
      JAVASCRIPT LÓGICA CORE
      ============================================================ -->
@@ -4687,6 +5212,64 @@ vProjects.forEach(proj => {
 if (!vProjects.some(p => p.id === 'QRO-041')) {
   vProjects = defaultProjects;
   localStorage.setItem('vProjects', JSON.stringify(vProjects));
+}
+
+// Guarantee GDL projects exist in vProjects
+if (!vProjects.some(p => p.id === 'GDL-077')) {
+  vProjects.push({
+    cliente: "Corporativo JAL-Media", 
+    subCliente: "Inmobiliaria Tapatía",
+    id: "GDL-077", 
+    monto: "$3,150,000", 
+    magn: "Grande", 
+    magnClass: "mag-alert-macro", 
+    proyectista: "Karen Tovar", 
+    etapa: "RENDER SOLICITADO",
+    urgente: false,
+    solicitudOriginal: "Modelado premium para las nuevas oficinas administrativas de JAL-Media en Guadalajara. Incluir mesa ejecutiva tipo barco Nova, 24 sillas Kenza, y maqueta virtual interactiva para revisar con el corporativo en Monterrey.",
+    documentosOriginales: [
+      { name: "plano-tapatia-autorizado.dwg", ext: "DWG", size: "5.1 MB", date: "24 May", version: "Layout Base Guadalajara", uploadedBy: "Karen Tovar" },
+      { name: "vistas-renders-showroom-gdl.skp", ext: "SKP", size: "38.5 MB", date: "25 May", version: "Diseño SketchUp 3D Oficina", uploadedBy: "Karen Tovar" },
+      { name: "recorrido-virtual-tap.mp4", ext: "Video", size: "42.0 MB", date: "26 May", version: "Recorrido Comercial Walkthrough", uploadedBy: "Sistemas Técnicos" },
+      { name: "despiece-tapatia-nova.xml", ext: "XML", size: "180 KB", date: "27 May", version: "Exportación Sistemas de Costos XML", uploadedBy: "Karen Tovar" },
+      { name: "maqueta-interactiva-jalmedia.glb", ext: "GLB", size: "6.2 MB", date: "27 May", version: "Modelo 3D General", uploadedBy: "Karen Tovar" },
+      { name: "minuta-levantamiento-tap.pdf", ext: "PDF", size: "1.1 MB", date: "23 May", version: "Levantamiento Campo PDF", uploadedBy: "Mariano Sanchez" }
+    ],
+    modificaciones: [],
+    m2: 520,
+    renders: true,
+    fechaIngreso: "2026-05-24",
+    horaIngreso: "10:15",
+    diasSla: 7,
+    fechaHoraOperativa: "2026-05-24T10:15:00.000Z",
+    tipoCliente: "B2B"
+  });
+  
+  vProjects.push({
+    cliente: "Centro Logístico El Salto", 
+    subCliente: "Almacenes Unidos Occidente",
+    id: "GDL-034", 
+    monto: "$1,250,000", 
+    magn: "Mediano", 
+    magnClass: "mag-alert-medio", 
+    proyectista: "Karen Tovar", 
+    etapa: "EN PROCESO",
+    urgente: false,
+    solicitudOriginal: "Distribución operativa en dos niveles para oficinas interiores del centro de distribución el Salto.",
+    documentosOriginales: [
+      { name: "layout-almacenes-interior.dwg", ext: "DWG", size: "2.8 MB", date: "26 May", version: "Plano Distribución Planta Baja", uploadedBy: "Karen Tovar" },
+      { name: "despiece-almacenes-sistemas.xml", ext: "XML", size: "95 KB", date: "27 May", version: "Despiece Parcial para Autorización", uploadedBy: "Karen Tovar" }
+    ],
+    modificaciones: [],
+    m2: 240,
+    renders: false,
+    fechaIngreso: "2026-05-26",
+    horaIngreso: "15:45",
+    diasSla: 4,
+    fechaHoraOperativa: "2026-05-26T15:45:00.000Z",
+    tipoCliente: "B2B"
+  });
+  localStorage.setItem('vProjects', JSON.stringify(vProjects));
 } else {
   // Guarantee LAG-011 modifications structure
   const projLag011 = vProjects.find(p => p.id === "LAG-011");
@@ -4747,7 +5330,9 @@ function switchRoleWorkspace(role) {
     roleEl.textContent = 'Dirección General';
     avatarEl.textContent = 'EC';
     showToast('info', 'Entorno Intercambiado', 'Entorno Dirección Activo');
-    if (typeof renderTable === 'function') renderTable();
+    if (typeof renderMasterWorkspace === 'function') {
+      renderMasterWorkspace();
+    }
   } else if (role === 'proyectista') {
     nameEl.textContent = 'Karen Tovar';
     roleEl.textContent = 'Proyectista Técnico';
@@ -7088,11 +7673,46 @@ let proyChatMessages = JSON.parse(localStorage.getItem('proyChatMessages')) || [
 ];
 
 // Seed technical boveda files
+let bovedaActiveBranch = 'Laguna';
 let proyGlobalBoveda = JSON.parse(localStorage.getItem('proyGlobalBoveda')) || [
-  { name: 'banco-bloques-gebesa-v5.3.dwg', size: '22 MB', creator: 'Karen Tovar', date: '2026-05-24', ext: 'dwg' },
-  { name: 'texturas-acabados-linea-nova.skp', size: '45 MB', creator: 'Coordinador Operativo', date: '2026-05-22', ext: 'skp' },
-  { name: 'plantilla-dimensionamiento-salas.dwg', size: '15 MB', creator: 'Sistemas Técnicos', date: '2026-05-18', ext: 'dwg' },
-  { name: 'manual-estandares-diseno-gebesa.pdf', size: '4.8 MB', creator: 'Dirección Corporativa', date: '2026-05-10', ext: 'pdf' }
+  // Laguna
+  { name: 'banco-bloques-gebesa-v5.3.dwg', size: '22.4 MB', creator: 'Karen Tovar', date: '2026-05-24', ext: 'dwg', sucursal: 'Laguna', project: 'LAG-011', deliverable: 'Librería General de Bloques' },
+  { name: 'texturas-acabados-linea-nova.skp', size: '45.1 MB', creator: 'Coordinador Técnico', date: '2026-05-22', ext: 'skp', sucursal: 'Laguna', project: 'LAG-011', deliverable: 'Texturas Premium Acabados' },
+  { name: 'planta-arq-saulo-v2.dwg', size: '2.4 MB', creator: 'Karen Tovar', date: '2026-05-20', ext: 'dwg', sucursal: 'Laguna', project: 'LAG-011', deliverable: 'Modificación R1 - Cambio de mesa tipo barco' },
+  { name: 'mobiliario-layout-v3.skp', size: '18.2 MB', creator: 'Karen Tovar', date: '2026-05-19', ext: 'skp', sucursal: 'Laguna', project: 'LAG-011', deliverable: 'Modificación R1 - Cambio de mesa' },
+  { name: 'render_vista_3d_nova.glb', size: '4.5 MB', creator: 'Karen Tovar', date: '2026-05-18', ext: 'glb', sucursal: 'Laguna', project: 'LAG-011', deliverable: 'Renders Finales' },
+  { name: 'despiece_gebesa_export.xml', size: '120 KB', creator: 'Karen Tovar', date: '2026-05-17', ext: 'xml', sucursal: 'Laguna', project: 'LAG-011', deliverable: 'Cotizador CAD Export' },
+  { name: 'video-recorrido-sala-saulo.mp4', size: '32.1 MB', creator: 'Sistemas Técnicos', date: '2026-05-16', ext: 'video', sucursal: 'Laguna', project: 'LAG-011', deliverable: 'Recorrido Virtual Walkthrough' },
+  { name: 'foto-levantamiento-sala.jpg', size: '1.2 MB', creator: 'Mariano Sanchez', date: '2026-05-15', ext: 'img', sucursal: 'Laguna', project: 'LAG-011', deliverable: 'Levantamiento Inicial Campo' },
+
+  // Querétaro
+  { name: 'diseno_arquitectonico_v1.dwg', size: '3.8 MB', creator: 'Karen Tovar', date: '2026-05-25', ext: 'dwg', sucursal: 'Queretaro', project: 'QRO-022', deliverable: 'Layout Inicial Ejecución' },
+  { name: 'logo_corporativo.png', size: '450 KB', creator: 'Mariano Sanchez', date: '2026-05-24', ext: 'img', sucursal: 'Queretaro', project: 'QRO-022', deliverable: 'Identidad Gráfica Cliente' },
+  { name: 'modelo_3d_oficinas_mexi.skp', size: '28.4 MB', creator: 'Coordinador Operativo', date: '2026-05-23', ext: 'skp', sucursal: 'Queretaro', project: 'QRO-022', deliverable: 'Modelado Premium V1' },
+  { name: 'requerimientos_clientes.pdf', size: '1.2 MB', creator: 'Ariadna Ladrón', date: '2026-05-22', ext: 'pdf', sucursal: 'Queretaro', project: 'QRO-041', deliverable: 'Minuta de Levantamiento' },
+  { name: 'despiece-mexi-complete.xml', size: '210 KB', creator: 'Karen Tovar', date: '2026-05-21', ext: 'xml', sucursal: 'Queretaro', project: 'QRO-022', deliverable: 'Exportación Costos XML' },
+  { name: 'render-isofila-lobby.glb', size: '5.2 MB', creator: 'Sistemas Técnicos', date: '2026-05-20', ext: 'glb', sucursal: 'Queretaro', project: 'QRO-022', deliverable: 'Renders Sala Magna' },
+
+  // CDMX
+  { name: 'esquema_general_huehuetoca.pdf', size: '2.1 MB', creator: 'Karen Tovar', date: '2026-05-26', ext: 'pdf', sucursal: 'CDMX', project: 'CDMX-001', deliverable: 'Levantamiento Huehuetoca Docs' },
+  { name: 'plano_operativo_redisenado.dwg', size: '1.9 MB', creator: 'Karen Tovar', date: '2026-05-25', ext: 'dwg', sucursal: 'CDMX', project: 'CDMX-001', deliverable: 'Plano de Planta Redistribuida' },
+  { name: 'banco_de_bloques_cdmx.dwg', size: '14.5 MB', creator: 'Dirección Corporativa', date: '2026-05-20', ext: 'dwg', sucursal: 'CDMX', project: 'CDMX-001', deliverable: 'Bloques AutoCAD Oficial CDMX' },
+  { name: 'texturas_madera_kenza.skp', size: '12.0 MB', creator: 'Coordinador Operativo', date: '2026-05-18', ext: 'skp', sucursal: 'CDMX', project: 'CDMX-001', deliverable: 'Texturas Acabados V2' },
+  { name: 'maqueta_volumetrica_reconfiguracion.glb', size: '3.6 MB', creator: 'Karen Tovar', date: '2026-05-15', ext: 'glb', sucursal: 'CDMX', project: 'CDMX-001', deliverable: 'Modelado 3D Bloques de Trabajo' },
+
+  // Metrópoli
+  { name: 'plano-distribucion-torre-metropoli.dwg', size: '6.4 MB', creator: 'Carlos Gomez', date: '2026-05-26', ext: 'dwg', sucursal: 'Metropoli', project: 'MET-051', deliverable: 'Plano Planta General L9' },
+  { name: 'perspectiva-3d-acabados.skp', size: '33.1 MB', creator: 'Lorena Ruiz', date: '2026-05-25', ext: 'skp', sucursal: 'Metropoli', project: 'MET-051', deliverable: 'Render SketchUp V1' },
+  { name: 'render-fotorrealista-cafeteria.png', size: '4.2 MB', creator: 'Sistemas Técnicos', date: '2026-05-24', ext: 'img', sucursal: 'Metropoli', project: 'MET-051', deliverable: 'Render Cafetería Corporativa' },
+  { name: 'despiece-total-metropoli.xml', size: '185 KB', creator: 'Lorena Ruiz', date: '2026-05-23', ext: 'xml', sucursal: 'Metropoli', project: 'MET-051', deliverable: 'Despiece XML para Presupuesto' },
+  { name: 'vistas_volumetricas_metropoli.glb', size: '7.8 MB', creator: 'Carlos Gomez', date: '2026-05-22', ext: 'glb', sucursal: 'Metropoli', project: 'MET-051', deliverable: 'Maqueta Operativa Interactiva' },
+
+  // Puebla
+  { name: 'levantamiento_planta_puebla.dwg', size: '4.1 MB', creator: 'Julio Espinoza', date: '2026-05-25', ext: 'dwg', sucursal: 'Puebla', project: 'PUE-062', deliverable: 'Plano Planta Base Puebla' },
+  { name: 'sala-exhibicion-completa.skp', size: '15.9 MB', creator: 'Julio Espinoza', date: '2026-05-24', ext: 'skp', sucursal: 'Puebla', project: 'PUE-062', deliverable: 'Diseño Showroom' },
+  { name: 'fotos-del-sitio-showroom.jpg', size: '2.8 MB', creator: 'Sistemas Técnicos', date: '2026-05-23', ext: 'img', sucursal: 'Puebla', project: 'PUE-062', deliverable: 'Levantamiento Fotográfico Puebla' },
+  { name: 'presupuesto-gebesa-puebla.xml', size: '94 KB', creator: 'Julio Espinoza', date: '2026-05-22', ext: 'xml', sucursal: 'Puebla', project: 'PUE-062', deliverable: 'Exportación XML Precios' },
+  { name: 'vista-aerea-showroom.glb', size: '4.9 MB', creator: 'Julio Espinoza', date: '2026-05-21', ext: 'glb', sucursal: 'Puebla', project: 'PUE-062', deliverable: 'Modelo Volumétrico Exhibición' }
 ];
 
 // Initialize Workspace
@@ -9325,39 +9945,1335 @@ function renderProyectistaCalendar() {
 }
 
 // 6. BÓVEDA TÉCNICA GLOBAL
+let bovedaExpandedProjects = {};
+let bovedaUploadTargetProjectId = null;
+
+function bovedaSetActiveBranch(branch) {
+  bovedaActiveBranch = branch;
+  
+  // Set active class on corresponding branch buttons and handle custom variables for borders / glows
+  const branchConfigs = {
+    'Laguna': { color: '#10b981', glow: 'rgba(16,185,129,0.25)' },
+    'Queretaro': { color: '#f97316', glow: 'rgba(249,115,22,0.25)' },
+    'CDMX': { color: '#ec4899', glow: 'rgba(236,72,153,0.25)' },
+    'Metropoli': { color: '#8b5cf6', glow: 'rgba(139,92,246,0.25)' },
+    'Puebla': { color: '#06b6d4', glow: 'rgba(6,182,212,0.25)' },
+    'Guadalajara': { color: '#fbbf24', glow: 'rgba(251,191,36,0.25)' }
+  };
+  
+  const config = branchConfigs[branch] || branchConfigs['Laguna'];
+  const viewEl = document.getElementById('pv-boveda');
+  if (viewEl) {
+    viewEl.style.setProperty('--active-branch-color', config.color);
+    viewEl.style.setProperty('--active-branch-glow', config.glow);
+  }
+  
+  document.querySelectorAll('#boveda-branch-selector .bov-tab-btn').forEach(b => {
+    b.classList.remove('active');
+    // Check innerText to see if it starts with or matches branch
+    if (b.innerText.toLowerCase().includes(branch.toLowerCase()) || (branch === 'Queretaro' && b.innerText.includes('Querétaro')) || (branch === 'Metropoli' && b.innerText.includes('Metrópoli'))) {
+      b.classList.add('active');
+    }
+  });
+
+  const uploadBranchLbl = document.getElementById('bprev-active-upload-branch');
+  if (uploadBranchLbl) {
+    uploadBranchLbl.innerText = branch === 'Queretaro' ? 'Querétaro' : (branch === 'Metropoli' ? 'Metrópoli' : branch);
+  }
+  
+  // Auto-expand the first project of this branch
+  bovedaExpandedProjects = {};
+  const branchOfProjHelper = (id) => {
+    const prefix = (id || '').split('-')[0].toUpperCase();
+    if (prefix === 'LAG') return 'Laguna';
+    if (prefix === 'QRO') return 'Queretaro';
+    if (prefix === 'CDMX') return 'CDMX';
+    if (prefix === 'MET') return 'Metropoli';
+    if (prefix === 'PUE') return 'Puebla';
+    if (prefix === 'GDL') return 'Guadalajara';
+    return '';
+  };
+  const firstProj = vProjects.find(p => branchOfProjHelper(p.id).toLowerCase() === branch.toLowerCase());
+  if (firstProj) {
+    bovedaExpandedProjects[firstProj.id] = true;
+  }
+  
+  renderProyectistaBoveda();
+}
+
+// Global active file under preview
+let bprevActiveFile = null;
+
+window.bovedaCurrentUploadType = 'original'; // default
+window.bovedaSubCategoriesExpanded = window.bovedaSubCategoriesExpanded || {};
+window.bovedaSelectedRevisionIdx = window.bovedaSelectedRevisionIdx || {};
+
+window.bovedaSetSelectedRevision = function(projId, val) {
+  window.bovedaSelectedRevisionIdx[projId] = val;
+  renderProyectistaBoveda();
+};
+
+window.bovedaToggleSubCategory = function(projId, type, catKey) {
+  const compositeKey = `${projId}-${type}-${catKey}`;
+  if (window.bovedaSubCategoriesExpanded[compositeKey] === undefined) {
+    window.bovedaSubCategoriesExpanded[compositeKey] = true;
+  }
+  window.bovedaSubCategoriesExpanded[compositeKey] = !window.bovedaSubCategoriesExpanded[compositeKey];
+  renderProyectistaBoveda();
+};
+
+window.bovedaToggleRevision = function(projId, modIdx) {
+  const compositeKey = `${projId}-rev-${modIdx}`;
+  const proj = vProjects.find(p => p.id === projId);
+  if (window.bovedaSubCategoriesExpanded[compositeKey] === undefined) {
+    const isLatest = proj && proj.modificaciones && (modIdx === (proj.modificaciones.length - 1));
+    window.bovedaSubCategoriesExpanded[compositeKey] = isLatest;
+  }
+  window.bovedaSubCategoriesExpanded[compositeKey] = !window.bovedaSubCategoriesExpanded[compositeKey];
+  renderProyectistaBoveda();
+};
+
+window.renderBovedaFileCard = function(f, clrConfig) {
+  const fileKey = f.name.replace(/'/g, "\\'");
+  const extLower = f.ext.toLowerCase();
+  
+  let extBadgeBg = 'rgba(88, 166, 255, 0.1)';
+  let extBadgeColor = '#58a6ff';
+  if (extLower === 'dwg') { extBadgeBg = 'rgba(201, 169, 110, 0.15)'; extBadgeColor = '#c9a96e'; }
+  else if (extLower === 'skp') { extBadgeBg = 'rgba(249, 115, 22, 0.15)'; extBadgeColor = '#f97316'; }
+  else if (extLower === 'xml') { extBadgeBg = 'rgba(40, 167, 69, 0.15)'; extBadgeColor = '#5aab5e'; }
+  else if (extLower === 'glb') { extBadgeBg = 'rgba(160, 124, 240, 0.15)'; extBadgeColor = '#a07cf0'; }
+  else if (['jpg', 'png', 'jpeg', 'gif', 'img', 'video', 'mp4', 'mov', 'webm'].includes(extLower)) { extBadgeBg = 'rgba(230, 70, 150, 0.15)'; extBadgeColor = '#ec4899'; }
+
+  const revTag = f.revisionLabel ? `<span style="background: rgba(248,81,73,0.15); color: #ff8585; border: 1px solid rgba(248,81,73,0.25); padding: 1px 5px; border-radius: 4px; font-family: var(--font-mono); font-weight: bold; font-size: 9px; vertical-align: middle;">${f.revisionLabel}</span>` : '';
+  const projNameSafe = (f.projectName || '').replace(/'/g, "\\'");
+  const creatorSafe = (f.creator || '').replace(/'/g, "\\'");
+  const deliverableSafe = (f.deliverable || '').replace(/'/g, "\\'");
+
+  return `
+    <div class="bov-item-card" style="--card-accent-border: ${clrConfig.color}; --card-glow-color: ${clrConfig.glow}; height: auto; min-height: 145px; padding: 12px; background: rgba(30, 35, 45, 0.15);">
+      <div class="bov-item-badge-row" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <span class="bov-item-ext-tag" style="background: ${extBadgeBg}; color: ${extBadgeColor}; font-size: 10px; padding: 1px 5px; border-radius: 4px; font-weight:700;">${f.ext.toUpperCase()}</span>
+          ${revTag}
+        </div>
+        <span class="bov-item-size-txt" style="font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted);">${f.size}</span>
+      </div>
+      
+      <div class="bov-item-title" title="${f.name}" style="min-height: auto; margin:4px 0 8px 0; font-size:12px; color:#fff; font-weight:500; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height:1.3;">${f.name}</div>
+      
+      <div style="font-size: 10.5px; color: var(--text-muted); background: rgba(255,255,255,0.02); padding: 5px 8px; border-radius: 4px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom: 10px;" title="${f.deliverable}">
+        📌 ${f.deliverable}
+      </div>
+
+      <div class="bov-item-footer" style="padding-top: 6px; margin-top: 0; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.04);">
+        <div class="bov-item-creator-lbl" title="Sincronizado por: ${f.creator}" style="font-size: 9px; color: var(--text-muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; max-width: 140px;">
+          👤 ${f.creator.split(' (')[0]}
+        </div>
+        <div class="bov-item-actions-box" style="display: flex; gap: 4px;">
+          <button class="bov-action-round-btn boveda-action-preview-btn-item" onclick="event.stopPropagation(); bovedaOpenPreview('${fileKey}', '${f.ext}', '${f.projectId || ''}', '${projNameSafe}', '${f.size}', '${creatorSafe}', '${f.date}', '${deliverableSafe}', '${bovedaActiveBranch}')" title="Vista previa interactiva" style="width: 22px; height: 22px; font-size: 10px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: #fff; cursor: pointer;">
+            👁️
+          </button>
+          <button class="bov-action-round-btn boveda-action-download-btn-item" onclick="event.stopPropagation(); bovedaDownloadFile('${fileKey}', '${f.sucursal || bovedaActiveBranch}')" title="Descargar CAD/Render" style="width: 22px; height: 22px; font-size: 10px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; color: #fff; cursor: pointer;">
+            📥
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+window.bovedaSelectUploadType = function(type) {
+  window.bovedaCurrentUploadType = type;
+  
+  const optOrig = document.getElementById('opt-bov-orig');
+  const optMod = document.getElementById('opt-bov-mod');
+  const modBox = document.getElementById('bov-mod-details-box');
+  
+  if (type === 'original') {
+    if (optOrig) {
+      optOrig.style.borderColor = 'var(--active-branch-color, #10b981)';
+      optOrig.style.background = 'rgba(16, 185, 129, 0.05)';
+    }
+    if (optMod) {
+      optMod.style.borderColor = 'rgba(255,255,255,0.08)';
+      optMod.style.background = 'rgba(255,255,255,0.01)';
+    }
+    if (modBox) modBox.style.display = 'none';
+  } else {
+    if (optOrig) {
+      optOrig.style.borderColor = 'rgba(255,255,255,0.08)';
+      optOrig.style.background = 'rgba(255,255,255,0.01)';
+    }
+    if (optMod) {
+      optMod.style.borderColor = 'var(--active-branch-color, #10b981)';
+      optMod.style.background = 'rgba(16, 185, 129, 0.05)';
+    }
+    if (modBox) modBox.style.display = 'block';
+  }
+};
+
+window.bovedaTriggerFileSelect = function() {
+  const inp = document.getElementById('file-upload-bov');
+  if (inp) {
+    inp.value = ''; // Clear previous
+    inp.click();
+  }
+};
+
 function renderProyectistaBoveda() {
   const container = document.getElementById('proy-global-boveda');
   if (!container) return;
 
-  container.innerHTML = proyGlobalBoveda.map((f, idx) => `
-    <div class="bov-card clickable" onclick="showToast('info', 'Descarga de bloque', 'Descargando paquete CAD: ${f.name}...')">
-      <div class="bc-top">
-        <span class="bc-icon">${f.ext === 'dwg' ? '📐' : (f.ext === 'skp' ? '🖼' : '📄')}</span>
-        <span class="bc-tag">${f.ext.toUpperCase()}</span>
+  // Helper inside to get sucursal based on project ID
+  const getBranchOfProject = (projId) => {
+    if (!projId) return 'Laguna';
+    const prefix = projId.split('-')[0].toUpperCase();
+    if (prefix === 'LAG') return 'Laguna';
+    if (prefix === 'QRO') return 'Queretaro';
+    if (prefix === 'CDMX') return 'CDMX';
+    if (prefix === 'MET') return 'Metropoli';
+    if (prefix === 'PUE') return 'Puebla';
+    if (prefix === 'GDL') return 'Guadalajara';
+    return 'Laguna';
+  };
+
+  // Helper to infer classification type of a general file
+  const getDocType = (f) => {
+    if (f.docType) return f.docType;
+    const desc = ((f.deliverable || '') + ' ' + (f.name || '')).toLowerCase();
+    if (desc.includes('modificac') || desc.includes('revision') || desc.includes('cambio') || desc.includes(' r1') || desc.includes(' r2') || desc.includes(' r3') || desc.includes(' rx')) {
+      return 'modificacion';
+    }
+    return 'original';
+  };
+
+  // 1. Gather all files uploaded directly to proyGlobalBoveda
+  const directFiles = proyGlobalBoveda.map(f => ({
+    ...f,
+    id: f.name + '-' + f.date,
+    origin: 'Directo',
+    projectId: f.project || '',
+    projectName: f.projectName || (vProjects.find(p => p.id === f.project)?.cliente) || 'Bóveda General',
+    deliverable: f.deliverable || 'Documentación Técnica',
+    docType: f.docType || null
+  }));
+
+  // 2. Gather files from ALL projects in vProjects dynamically
+  const dynamicProjectFiles = [];
+  vProjects.forEach(proj => {
+    let projBranch = getBranchOfProject(proj.id);
+
+    // Original documents
+    if (proj.documentosOriginales) {
+      proj.documentosOriginales.forEach(f => {
+        dynamicProjectFiles.push({
+          name: f.name,
+          size: f.size || '3.2 MB',
+          creator: f.uploadedBy || proj.proyectista || 'Mariano Sanchez',
+          date: f.date || proj.fechaIngreso || '15 May',
+          ext: (f.ext || f.name.split('.').pop() || 'dwg').toLowerCase(),
+          sucursal: projBranch,
+          projectId: proj.id,
+          projectName: proj.cliente,
+          deliverable: f.version || 'Diseño Solicitado / Base',
+          origin: 'Proyecto',
+          docType: 'original'
+        });
+      });
+    }
+
+    // Modifications files
+    if (proj.modificaciones) {
+      proj.modificaciones.forEach((mod, modIdx) => {
+        const rNum = `R${modIdx + 1}`;
+        if (mod.files) {
+          mod.files.forEach(f => {
+            dynamicProjectFiles.push({
+              name: f.name,
+              size: f.size || '1.8 MB',
+              creator: f.uploadedBy || 'Karen Tovar',
+              date: f.date || mod.fecha || 'Hoy',
+              ext: (f.ext || f.name.split('.').pop() || 'dwg').toLowerCase(),
+              sucursal: projBranch,
+              projectId: proj.id,
+              projectName: proj.cliente,
+              deliverable: mod.titulo || 'Modificación Solicitada',
+              origin: 'Proyecto',
+              docType: 'modificacion',
+              revisionLabel: rNum
+            });
+          });
+        }
+      });
+    }
+  });
+
+  // Combine both sources
+  let allCombinedFiles = [...directFiles, ...dynamicProjectFiles];
+
+  // Map to enforce exact case/spelling across files
+  allCombinedFiles.forEach(f => {
+    if (f.sucursal) {
+      if (f.sucursal.toLowerCase() === 'queretaro' || f.sucursal.toLowerCase() === 'querétaro') f.sucursal = 'Queretaro';
+      if (f.sucursal.toLowerCase() === 'metropoli' || f.sucursal.toLowerCase() === 'metrópoli') f.sucursal = 'Metropoli';
+    }
+  });
+
+  // Deduplicate files by lowercase name so a file synced to the structure isn't shown in duplicates
+  const seenFiles = new Set();
+  const uniqueCombinedFiles = [];
+  allCombinedFiles.forEach(f => {
+    const key = (f.name || '').toLowerCase().trim();
+    if (!seenFiles.has(key)) {
+      seenFiles.add(key);
+      uniqueCombinedFiles.push(f);
+    }
+  });
+  allCombinedFiles = uniqueCombinedFiles;
+
+  // 3. Filter files by Active Branch
+  let filteredFiles = allCombinedFiles.filter(f => f.sucursal && f.sucursal.toLowerCase() === bovedaActiveBranch.toLowerCase());
+
+  // 4. Handle Search bar filters if applicable
+  const searchVal = document.getElementById('boveda-search-bar') ? document.getElementById('boveda-search-bar').value.toLowerCase().trim() : '';
+  if (searchVal) {
+    filteredFiles = filteredFiles.filter(f => 
+      f.name.toLowerCase().includes(searchVal) || 
+      (f.projectId && f.projectId.toLowerCase().includes(searchVal)) || 
+      (f.projectName && f.projectName.toLowerCase().includes(searchVal)) ||
+      (f.deliverable && f.deliverable.toLowerCase().includes(searchVal)) ||
+      (f.creator && f.creator.toLowerCase().includes(searchVal)) ||
+      f.ext.toLowerCase().includes(searchVal)
+    );
+  }
+
+  // 5. Get all registered projects belonging to this branch
+  const branchProjects = vProjects.filter(p => getBranchOfProject(p.id).toLowerCase() === bovedaActiveBranch.toLowerCase());
+
+  // Filter projects by search
+  let renderedProjects = [...branchProjects];
+  if (searchVal) {
+    renderedProjects = branchProjects.filter(p => {
+      const pMatchesDirectly = p.cliente.toLowerCase().includes(searchVal) || 
+                               p.id.toLowerCase().includes(searchVal) || 
+                               (p.subCliente && p.subCliente.toLowerCase().includes(searchVal)) ||
+                               (p.proyectista && p.proyectista.toLowerCase().includes(searchVal));
+      const hasMatchingFiles = filteredFiles.some(f => (f.projectId || f.project) === p.id);
+      return pMatchesDirectly || hasMatchingFiles;
+    });
+  }
+
+  // Category template constructor
+  const createCategoriesStructure = () => ({
+    'img_video': { title: '🖼️ Imágenes y Recorridos Video', extensions: ['img', 'video', 'jpg', 'png', 'jpeg', 'gif', 'mp4', 'mov', 'webm'], files: [] },
+    'dwg': { title: '📐 Planos de Planta Autocad (DWG)', extensions: ['dwg'], files: [] },
+    'skp': { title: '🧡 Modelados y Texturas SketchUp (SKP)', extensions: ['skp'], files: [] },
+    'xml': { title: '💚 Despieces y Estructuras XML/XLM', extensions: ['xml', 'xlm'], files: [] },
+    'glb': { title: '✨ Maquetas 3D Interactivas (GLB)', extensions: ['glb'], files: [] },
+    'otros': { title: '📂 Biblioteca de Soporte (Otros)', extensions: [], files: [] }
+  });
+
+  // Group files inside project blocks
+  const projectGroups = {};
+  renderedProjects.forEach(p => {
+    projectGroups[p.id] = {
+      project: p,
+      originales: createCategoriesStructure(),
+      modificaciones: createCategoriesStructure(),
+      totalCount: 0,
+      originalCount: 0,
+      modCount: 0
+    };
+  });
+
+  // Add virtual general/upload folder if there are matching files without explicit project ID
+  projectGroups['GENERAL-SUPPORT'] = {
+    project: {
+      id: bovedaActiveBranch.substring(0, 3).toUpperCase() + '-GEN',
+      cliente: 'Biblioteca General y Cargas Directas',
+      subCliente: 'Recopilación de Materiales Sucursal',
+      proyectista: 'Soporte Comercial',
+      etapa: 'SOPORTE CENTRAL'
+    },
+    originales: createCategoriesStructure(),
+    modificaciones: createCategoriesStructure(),
+    totalCount: 0,
+    originalCount: 0,
+    modCount: 0
+  };
+
+  // Populate files into their respective categories and groups
+  filteredFiles.forEach(f => {
+    const projId = f.projectId || f.project;
+    let group = projectGroups[projId];
+    
+    // Fallback: If project not in map, direct files go to GENERAL-SUPPORT
+    if (!group) {
+      group = projectGroups['GENERAL-SUPPORT'];
+    }
+    if (!group) return;
+
+    // Infer whether original or modification
+    const docType = getDocType(f);
+    const targetCategories = docType === 'original' ? group.originales : group.modificaciones;
+
+    let placed = false;
+    for (const catKey in targetCategories) {
+      if (catKey === 'otros') continue;
+      if (targetCategories[catKey].extensions.includes(f.ext.toLowerCase())) {
+        targetCategories[catKey].files.push(f);
+        placed = true;
+        break;
+      }
+    }
+    if (!placed) {
+      targetCategories['otros'].files.push(f);
+    }
+
+    group.totalCount++;
+    if (docType === 'original') {
+      group.originalCount++;
+    } else {
+      group.modCount++;
+    }
+  });
+
+  // Clean empty GENERAL-SUPPORT group if 0 files
+  if (projectGroups['GENERAL-SUPPORT'].totalCount === 0) {
+    delete projectGroups['GENERAL-SUPPORT'];
+  }
+
+  // Branch theme configuration
+  const branchColorMap = {
+    'Laguna': { color: '#10b981', glow: 'rgba(16,185,129,0.15)', text: '#10b981' },
+    'Queretaro': { color: '#f97316', glow: 'rgba(249,115,22,0.15)', text: '#f97316' },
+    'CDMX': { color: '#ec4899', glow: 'rgba(236,72,153,0.15)', text: '#ec4899' },
+    'Metropoli': { color: '#8b5cf6', glow: 'rgba(139,92,246,0.15)', text: '#a07cf0' },
+    'Puebla': { color: '#06b6d4', glow: 'rgba(6,182,212,0.15)', text: '#00d2d3' },
+    'Guadalajara': { color: '#fbbf24', glow: 'rgba(251,191,36,0.15)', text: '#fecb3e' }
+  };
+  const activeClr = branchColorMap[bovedaActiveBranch] || branchColorMap['Laguna'];
+
+  const getStageBadgeStyle = (stage) => {
+    const s = (stage || '').toUpperCase();
+    if (s.includes('NUEVO')) return 'background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2);';
+    if (s.includes('MODIFICACI')) return 'background: rgba(248,81,73,0.12); color: #ff8585; border: 1px solid rgba(248,81,73,0.2);';
+    if (s.includes('RENDER')) return 'background: rgba(139,92,246,0.12); color: #c09fff; border: 1px solid rgba(139,92,246,0.2);';
+    if (s.includes('PROCESO')) return 'background: rgba(249,115,22,0.12); color: #f97316; border: 1px solid rgba(249,115,22,0.2);';
+    return 'background: rgba(255,255,255,0.05); color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.08);';
+  };
+
+  const projectIds = Object.keys(projectGroups);
+
+  if (projectIds.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 60px 20px; text-align: center; border: 1px dashed rgba(255,255,255,0.06); border-radius: 12px; background: rgba(22, 27, 34, 0.22);">
+        <div style="font-size: 40px; margin-bottom: 12px;">📁</div>
+        <h4 style="font-size: 15px; font-weight: 700; color: #fff;">No hay proyectos con entregables</h4>
+        <p style="font-size: 13px; color: var(--text-muted); max-width: 400px; margin: 4px auto 0 auto;">No se han registrado expedientes o cargado archivos para la sucursal de ${bovedaActiveBranch === 'Queretaro' ? 'Querétaro' : (bovedaActiveBranch === 'Metropoli' ? 'Metrópoli' : bovedaActiveBranch)} todavía.</p>
       </div>
-      <div class="bc-name">${f.name}</div>
-      <div class="bc-meta">Tamaño: ${f.size} • Por: ${f.creator}</div>
-    </div>
-  `).join('');
+    `;
+    return;
+  }
+
+  let finalHTML = '';
+
+  projectIds.forEach(projKey => {
+    const group = projectGroups[projKey];
+    const proj = group.project;
+    const isExpanded = bovedaExpandedProjects[proj.id] || false;
+    const fileCount = group.totalCount;
+
+    // Build project-level card
+    let cardHTML = `
+      <div class="bov-project-card ${isExpanded ? 'active-expanded' : ''}" style="--active-branch-color: ${activeClr.color}; --active-branch-glow: ${activeClr.glow};">
+        
+        <!-- HEADER CLICK TO TOGGLE EXPANSION -->
+        <div class="bov-project-header" onclick="bovedaToggleProject('${proj.id}')">
+          <div class="bov-project-primary-info">
+            <div class="bov-project-icon-box">
+              <span>${isExpanded ? '📂' : '📁'}</span>
+            </div>
+            <div class="bov-project-text">
+              <div class="bov-project-id-row">
+                <span class="bov-project-id-badge">${proj.id}</span>
+                <span class="bov-project-client">${proj.cliente}</span>
+              </div>
+              <div class="bov-project-sub">
+                ${proj.subCliente ? proj.subCliente : 'Soporte Comercial'} · <span style="color: var(--text-muted);">Proyectista: ${proj.proyectista || 'Varios asignados'}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="bov-project-right-box">
+            <!-- Stage Stage badge -->
+            <span class="bov-project-stage-badge" style="${getStageBadgeStyle(proj.etapa || 'Proceso')}">
+              ${proj.etapa || 'EN PROCESO'}
+            </span>
+            
+            <!-- Deliverable count badge -->
+            <span class="bov-project-file-count">
+              ⚡ <strong>${fileCount}</strong> ${fileCount === 1 ? 'entregable' : 'entregables'}
+            </span>
+ 
+            <!-- Action buttons: Upload to this specific project -->
+            <button class="bov-action-round-btn bov-btn-download" onclick="event.stopPropagation(); proyTriggerProjectUpload('${proj.id}')" title="Subir entregable técnico aquí" style="width:30px; height:30px;">
+              ➕
+            </button>
+            
+            <div class="bov-project-toggle-btn">
+              ▼
+            </div>
+          </div>
+        </div>
+ 
+        <!-- CONTENT PANEL FOR EXPANDED PROJECT DELIVERABLES -->
+        <div class="bov-project-content" style="padding: 0;">
+    `;
+
+    if (isExpanded) {
+      // Render sub-grids inside split-columns precisely to isolate Original and Modifications
+      let originalsHTML = '';
+      let modsHTML = '';
+
+      // 1. LEFT COLUMN: Documentación Original Accordions
+      for (const catKey in group.originales) {
+        const cat = group.originales[catKey];
+        const files = cat.files;
+        const cnt = files.length;
+        if (cnt === 0) continue;
+
+        const subCatKey = `${proj.id}-orig-${catKey}`;
+        // Default to expanded (true) if undefined
+        if (window.bovedaSubCategoriesExpanded[subCatKey] === undefined) {
+          window.bovedaSubCategoriesExpanded[subCatKey] = true;
+        }
+        const isSubCatExpanded = window.bovedaSubCategoriesExpanded[subCatKey];
+
+        originalsHTML += `
+          <div class="bov-category-accordion-item" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 8px; overflow: hidden; background: rgba(15,18,23,0.35);">
+            <!-- Click Header -->
+            <div onclick="event.stopPropagation(); bovedaToggleSubCategory('${proj.id}', 'orig', '${catKey}')" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.02); cursor: pointer; transition: background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.04)'" onmouseleave="this.style.background='rgba(255,255,255,0.02)'">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="font-size: 11.5px; font-weight: 600; color: #fff; opacity:0.9;">${cat.title}</span>
+                <span style="font-family: var(--font-mono); font-size: 10px; background: rgba(16,185,129,0.12); color: #10b981; padding: 1px 6px; border-radius: 12px; font-weight: bold;">${cnt}</span>
+              </div>
+              <span class="subcat-arrow" style="font-size: 10px; color: var(--text-muted); transition: transform 0.2s; display: inline-block; transform: ${isSubCatExpanded ? 'rotate(180deg)' : 'rotate(0deg)'};">▼</span>
+            </div>
+            
+            <!-- Category file grid -->
+            <div style="display: ${isSubCatExpanded ? 'block' : 'none'}; padding: 12px; border-top: 1px solid rgba(255,255,255,0.04); background: rgba(10,12,16,0.35);">
+              <div class="bov-grid-system" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
+                ${files.map(f => window.renderBovedaFileCard(f, activeClr)).join('')}
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 2. RIGHT COLUMN: Historial de Modificaciones (Grouped by Revision (R1, R2, R9))
+      const isGeneralSupport = proj.id === (bovedaActiveBranch.substring(0, 3).toUpperCase() + '-GEN');
+      
+      let selectorHTML = '';
+      if (!isGeneralSupport && proj.modificaciones && proj.modificaciones.length > 1) {
+        if (window.bovedaSelectedRevisionIdx[proj.id] === undefined) {
+          window.bovedaSelectedRevisionIdx[proj.id] = 'all';
+        }
+        const currentSel = window.bovedaSelectedRevisionIdx[proj.id];
+        selectorHTML = `
+          <div class="bov-revision-picker" style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 10px; color: var(--text-muted); font-weight: 500;">Ver:</span>
+            <select onclick="event.stopPropagation();" onchange="window.bovedaSetSelectedRevision('${proj.id}', this.value)" style="background: rgba(22, 26, 34, 0.95); border: 1px solid rgba(248, 81, 73, 0.4); color: #ff8585; font-size: 10.5px; font-weight: bold; padding: 2px 20px 2px 6px; border-radius: 4px; outline: none; cursor: pointer; max-width: 150px; font-family: var(--font-sans); -webkit-appearance: listbox; appearance: auto;">
+              <option value="all" ${currentSel === 'all' ? 'selected' : ''}>Todas (${proj.modificaciones.length})</option>
+              ${proj.modificaciones.map((m, idx) => {
+                return `<option value="${idx}" ${currentSel === String(idx) ? 'selected' : ''}>R${idx + 1}: ${m.titulo.substring(0, 18)}...</option>`;
+              }).join('')}
+            </select>
+          </div>
+        `;
+      }
+
+      if (!isGeneralSupport && proj.modificaciones && proj.modificaciones.length > 0) {
+        const currentSel = window.bovedaSelectedRevisionIdx[proj.id] || 'all';
+
+        // Loop through project revisions in reverse order (newest revisions on top!)
+        for (let modIdx = proj.modificaciones.length - 1; modIdx >= 0; modIdx--) {
+          // Filter if a specific revision is selected
+          if (currentSel !== 'all' && currentSel !== String(modIdx)) {
+            continue;
+          }
+
+          const mod = proj.modificaciones[modIdx];
+          const files = mod.files || [];
+          const cnt = files.length;
+          
+          const revKey = `${proj.id}-rev-${modIdx}`;
+          // Default to expanded (true) if it's the newest modification or if filtered
+          if (window.bovedaSubCategoriesExpanded[revKey] === undefined) {
+            window.bovedaSubCategoriesExpanded[revKey] = (modIdx === proj.modificaciones.length - 1) || (currentSel !== 'all');
+          }
+          let isRevExpanded = window.bovedaSubCategoriesExpanded[revKey];
+          if (currentSel !== 'all') {
+            isRevExpanded = true; // force expand if isolated via select dropdown
+          }
+
+          // Map files inside the revision to unified file objects
+          const mappedModFiles = files.map(f => ({
+            name: f.name,
+            size: f.size || '1.8 MB',
+            creator: f.uploadedBy || mod.autor || 'Karen Tovar',
+            date: f.date || mod.fecha || 'Hoy',
+            ext: (f.ext || f.name.split('.').pop() || 'dwg').toLowerCase(),
+            sucursal: bovedaActiveBranch,
+            projectId: proj.id,
+            projectName: proj.cliente,
+            deliverable: mod.titulo || 'Modificación Autorizada',
+            origin: 'Proyecto',
+            docType: 'modificacion',
+            revisionLabel: `R${modIdx + 1}`
+          }));
+
+          let revFilesHTML = '';
+          if (cnt > 0) {
+            revFilesHTML = `
+              <div class="bov-grid-system" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
+                ${mappedModFiles.map(f => window.renderBovedaFileCard(f, activeClr)).join('')}
+              </div>
+            `;
+          } else {
+            revFilesHTML = `
+              <div style="padding: 14px; text-align: center; border: 1px dashed rgba(255,255,255,0.04); border-radius: 6px; color: var(--text-muted); font-size: 11px; background: rgba(0,0,0,0.12);">
+                 📝 Historial: "<em>${mod.instrucciones || 'Plano o renders en espera de carga.'}</em>"
+              </div>
+            `;
+          }
+
+          modsHTML += `
+            <div class="bov-category-accordion-item" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 8px; overflow: hidden; background: rgba(15,18,23,0.35);">
+              <!-- Click Header -->
+              <div onclick="event.stopPropagation(); bovedaToggleRevision('${proj.id}', ${modIdx})" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.02); cursor: pointer; transition: background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.04)'" onmouseleave="this.style.background='rgba(255,255,255,0.02)'">
+                <div style="display: flex; align-items: center; gap: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 85%;">
+                  <span style="font-family: var(--font-mono); font-weight: bold; background: rgba(248,81,73,0.12); color: #ff8585; padding: 2px 6px; border-radius: 4px; font-size: 10px;">R${modIdx + 1}</span>
+                  <span style="font-size: 11.5px; font-weight: 600; color: #fff; opacity:0.9; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;" title="${mod.titulo}">${mod.titulo}</span>
+                  <span style="font-family: var(--font-mono); font-size: 10px; color: var(--text-muted);">(${cnt})</span>
+                </div>
+                <span class="subcat-arrow" style="font-size: 10px; color: var(--text-muted); transition: transform 0.2s; display: inline-block; transform: ${isRevExpanded ? 'rotate(180deg)' : 'rotate(0deg)'};">▼</span>
+              </div>
+              
+              <!-- Content Pane -->
+              <div style="display: ${isRevExpanded ? 'block' : 'none'}; padding: 12px; border-top: 1px solid rgba(255,255,255,0.04); background: rgba(10,12,16,0.35);">
+                <!-- Author & Description meta info -->
+                <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 10px; background: rgba(255,255,255,0.01); padding: 8px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.02);">
+                  <div style="display:flex; justify-content:space-between; margin-bottom: 4px; font-weight:bold; color: #fff; opacity:0.85;">
+                    <span>👤 Por: ${mod.autor || 'Karen Tovar'}</span>
+                    <span>📅 ${mod.fecha || 'Hoy'}</span>
+                  </div>
+                  <div style="line-height:1.4;">💬 <em>${mod.instrucciones || 'Sin detalles extra.'}</em></div>
+                </div>
+                ${revFilesHTML}
+              </div>
+            </div>
+          `;
+        }
+      } else {
+        // Fallback or GENERAL-SUPPORT library downloads: categorized by file types
+        for (const catKey in group.modificaciones) {
+          const cat = group.modificaciones[catKey];
+          const files = cat.files;
+          const cnt = files.length;
+          if (cnt === 0) continue;
+
+          const subCatKey = `${proj.id}-mod-${catKey}`;
+          if (window.bovedaSubCategoriesExpanded[subCatKey] === undefined) {
+            window.bovedaSubCategoriesExpanded[subCatKey] = true;
+          }
+          const isSubCatExpanded = window.bovedaSubCategoriesExpanded[subCatKey];
+
+          modsHTML += `
+            <div class="bov-category-accordion-item" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; margin-bottom: 8px; overflow: hidden; background: rgba(15,18,23,0.35);">
+              <div onclick="event.stopPropagation(); bovedaToggleSubCategory('${proj.id}', 'mod', '${catKey}')" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.02); cursor: pointer; transition: background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.04)'" onmouseleave="this.style.background='rgba(255,255,255,0.02)'">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="font-size: 11.5px; font-weight: 600; color: #fff; opacity:0.9;">${cat.title}</span>
+                  <span style="font-family: var(--font-mono); font-size: 10px; background: rgba(248,81,73,0.12); color: #ff8585; padding: 1px 6px; border-radius: 12px; font-weight: bold;">${cnt}</span>
+                </div>
+                <span class="subcat-arrow" style="font-size: 10px; color: var(--text-muted); transition: transform 0.2s; display: inline-block; transform: ${isSubCatExpanded ? 'rotate(180deg)' : 'rotate(0deg)'};">▼</span>
+              </div>
+              
+              <div style="display: ${isSubCatExpanded ? 'block' : 'none'}; padding: 12px; border-top: 1px solid rgba(255,255,255,0.04); background: rgba(10,12,16,0.35);">
+                <div class="bov-grid-system" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px;">
+                  ${files.map(f => window.renderBovedaFileCard(f, activeClr)).join('')}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      // Setup placeholders for column symmetry
+      if (!originalsHTML) {
+        originalsHTML = `
+          <div style="padding: 30px 16px; margin-top:4px; text-align: center; border: 1px dashed rgba(255,255,255,0.04); border-radius: 6px; color: var(--text-muted); font-size: 11.5px; background: rgba(255,255,255,0.005);">
+             📂 Sin documentos originales pre-cargados.
+          </div>
+        `;
+      }
+      if (!modsHTML) {
+        modsHTML = `
+          <div style="padding: 30px 16px; margin-top:4px; text-align: center; border: 1px dashed rgba(255,255,255,0.04); border-radius: 6px; color: var(--text-muted); font-size: 11.5px; background: rgba(255,255,255,0.005);">
+             🔄 No se han registrado modificaciones para este proyecto todavía.
+          </div>
+        `;
+      }
+
+      cardHTML += `
+        <div class="bov-project-split-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; padding: 18px; border-top: 1px solid rgba(255,255,255,0.05); background: rgba(10, 12, 16, 0.15);">
+          
+          <!-- LEFT COLUMN: ORIGINALES -->
+          <div class="bov-split-column-originales" style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid rgba(16, 185, 129, 0.15); padding-bottom: 8px; margin-bottom: 8px;">
+              <h4 style="font-size: 11.5px; font-weight: 800; color: #10b981; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; text-transform: uppercase; margin:0;">
+                <span>📋 Documentación Original</span>
+              </h4>
+              <span style="font-family: var(--font-mono); font-size: 10px; background: rgba(16, 185, 129, 0.12); color: #10b981; padding: 1px 6px; border-radius: 12px; font-weight: bold;">${group.originalCount}</span>
+            </div>
+            ${originalsHTML}
+          </div>
+
+          <!-- RIGHT COLUMN: MODIFICACIONES -->
+          <div class="bov-split-column-modificaciones" style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid rgba(248, 81, 73, 0.15); padding-bottom: 8px; margin-bottom: 8px; min-height: 28px;">
+              <h4 style="font-size: 11.5px; font-weight: 800; color: #ff8585; display: flex; align-items: center; gap: 4px; letter-spacing: 0.5px; text-transform: uppercase; margin:0;">
+                <span>🔄 Historial de Modificaciones (R)</span>
+              </h4>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                ${selectorHTML}
+                <span style="font-family: var(--font-mono); font-size: 10px; background: rgba(248, 81, 73, 0.12); color: #ff8585; padding: 1px 6px; border-radius: 12px; font-weight: bold;">${group.modCount}</span>
+              </div>
+            </div>
+            ${modsHTML}
+          </div>
+
+        </div>
+      `;
+    } else {
+      cardHTML += `
+        <!-- Collapsed Empty indicator -->
+      `;
+    }
+
+    cardHTML += `
+        </div>
+      </div>
+    `;
+
+    finalHTML += cardHTML;
+  });
+
+  container.innerHTML = finalHTML;
 }
+
+window.bovedaToggleProject = function(projId) {
+  // Accordion effect: Close others, toggle current
+  if (bovedaExpandedProjects[projId]) {
+    delete bovedaExpandedProjects[projId];
+  } else {
+    bovedaExpandedProjects = {};
+    bovedaExpandedProjects[projId] = true;
+  }
+  renderProyectistaBoveda();
+};
+
+window.proyTriggerProjectUpload = function(projId) {
+  bovedaUploadTargetProjectId = projId;
+  window.bovedaCurrentUploadType = 'original'; // Default type
+  
+  const proj = vProjects.find(p => p.id === projId);
+  if (!proj) return;
+  
+  // Fill project info
+  const projInfo = document.getElementById('bov-up-project-info');
+  if (projInfo) {
+    projInfo.innerText = `${proj.id} · ${proj.cliente}`;
+  }
+  
+  // Fill modifications select
+  const selectMod = document.getElementById('bov-up-mod-select');
+  if (selectMod) {
+    selectMod.innerHTML = '';
+    const mods = proj.modificaciones || [];
+    if (mods.length === 0) {
+      const opt = document.createElement('option');
+      opt.value = 'new';
+      opt.innerText = '🆕 Nueva Revisión R1';
+      selectMod.appendChild(opt);
+    } else {
+      mods.forEach((mod, idx) => {
+        const opt = document.createElement('option');
+        opt.value = `index_${idx}`;
+        opt.innerText = `🔄 R${idx+1}: ${mod.titulo.length > 40 ? mod.titulo.substring(0, 40) + '...' : mod.titulo}`;
+        selectMod.appendChild(opt);
+      });
+      const optNew = document.createElement('option');
+      optNew.value = 'new';
+      optNew.innerText = `🆕 Nueva Revisión (R${mods.length + 1})`;
+      selectMod.appendChild(optNew);
+    }
+  }
+  
+  // Map brand color
+  const branchColorMap = {
+    'Laguna': { color: '#10b981' },
+    'Queretaro': { color: '#f97316' },
+    'CDMX': { color: '#ec4899' },
+    'Metropoli': { color: '#8b5cf6' },
+    'Puebla': { color: '#06b6d4' },
+    'Guadalajara': { color: '#fbbf24' }
+  };
+  const activeClr = branchColorMap[bovedaActiveBranch] || branchColorMap['Laguna'];
+  
+  const modal = document.getElementById('boveda-upload-classification-modal');
+  if (modal) {
+    modal.style.setProperty('--active-branch-color', activeClr.color);
+    modal.style.display = 'flex';
+  }
+  
+  // Default to selecting original
+  bovedaSelectUploadType('original');
+};
 
 function proyUploadToBovedaGlobal(fileInp) {
   if (fileInp.files && fileInp.files[0]) {
-    const file = fileInp.files[0];
+    const file = fileInp.files[fileInp.files.length - 1];
     const ext = file.name.split('.').pop().toLowerCase();
     
+    const targetProjId = bovedaUploadTargetProjectId || (bovedaActiveBranch.substring(0, 3).toUpperCase() + '-GEN');
+    const matchedProj = vProjects.find(p => p.id === targetProjId);
+    const targetProjName = matchedProj ? matchedProj.cliente : 'Biblioteca de Soporte';
+    
+    const classification = window.bovedaCurrentUploadType || 'original';
+    let deliverable = 'Carga técnica manual';
+    
+    if (classification === 'original') {
+      deliverable = 'Documento Original';
+    } else {
+      const selectedModVal = document.getElementById('bov-up-mod-select') ? document.getElementById('bov-up-mod-select').value : 'new';
+      if (selectedModVal && selectedModVal.startsWith('index_')) {
+        const modIdx = parseInt(selectedModVal.replace('index_', ''));
+        if (matchedProj && matchedProj.modificaciones && matchedProj.modificaciones[modIdx]) {
+          deliverable = matchedProj.modificaciones[modIdx].titulo;
+        } else {
+          deliverable = 'Modificación de Diseño';
+        }
+      } else {
+        const rIndex = (matchedProj && matchedProj.modificaciones) ? (matchedProj.modificaciones.length + 1) : 1;
+        deliverable = `Nueva Corrección R${rIndex}`;
+      }
+    }
+    
+    // Save to global boveda cache
     proyGlobalBoveda.unshift({
       name: file.name,
       size: (file.size / (1024 * 1024)).toFixed(1) + ' MB',
-      creator: 'Karen Tovar',
+      creator: 'Karen Tovar (Proyectista)',
       date: new Date().toISOString().split('T')[0],
-      ext: ext
+      ext: ext,
+      sucursal: bovedaActiveBranch,
+      project: targetProjId,
+      projectName: targetProjName,
+      deliverable: deliverable,
+      docType: classification
     });
+    
+    // Also save directly into the project's internal structure for instant sync
+    if (matchedProj) {
+      if (classification === 'original') {
+        if (!matchedProj.documentosOriginales) matchedProj.documentosOriginales = [];
+        matchedProj.documentosOriginales.push({
+          name: file.name,
+          ext: ext.toUpperCase(),
+          size: (file.size / (1024 * 1024)).toFixed(1) + ' MB',
+          date: new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }),
+          version: deliverable,
+          uploadedBy: 'Karen Tovar'
+        });
+      } else {
+        if (!matchedProj.modificaciones) matchedProj.modificaciones = [];
+        
+        const selectedModVal = document.getElementById('bov-up-mod-select') ? document.getElementById('bov-up-mod-select').value : 'new';
+        let existMod = null;
+        if (selectedModVal && selectedModVal.startsWith('index_')) {
+          const modIdx = parseInt(selectedModVal.replace('index_', ''));
+          if (matchedProj.modificaciones[modIdx]) {
+            existMod = matchedProj.modificaciones[modIdx];
+          }
+        }
+        
+        if (existMod) {
+          if (!existMod.files) existMod.files = [];
+          existMod.files.unshift({
+            name: file.name,
+            ext: ext.toUpperCase(),
+            size: (file.size / (1024 * 1024)).toFixed(1) + ' MB',
+            date: new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }),
+            uploadedBy: 'Karen Tovar'
+          });
+        } else {
+          // Add a new revision
+          const rIndex = matchedProj.modificaciones.length + 1;
+          matchedProj.modificaciones.push({
+            titulo: `Modificación Complementaria R${rIndex}`,
+            instrucciones: 'Plano corregido y validado de acuerdo a la solicitud.',
+            tipo: 'CORRECCIÓN DISEÑO',
+            autor: 'Karen Tovar',
+            fecha: 'Hoy',
+            files: [{
+              name: file.name,
+              ext: ext.toUpperCase(),
+              size: (file.size / (1024 * 1024)).toFixed(1) + ' MB',
+              date: new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'short' }),
+              uploadedBy: 'Karen Tovar'
+            }]
+          });
+        }
+      }
+      saveProjectsToStorage();
+    }
+    
+    // Clear upload target
+    bovedaUploadTargetProjectId = null;
+    
     localStorage.setItem('proyGlobalBoveda', JSON.stringify(proyGlobalBoveda));
-    showToast('success', 'Bóveda Actualizada', `Se cargó el archivo ${file.name} a la bóveda técnica de Gebesa.`);
+    
+    // Hide modal overlay
+    const modalOverlay = document.getElementById('boveda-upload-classification-modal');
+    if (modalOverlay) {
+      modalOverlay.style.display = 'none';
+    }
+    
+    showToast('success', 'Archivo Registrado', `Se guardó "${file.name}" de forma segura en la sección ${classification === 'original' ? 'Originales' : 'Modificaciones/R'} para ${targetProjName}.`);
+    
+    // Auto-expand uploaded project so user immediately sees their file!
+    bovedaExpandedProjects[targetProjId] = true;
+    
     renderProyectistaBoveda();
   }
 }
+
+// INTERACTIVE PREVIEW CONTROLLERS & DOWNLOADING VECTORS
+window.bprevToggleLayer = function(layerId, isChecked) {
+  const layer = document.getElementById(layerId);
+  if (layer) {
+    layer.style.opacity = isChecked ? '1' : '0';
+  }
+};
+
+window.bprevUpdateGlbRotation = function(val) {
+  const box = document.getElementById('glb-3d-box');
+  if (box) {
+    box.style.transform = `rotateX(-20deg) rotateY(${val}deg)`;
+  }
+};
+
+window.bprevChangeGlbShader = function(mode) {
+  const box = document.getElementById('glb-3d-box');
+  const floor = box ? box.querySelector('div') : null;
+  const meshTable = box ? box.querySelector('div:nth-child(2)') : null;
+  
+  if (mode === 'clay') {
+    if (floor) { floor.style.background = 'rgba(250,250,250,0.2)'; floor.style.borderColor = '#aaa'; }
+    if (meshTable) { meshTable.style.background = '#ddd'; meshTable.style.borderColor = '#bbb'; }
+    showToast('info', 'Shader Actualizado', 'Vista en modelo sólido blanco (Clay render)');
+  } else {
+    // Realistic
+    if (floor) { floor.style.background = 'rgba(56, 189, 248, 0.2)'; floor.style.borderColor = '#0284c7'; }
+    if (meshTable) { meshTable.style.background = '#eab308'; meshTable.style.borderColor = '#ca8a04'; }
+    showToast('success', 'Render Completo', 'Texturas fotorrealistas con iluminación global calculada.');
+  }
+};
+
+window.bovedaOpenPreview = function(name, ext, projectId, projectName, size, creator, date, deliverable, sucursal) {
+  bprevActiveFile = { name, ext, projectId, projectName, size, creator, date, deliverable, sucursal };
+  
+  const modal = document.getElementById('boveda-preview-modal');
+  if (!modal) return;
+  
+  // Set basic specs
+  document.getElementById('bprev-title').innerText = name;
+  document.getElementById('bprev-subinfo').innerText = `Entrega de Ingeniería · Exp: ${projectId || 'SoporteGeneral'}`;
+  
+  document.getElementById('bprev-meta-project').innerText = `${projectId || 'Soporte'} · ${projectName}`;
+  document.getElementById('bprev-meta-deliverable').innerText = deliverable;
+  document.getElementById('bprev-meta-creator').innerText = creator.split(' (')[0];
+  document.getElementById('bprev-meta-date').innerText = date;
+  document.getElementById('bprev-meta-size').innerText = size;
+  
+  // Branch label
+  const branchEl = document.getElementById('bprev-meta-branch');
+  if (branchEl) {
+    branchEl.innerText = sucursal;
+    if (sucursal === 'Laguna') { branchEl.style.background = 'rgba(16,185,129,0.15)'; branchEl.style.color = '#10b981'; }
+    else if (sucursal === 'CDMX') { branchEl.style.background = 'rgba(236,72,153,0.15)'; branchEl.style.color = '#ec4899'; }
+    else if (sucursal === 'Metropoli') { branchEl.style.background = 'rgba(139,92,246,0.15)'; branchEl.style.color = '#c09fff'; }
+    else if (sucursal === 'Puebla') { branchEl.style.background = 'rgba(6,182,212,0.15)'; branchEl.style.color = '#00d2d3'; }
+    else if (sucursal === 'Guadalajara') { branchEl.style.background = 'rgba(251,191,36,0.15)'; branchEl.style.color = '#fbbf24'; }
+    else { branchEl.style.background = 'rgba(249,115,22,0.15)'; branchEl.style.color = '#f97316'; }
+  }
+
+  const visualizer = document.getElementById('bprev-visualizer');
+  const controls = document.getElementById('bprev-controls-container');
+  
+  let visualizerHTML = '';
+  let controlsHTML = '';
+  
+  const lowerExt = ext.toLowerCase();
+  
+  if (lowerExt === 'dwg') {
+    document.getElementById('bprev-icon-type').innerText = '📐';
+    visualizerHTML = `
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
+        <svg viewBox="0 0 400 300" style="width: 95%; height: 90%; background: #080a0f; border: 1px solid #1a2233; border-radius: 8px;">
+          <defs>
+            <pattern id="cadGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(88, 166, 255, 0.08)" stroke-width="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#cadGrid)" />
+          
+          <!-- Outer Walls -->
+          <rect x="40" y="40" width="320" height="220" fill="none" stroke="#639fcb" stroke-width="2" />
+          <path d="M 40 100 H 60 M 340 100 H 360 M 150 40 V 50" stroke="#639fcb" stroke-width="1.5" />
+          <text x="15" y="25" fill="#58a6ff" font-family="monospace" font-size="8">CAD SYSTEM: VER MEDIDAS DE MONTAJE — ESCALA 1:50</text>
+          
+          <!-- Dynamic Layers -->
+          <!-- 1. Furniture Layer -->
+          <g id="lay-furniture" style="opacity: 1; transition: opacity 0.2s;">
+            <!-- Table in boat shape -->
+            <path d="M 120 130 C 160 125, 240 125, 280 130 C 290 145, 290 155, 280 170 C 240 175, 160 175, 120 170 C 110 155, 110 145, 120 130 Z" fill="none" stroke="#3ecfb2" stroke-width="1.8" />
+            <circle cx="120" cy="150" r="4" fill="none" stroke="#3ecfb2"/>
+            <circle cx="280" cy="150" r="4" fill="none" stroke="#3ecfb2"/>
+            
+            <!-- Chairs -->
+            <rect x="140" y="110" width="16" height="12" rx="2" fill="none" stroke="#3ecfb2" stroke-width="1.2" />
+            <rect x="175" y="110" width="16" height="12" rx="2" fill="none" stroke="#3ecfb2" stroke-width="1.2" />
+            <rect x="210" y="110" width="16" height="12" rx="2" fill="none" stroke="#3ecfb2" stroke-width="1.2" />
+            <rect x="245" y="110" width="16" height="12" rx="2" fill="none" stroke="#3ecfb2" stroke-width="1.2" />
+            
+            <rect x="140" y="178" width="16" height="12" rx="2" fill="none" stroke="#3ecfb2" stroke-width="1.2" />
+            <rect x="175" y="178" width="16" height="12" rx="2" fill="none" stroke="#3ecfb2" stroke-width="1.2" />
+            <rect x="210" y="178" width="16" height="12" rx="2" fill="none" stroke="#3ecfb2" stroke-width="1.2" />
+            <rect x="245" y="178" width="16" height="12" rx="2" fill="none" stroke="#3ecfb2" stroke-width="1.2" />
+            <text x="160" y="154" fill="#3ecfb2" font-family="sans-serif" font-weight="bold" font-size="7">MESA NOVA BARCO 10P</text>
+          </g>
+          
+          <!-- 2. Cotas/Dimensions Layer -->
+          <g id="lay-dimensions" style="opacity: 1; transition: opacity 0.2s;">
+            <line x1="40" y1="270" x2="360" y2="270" stroke="#f06b6b" stroke-dasharray="3,3" stroke-width="1" />
+            <line x1="40" y1="265" x2="40" y2="275" stroke="#f06b6b" stroke-width="1" />
+            <line x1="360" y1="265" x2="360" y2="275" stroke="#f06b6b" stroke-width="1" />
+            <text x="200" y="282" fill="#f06b6b" font-family="monospace" font-size="9" text-anchor="middle">8.50 m</text>
+            
+            <line x1="20" y1="40" x2="20" y2="260" stroke="#f06b6b" stroke-dasharray="3,3" stroke-width="1" />
+            <line x1="15" y1="40" x2="25" y2="40" stroke="#f06b6b" stroke-width="1" />
+            <line x1="15" y1="260" x2="25" y2="260" stroke="#f06b6b" stroke-width="1" />
+            <text x="12" y="150" fill="#f06b6b" font-family="monospace" font-size="9" text-anchor="middle" transform="rotate(-90 12 150)">5.20 m</text>
+          </g>
+          
+          <!-- 3. Electrical Connections Layer -->
+          <g id="lay-electrical" style="opacity: 0; transition: opacity 0.2s;">
+            <circle cx="160" cy="150" r="5" fill="none" stroke="#e8a03a" stroke-width="1.5" />
+            <line x1="155" y1="150" x2="165" y2="150" stroke="#e8a03a" stroke-width="1.2" />
+            <circle cx="240" cy="150" r="5" fill="none" stroke="#e8a03a" stroke-width="1.5" />
+            <line x1="235" y1="150" x2="245" y2="150" stroke="#e8a03a" stroke-width="1.2" />
+            
+            <circle cx="200" cy="40" r="4" fill="#e8a03a" />
+            <path d="M 160 150 V 100 H 240 V 150" fill="none" stroke="#e8a03a" stroke-width="1" stroke-dasharray="2,2" />
+            <text x="145" y="90" fill="#e8a03a" font-family="monospace" font-size="7">SALIDA REGISTRO DE PISO G-CONNECT</text>
+          </g>
+        </svg>
+      </div>
+    `;
+    controlsHTML = `
+      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:12px;">
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing:0.5px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px; margin:0;">CAPAS CAD INDEPENDIENTES</p>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <label style="display:flex; align-items:center; gap:10px; font-size:12.5px; color:#fff; cursor:pointer;">
+            <input type="checkbox" checked onchange="bprevToggleLayer('lay-furniture', this.checked)" style="accent-color:#3ecfb2;"> <span>🛋️ Mobiliario (Verde)</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:10px; font-size:12.5px; color:#fff; cursor:pointer;">
+            <input type="checkbox" checked onchange="bprevToggleLayer('lay-dimensions', this.checked)" style="accent-color:#f06b6b;"> <span>📏 Cotas y Ejes (Rojo)</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:10px; font-size:12.5px; color:#fff; cursor:pointer;">
+            <input type="checkbox" onchange="bprevToggleLayer('lay-electrical', this.checked)" style="accent-color:#e8a03a;"> <span>⚡ Voz y Datos (Registro)</span>
+          </label>
+        </div>
+      </div>
+      <div style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.4; padding: 4px;">
+        📝 <strong>Info AutoCAD:</strong> Este archivo dwg contiene el levantamiento exacto de muros y anclaje de piso para conectividad multimedia Gebesa.
+      </div>
+    `;
+  } else if (lowerExt === 'skp') {
+    document.getElementById('bprev-icon-type').innerText = '🧡';
+    visualizerHTML = `
+      <div style="width: 100%; height: 100%; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
+        <div style="width: 95%; height: 85%; background: radial-gradient(circle, #1a2230 0%, #0c1015 100%); border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative;">
+          <!-- Vectorized Isometric Blueprint Room representing Sketchup layout -->
+          <svg viewBox="0 0 400 300" style="width:100%; height:100%;">
+            <!-- Isometric grids -->
+            <path d="M0 150 L200 50 L400 150 L200 250 Z" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1.5" />
+            <path d="M0 100 L200 0 L400 100 L200 200 Z" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1" />
+            <path d="M0 200 L200 100 L400 200 L200 300 Z" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="1" />
+
+            <!-- Isometric walls and floor shadows -->
+            <polygon points="200,250 40,170 40,80 200,160" fill="rgba(88, 166, 255, 0.05)" stroke="rgba(88, 166, 255, 0.2)" stroke-width="1" />
+            <polygon points="200,250 360,170 360,80 200,160" fill="rgba(88, 166, 255, 0.08)" stroke="rgba(88, 166, 255, 0.25)" stroke-width="1" />
+            
+            <!-- Isometric conference Table mockup -->
+            <polygon points="200,195 140,165 200,135 260,165" fill="#f97316" fill-opacity="0.2" stroke="#f97316" stroke-width="1.8" />
+            <polygon points="200,195 140,165 140,175 200,205" fill="#ca8a04" stroke="#f97316" stroke-width="1.5" />
+            <polygon points="200,205 260,175 260,165 200,195" fill="#ca8a04" stroke="#f97316" stroke-width="1.5" />
+            
+            <!-- Center connectivity panel isometric -->
+            <polygon points="200,170 185,162 200,155 215,162" fill="#fff" stroke="#fff" stroke-width="1" />
+            
+            <!-- Table support leg isometric -->
+            <line x1="200" y1="205" x2="200" y2="235" stroke="#f97316" stroke-width="3" />
+            <line x1="160" y1="185" x2="160" y2="215" stroke="#f97316" stroke-width="2.5" />
+            <line x1="240" y1="185" x2="240" y2="215" stroke="#f97316" stroke-width="2.5" />
+          </svg>
+          
+          <div style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.6); padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 10px; color:#f97316; border: 1px solid rgba(249,115,22,0.3);">
+            SKP RENDER MESH ACTIVE
+          </div>
+        </div>
+      </div>
+    `;
+    controlsHTML = `
+      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; border:1px solid rgba(255,255,255,0.05);">
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing:0.5px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px; margin-bottom:8px;">CONTEO DE COMPONENTES SKP</p>
+        <div style="display:flex; flex-direction:column; gap:8px; font-size:12px;">
+          <div style="display:flex; justify-content:space-between; color:var(--text-secondary);"><span>Mesa Nova Barco 240</span> <strong style="color:#fff;">1 pza</strong></div>
+          <div style="display:flex; justify-content:space-between; color:var(--text-secondary);"><span>Silla Kenza Ejecutiva</span> <strong style="color:#fff;">10 pzas</strong></div>
+          <div style="display:flex; justify-content:space-between; color:var(--text-secondary);"><span>Muebles Credenza Nova</span> <strong style="color:#fff;">2 pzas</strong></div>
+          <div style="display:flex; justify-content:space-between; color:var(--text-secondary);"><span>Interfaces G-Connect</span> <strong style="color:#fff;">3 pzas</strong></div>
+        </div>
+      </div>
+      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:8px;">
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-secondary); margin:0;">TEXTURA ACTIVA EN EXTREMO</p>
+        <select class="form-select" style="width:100%; border:1px solid var(--border); background:#161a22; color:#fff; font-size:12px; height:32px; padding:0 8px; border-radius:4px;" onchange="showToast('info', 'Textura cambiada', 'Se pre-visualizará acabado ' + this.value + ' en el despiece.')">
+          <option>Nogal Español (Spanish Oak)</option>
+          <option>Encino Polar (Polar Oak)</option>
+          <option>Baysand Premium Wood</option>
+          <option>Gris Grafito Mate</option>
+        </select>
+      </div>
+    `;
+  } else if (lowerExt === 'glb') {
+    document.getElementById('bprev-icon-type').innerText = '✨';
+    visualizerHTML = `
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position:relative;">
+        <div style="perspective: 800px; width: 100%; height: 75%; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+          <div id="glb-3d-box" style="width: 200px; height: 160px; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(45deg); transition: transform 0.1s; position: relative;">
+            <!-- Renders an isometric floor workspace -->
+            <div style="position: absolute; width: 220px; height: 160px; background: rgba(56, 189, 248, 0.2); border: 2px solid #0284c7; transform: rotateX(90deg) translateZ(-50px); display:flex; align-items:center; justify-content:center; font-size:9px; color:#fff; font-weight:bold; box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+              PLANTA DE MODELADO GLB
+            </div>
+            <!-- Table block in 3D using CSS transform -->
+            <div style="position: absolute; width: 120px; height: 40px; background: #eab308; border: 1px solid #ca8a04; transform: translate3d(50px, -15px, 10px) rotateX(0deg); display:flex; align-items:center; justify-content:center; color:#000; font-size:8px; font-weight:bold; box-shadow:0 10px 15px rgba(0,0,0,0.4);">
+              MESA SHADER
+            </div>
+            <!-- Chairs dots -->
+            <div style="position: absolute; font-size:14px; transform: translate3d(80px, -35px, 45px); filter: drop-shadow(0 2px 4px #000);">👤</div>
+            <div style="position: absolute; font-size:14px; transform: translate3d(120px, -35px, 45px); filter: drop-shadow(0 2px 4px #000);">👤</div>
+            <div style="position: absolute; font-size:14px; transform: translate3d(85px, -35px, -15px); filter: drop-shadow(0 2px 4px #000);">👤</div>
+            <div style="position: absolute; font-size:14px; transform: translate3d(125px, -35px, -15px); filter: drop-shadow(0 2px 4px #000);">👤</div>
+          </div>
+        </div>
+        <div style="position:absolute; bottom: 20px; text-align:center; font-size:11.5px; color:var(--text-secondary); background:rgba(0,0,0,0.5); padding:6px 16px; border-radius:20px; border:1px solid rgba(255,255,255,0.06);">
+          <span>↔️ Rota orbitalmente el espacio usando la barra lateral de control</span>
+        </div>
+      </div>
+    `;
+    controlsHTML = `
+      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; border:1px solid rgba(255,255,255,0.05);">
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing:0.5px; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px;">ROTACIÓN DE CAMARA 3D</p>
+        <input type="range" min="0" max="360" value="45" style="width:100%; cursor:pointer; accent-color:#a07cf0;" oninput="bprevUpdateGlbRotation(this.value)">
+        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted); margin-top:4px;">
+          <span>0°</span>
+          <span>180°</span>
+          <span>360°</span>
+        </div>
+      </div>
+      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:8px;">
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-secondary); margin:0;">VERTEX SHADER</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+          <button class="btn-solid" style="padding:6px; font-size:11px; background:#21262d; border:1px solid rgba(255,255,255,0.15);" onclick="bprevChangeGlbShader('clay')">Modelar Sólido</button>
+          <button class="btn-solid" style="padding:6px; font-size:11px; background:linear-gradient(to bottom, #a07cf0, #8b5cf6);" onclick="bprevChangeGlbShader('realistic')">Render HD</button>
+        </div>
+      </div>
+    `;
+  } else if (lowerExt === 'xml' || lowerExt === 'xlm') {
+    document.getElementById('bprev-icon-type').innerText = '💚';
+    visualizerHTML = `
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column; padding: 24px; overflow-y: auto;">
+        <h4 style="font-size: 13px; font-weight: bold; color: var(--green); margin-bottom: 12px; display:flex; align-items:center; gap:8px;">
+          <span>📋 Sincronización XML de Despiece Gebesa (Cotizador Técnico)</span>
+        </h4>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px; color: var(--text-secondary); text-align: left;">
+          <thead>
+            <tr style="border-bottom: 2px solid rgba(255,255,255,0.1); color: #fff; font-weight: bold;">
+              <th style="padding: 10px 6px;">Código de Parte</th>
+              <th style="padding: 10px 6px;">Componente / Descripción</th>
+              <th style="padding: 10px 6px; text-align: center;">Línea</th>
+              <th style="padding: 10px 6px; text-align: center;">Cant.</th>
+              <th style="padding: 10px 6px; text-align: right;">P. Unitario</th>
+              <th style="padding: 10px 6px; text-align: right;">Total M.N.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04); height: 38px;">
+              <td style="padding: 6px; font-family: monospace; color:#fff;">NVA-BBOAT-240</td>
+              <td style="padding: 6px;">Mesa de Juntas Barca Nova Premium - 10 Directores</td>
+              <td style="padding: 6px; text-align: center;"><span class="badge" style="padding: 2px 6px; font-size:9.5px; color:#5aab5e; border-color:#5aab5e; background:none;">Nova</span></td>
+              <td style="padding: 6px; text-align: center;">1</td>
+              <td style="padding: 6px; text-align: right;">$24,500.00</td>
+              <td style="padding: 6px; text-align: right; color:#fff; font-weight:600;">$24,500.00</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04); height: 38px;">
+              <td style="padding: 6px; font-family: monospace; color:#fff;">KNZ-EXE-MESH</td>
+              <td style="padding: 6px;">Silla Ergonómica Alta Kenza Ejecutiva - Soporte Lumbar</td>
+              <td style="padding: 6px; text-align: center;"><span class="badge" style="padding: 2px 6px; font-size:9.5px; color:#58a6ff; border-color:#58a6ff; background:none;">Kenza</span></td>
+              <td style="padding: 6px; text-align: center;">10</td>
+              <td style="padding: 6px; text-align: right;">$4,200.00</td>
+              <td style="padding: 6px; text-align: right; color:#fff; font-weight:600;">$42,000.00</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04); height: 38px;">
+              <td style="padding: 6px; font-family: monospace; color:#fff;">NVA-CRE-LOW2</td>
+              <td style="padding: 6px;">Mueble Credenza Baja Nova - 2 Puertas Corredizas</td>
+              <td style="padding: 6px; text-align: center;"><span class="badge" style="padding: 2px 6px; font-size:9.5px; color:#5aab5e; border-color:#5aab5e; background:none;">Nova</span></td>
+              <td style="padding: 6px; text-align: center;">2</td>
+              <td style="padding: 6px; text-align: right;">$7,800.00</td>
+              <td style="padding: 6px; text-align: right; color:#fff; font-weight:600;">$15,600.00</td>
+            </tr>
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04); height: 38px;">
+              <td style="padding: 6px; font-family: monospace; color:#fff;">GCON-POD-MINI</td>
+              <td style="padding: 6px;">Módulo de Conectividad G-Connect - Corriente + Datos</td>
+              <td style="padding: 6px; text-align: center;"><span class="badge" style="padding: 2px 6px; font-size:9.5px; color:var(--text-muted); border-color:var(--border); background:none;">Inst.</span></td>
+              <td style="padding: 6px; text-align: center;">3</td>
+              <td style="padding: 6px; text-align: right;">$1,200.00</td>
+              <td style="padding: 6px; text-align: right; color:#fff; font-weight:600;">$3,600.00</td>
+            </tr>
+            <tr style="border-top: 2px solid rgba(255,255,255,0.1); height: 48px; font-size: 13.5px; color: #fff;">
+              <td colspan="4" style="padding: 10px 6px; font-weight: bold; text-align: right;">Venta Total Bruto:</td>
+              <td colspan="2" style="padding: 10px 6px; font-weight: 800; text-align: right; color: var(--green);">$85,700.00 MXN</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `;
+    controlsHTML = `
+      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:10px;">
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing:0.5px; margin:0; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px;">CRM INTEGRACIÓN</p>
+        <button class="btn-solid" style="padding:8px; font-size:12px; background:rgba(32, 201, 151, 0.1); border:1px solid rgba(32,201,151,0.4); color:#20c997;" onclick="showToast('success', 'XML Vinculado', 'Las piezas han sido consolidadas en el CRM de Ventas.')">
+          ⚡ Vincular con Cotización
+        </button>
+      </div>
+      <div style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.4; padding:4px;">
+        💡 El despiece XML permite automatizar el pedido ingresándolo directamente a la planta de ingeniería Gebesa sin re-captura de datos.
+      </div>
+    `;
+  } else {
+    // IMG, VIDEO OR OTHERS
+    document.getElementById('bprev-icon-type').innerText = lowerExt === 'video' || lowerExt === 'mp4' ? '📹' : '🖼️';
+    visualizerHTML = `
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; position:relative;">
+        <div style="width:90%; height:85%; background:#141920; border-radius:12px; border:1px solid rgba(255,255,255,0.1); display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden; box-shadow:0 12px 32px rgba(0,0,0,0.8);">
+          <svg viewBox="0 0 500 350" style="width:100%; height:100%;">
+            <defs>
+              <linearGradient id="officeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1e293b" />
+                <stop offset="50%" stop-color="#0f172a" />
+                <stop offset="100%" stop-color="#020617" />
+              </linearGradient>
+              <radialGradient id="deskGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(32, 201, 151, 0.3)" />
+                <stop offset="100%" stop-color="rgba(32, 201, 151, 0)" />
+              </radialGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#officeGrad)" />
+            <path d="M 0 50 H 500 M 0 100 H 500 M 0 150 H 500 M 0 200 H 500 M 0 250 H 500" stroke="rgba(255,255,255,0.02)" stroke-width="0.5" />
+            <rect x="60" y="50" width="380" height="250" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-dasharray="4,4" />
+            <rect x="180" y="110" width="140" height="130" rx="10" fill="#0f172a" stroke="rgba(56, 189, 248, 0.3)" stroke-width="2" />
+            <rect x="180" y="110" width="140" height="130" rx="10" fill="url(#deskGlow)" />
+            <ellipse cx="250" cy="175" rx="55" ry="35" fill="none" stroke="#20c997" stroke-width="2.5" />
+            <text x="250" y="180" fill="#20c997" font-weight="900" font-family="sans-serif" font-size="9" text-anchor="middle">SALA RECONECTADA</text>
+            <circle cx="180" cy="175" r="5" fill="#58a6ff" />
+            <circle cx="320" cy="175" r="5" fill="#58a6ff" />
+            <circle cx="215" cy="135" r="5" fill="#58a6ff" />
+            <circle cx="285" cy="135" r="5" fill="#58a6ff" />
+            <ellipse cx="250" cy="60" rx="30" ry="10" fill="none" stroke="#f06b6b" stroke-width="2" />
+          </svg>
+          <div style="position:absolute; background:rgba(0,0,0,0.7); border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:6px; color:#fff; font-size:12px; font-weight:bold; bottom:16px;">
+            📸 FOTORREALISMO / RECORRIDO REGISTRADO
+          </div>
+        </div>
+      </div>
+    `;
+    controlsHTML = `
+      <div style="background: rgba(255,255,255,0.03); padding: 14px; border-radius: 8px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:10px;">
+        <p style="font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing:0.5px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px; margin:0;">RESOLUCIÓN DE VISUALIZACIÓN</p>
+        <div style="font-size:12.5px; color:#fff; font-weight:600; display:flex; justify-content:space-between;">
+          <span>Formato Original</span>
+          <span style="font-family:monospace; color:#3fcfb2;">PNG / FULL-HD</span>
+        </div>
+      </div>
+    `;
+  }
+  
+  visualizer.innerHTML = visualizerHTML;
+  controls.innerHTML = controlsHTML;
+  
+  modal.style.display = 'flex';
+};
+
+window.bovedaClosePreview = function(e, force = false) {
+  if (force || (e && e.target && e.target.id === 'boveda-preview-modal')) {
+    const modal = document.getElementById('boveda-preview-modal');
+    if (modal) {
+      modal.style.display = 'none';
+      bprevActiveFile = null;
+    }
+  }
+};
+
+window.bovedaDownloadCurrentFile = function() {
+  if (bprevActiveFile) {
+    bovedaDownloadFile(bprevActiveFile.name, bprevActiveFile.sucursal);
+  }
+};
+
+window.bovedaDownloadFile = function(fileName, sucursal) {
+  showToast('info', 'Iniciando descarga', `Preparando paquete de ingeniería para "${fileName}"...`);
+  
+  setTimeout(() => {
+    showToast('success', 'Descarga Completada', `Se ha descargado "${fileName}" de la bóveda técnica de ${sucursal} con éxito.`);
+  }, 1200);
+
+  try {
+    const dummyContent = `Se descargo el archivo de Gebesa: ${fileName} \nSucursal: ${sucursal}\nFecha de descarga: ${new Date().toLocaleString()}`;
+    const blob = new Blob([dummyContent], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Error launching download anchor", err);
+  }
+};
 
 // 7. DELIVERABLES CALCULATION
 function proyUpdateDeliverableSlaMultiplier() {
@@ -9467,6 +11383,959 @@ function cancelMwmConfig() {
   renderProyectistaWorkspace();
 }
 
+/* ========================================================
+   SISTEMA DE CONTROL GENERAL: MASTER (DIRECCIÓN GENERAL)
+   ======================================================== */
+window.activeMasterSection = window.activeMasterSection || 'dashboard';
+window.activeMasterSucursal = window.activeMasterSucursal || 'all';
+
+// Active sections switcher in Direction General sidebar
+window.switchMasterSection = function(sectionId, element) {
+  window.activeMasterSection = sectionId;
+  
+  // Update sidebar active styling
+  const sidebar = document.getElementById('left-sidebar-master');
+  if (sidebar) {
+    sidebar.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  }
+  if (element) {
+    element.classList.add('active');
+  }
+  
+  showToast('info', 'Intercambio de Sección', `Sección ${sectionId.toUpperCase()} cargada`);
+  window.renderMasterWorkspace();
+};
+
+// Global reassigner technically connected to Ventas and Proyectistas
+window.masterReassignProject = function(projId, newProyectistaName) {
+  const proj = vProjects.find(p => p.id === projId);
+  if (!proj) return;
+  
+  const oldName = proj.proyectista;
+  proj.proyectista = newProyectistaName;
+  saveProjectsToStorage();
+  
+  showToast('success', 'Re-asignación Completada', `Proyecto ${projId} transferido de ${oldName} a ${newProyectistaName} con éxito.`);
+  
+  // Sync changes across all panels if open
+  window.renderMasterWorkspace();
+  if (typeof renderProyectistaWorkspace === 'function') renderProyectistaWorkspace();
+  if (typeof renderTable === 'function') renderTable();
+};
+
+// Extend SLA days dynamically
+window.masterProrrogaSLA = function(projId, days) {
+  const proj = vProjects.find(p => p.id === projId);
+  if (!proj) return;
+  
+  proj.diasSla = (proj.diasSla || 5) + days;
+  saveProjectsToStorage();
+  
+  showToast('success', 'Prórroga de SLA', `Se han añadido +${days} días hábiles al SLA del proyecto ${proj.id}. Nuevo límite: ${proj.diasSla} días.`);
+  window.renderMasterWorkspace();
+  if (typeof renderProyectistaWorkspace === 'function') renderProyectistaWorkspace();
+};
+
+// Toggle urgency indicator
+window.masterToggleUrgency = function(projId) {
+  const proj = vProjects.find(p => p.id === projId);
+  if (!proj) return;
+  
+  proj.urgente = !proj.urgente;
+  saveProjectsToStorage();
+  
+  const status = proj.urgente ? 'priorizado con SLA CRÍTICO' : 'removido del estado urgente';
+  showToast(proj.urgente ? 'error' : 'info', 'Urgencia Modificada', `Proyecto ${proj.id} ha sido ${status}.`);
+  window.renderMasterWorkspace();
+  if (typeof renderProyectistaWorkspace === 'function') renderProyectistaWorkspace();
+  if (typeof renderTable === 'function') renderTable();
+};
+
+// Direct stage transitions from Kanban board
+window.masterAdvanceProjectStage = function(projId) {
+  const proj = vProjects.find(p => p.id === projId);
+  if (!proj) return;
+  
+  const stages = [
+    'NUEVO', 
+    'RENDER SOLICITADO', 
+    'MODIFICACIÓN PEND.',
+    'POR VALIDAR',
+    'VALIDADO',
+    'ENTREGADO'
+  ];
+  
+  const currentIdx = stages.indexOf(proj.etapa);
+  if (currentIdx !== -1 && currentIdx < stages.length - 1) {
+    const nextStage = stages[currentIdx + 1];
+    proj.etapa = nextStage;
+    saveProjectsToStorage();
+    showToast('success', 'Fase Avanzada', `Proyecto ${proj.id} avanzado a la fase: ${nextStage}`);
+    window.renderMasterWorkspace();
+    if (typeof renderProyectistaWorkspace === 'function') renderProyectistaWorkspace();
+    if (typeof renderTable === 'function') renderTable();
+  } else {
+    showToast('warning', 'Fase Límite', `El proyecto ${proj.id} ya se encuentra en fase de entrega final.`);
+  }
+};
+
+// Master vacation switcher linked automatically to Technical MWM Warning
+window.masterToggleProyectistaVacations = function(nameKey, isChecked) {
+  if (nameKey === 'karen') {
+    localStorage.setItem('proyVacationsActive', isChecked ? 'true' : 'false');
+    CLINIC_PROYECTISTAS.karen.enVacaciones = isChecked;
+    showToast(isChecked ? 'error' : 'success', 'Modo Vacaciones', `Karen Tovar se encuentra ahora ${isChecked ? 'DE VACACIONES' : 'DISPONIBLE'}.`);
+  } else if (nameKey === 'oscar') {
+    showToast('info', 'Control de Vacaciones', `Estado del proyectista Oscar Rodríguez actualizado.`);
+  }
+  
+  window.renderMasterWorkspace();
+  if (typeof renderProyectistaWorkspace === 'function') renderProyectistaWorkspace();
+};
+
+// Main Direction Render Engine
+window.renderMasterWorkspace = function() {
+  const wrapper = document.getElementById('master-main-wrapper');
+  if (!wrapper) return;
+  
+  // Calculate dynamic data metrics
+  let totalActive = vProjects.length;
+  let reworkCount = vProjects.filter(p => p.modificaciones && p.modificaciones.length > 0).length;
+  let reworkRate = Math.round((reworkCount / (totalActive || 1)) * 100);
+  
+  let totalBudget = 0;
+  vProjects.forEach(p => {
+    let num = parseInt(p.monto.replace(/[^0-9]/g, ''), 10) || 0;
+    totalBudget += num;
+  });
+  let formattedBudget = '$' + (totalBudget / 1000000).toFixed(2) + 'M MXN';
+  
+  let criticalAlerts = vProjects.filter(p => p.urgente || p.etapa.includes('PEND')).length;
+  let avgTctVal = (vProjects.reduce((sum, p) => sum + (p.diasSla || 5), 0) / (totalActive || 1)).toFixed(1);
+
+  // Active projects filtered by sucursal
+  let displayedProjects = vProjects;
+  if (window.activeMasterSucursal !== 'all') {
+    displayedProjects = vProjects.filter(p => p.id.toUpperCase().startsWith(window.activeMasterSucursal.toUpperCase()));
+  }
+
+  // Define HTML of active section
+  let activeHTML = '';
+
+  if (window.activeMasterSection === 'dashboard') {
+    // --- I. EXECUTIVE HIGH-METRICS DASHBOARD ---
+    activeHTML = `
+      <div class="content-header">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <h1 class="display-title" style="margin:0; font-size: 24px; color: var(--gold); font-family: var(--font-display);">Executive Master Dashboard</h1>
+            <div class="subtitle" style="margin-top: 4px; color: var(--text-muted); font-size:12px;">Métricas Centrales, Cargas Técnicas y Flujos Operativos del CRM Gebesa</div>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span style="font-size:11px; color:var(--text-muted); font-weight:700;">SUCURSAL:</span>
+            <select class="form-select" onchange="window.activeMasterSucursal = this.value; window.renderMasterWorkspace()" style="padding: 6px 12px; background: var(--surface-2); border:1px solid var(--border); color:#fff; font-size:11px; font-weight:600; border-radius:4px; outline:none; cursor:pointer;">
+              <option value="all" ${window.activeMasterSucursal === 'all' ? 'selected' : ''}>Todas Nacional</option>
+              <option value="LAG" ${window.activeMasterSucursal === 'LAG' ? 'selected' : ''}>Torreón (LAG)</option>
+              <option value="QRO" ${window.activeMasterSucursal === 'QRO' ? 'selected' : ''}>Querétaro (QRO)</option>
+              <option value="CDMX" ${window.activeMasterSucursal === 'CDMX' ? 'selected' : ''}>Ciudad de México (CDMX)</option>
+              <option value="MTY" ${window.activeMasterSucursal === 'MTY' ? 'selected' : ''}>Monterrey (MTY)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-area" style="padding: 24px; display:flex; flex-direction:column; gap:24px;">
+        
+        <!-- Metrics Row -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); gap:16px;">
+          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px;">
+            <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Ciclo Técnico Promedio (SLA)</span>
+            <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--blue);">${avgTctVal} días</div>
+            <span style="display:inline-block; font-size:10px; padding:2px 6px; background:rgba(88,166,255,0.1); color:var(--blue); border-radius:12px; margin-top:8px; font-weight:600;">SLA Prometido</span>
+          </div>
+          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px;">
+            <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Tasa de Iteración (Re-diseño)</span>
+            <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--amber);">${reworkRate}%</div>
+            <span style="display:inline-block; font-size:10px; padding:2px 6px; background:rgba(240,135,0,0.1); color:var(--amber); border-radius:12px; margin-top:8px; font-weight:600;">Iteraciones Técnicas</span>
+          </div>
+          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px;">
+            <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Valor de Cartera Activa</span>
+            <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--green);">${formattedBudget}</div>
+            <span style="display:inline-block; font-size:10px; padding:2px 6px; background:rgba(63,185,80,0.1); color:var(--green); border-radius:12px; margin-top:8px; font-weight:600;">Volumen de Negocio</span>
+          </div>
+          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px;">
+            <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Alertas de Cuello de Botella</span>
+            <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--red);">${criticalAlerts}</div>
+            <span style="display:inline-block; font-size:10px; padding:2px 6px; background:rgba(248,81,73,0.1); color:var(--red); border-radius:12px; margin-top:8px; font-weight:600;">Respuesta Crítica</span>
+          </div>
+        </div>
+
+        <!-- Team Workloads & Breakdown Row -->
+        <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:16px;">
+          
+          <!-- Balance de Ocupación por Puntos -->
+          <div class="card" style="padding:20px; background:rgba(13,17,23,0.3); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
+              <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em;">⚖️ Semáforo de Carga del Equipo</span>
+              <span style="font-size:10px; color:var(--text-muted); font-weight:500;">Capacidad Inteligente Max: 6 Puntos</span>
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
+              <!-- Karen Tovar Load -->
+              ${(function() {
+                const isVac = localStorage.getItem('proyVacationsActive') === 'true';
+                let pts = 0;
+                let list = [];
+                vProjects.forEach(p => {
+                  if (p.proyectista.includes('Karen')) {
+                    const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
+                    pts += pVal;
+                    list.push(p.id);
+                  }
+                });
+                const pct = Math.min(100, Math.round((pts / 6) * 100));
+                const barColor = pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
+                return `
+                  <div style="display:flex; flex-direction:column; gap:4px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+                      <span style="font-weight:700; color:#fff;">Karen Tovar ${isVac ? '🌴 (MWM Activo)' : ''}</span>
+                      <span style="font-family:var(--font-mono); font-weight:bold; color:${barColor};">${pts}/6 Pts (${pct}%)</span>
+                    </div>
+                    <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                      <div style="width:${pct}%; height:100%; background:${barColor}; border-radius:3px;"></div>
+                    </div>
+                    <span style="font-size:10px; color:var(--text-muted);">Asignados: ${list.length > 0 ? list.join(', ') : 'Ninguno'}</span>
+                  </div>
+                `;
+              })()}
+
+              <!-- Rodrigo Vergara Load -->
+              ${(function() {
+                let pts = 0;
+                let list = [];
+                vProjects.forEach(p => {
+                  if (p.proyectista.includes('Rodrigo')) {
+                    const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
+                    pts += pVal;
+                    list.push(p.id);
+                  }
+                });
+                const pct = Math.min(100, Math.round((pts / 6) * 100));
+                const barColor = pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
+                return `
+                  <div style="display:flex; flex-direction:column; gap:4px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+                      <span style="font-weight:700; color:#fff;">Rodrigo Vergara</span>
+                      <span style="font-family:var(--font-mono); font-weight:bold; color:${barColor};">${pts}/6 Pts (${pct}%)</span>
+                    </div>
+                    <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                      <div style="width:${pct}%; height:100%; background:${barColor}; border-radius:3px;"></div>
+                    </div>
+                    <span style="font-size:10px; color:var(--text-muted);">Asignados: ${list.length > 0 ? list.join(', ') : 'Ninguno'}</span>
+                  </div>
+                `;
+              })()}
+
+              <!-- Oscar Rodriguez Load (Always simulated or vacant) -->
+              <div style="display:flex; flex-direction:column; gap:4px; opacity: 0.6;">
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+                  <span style="font-weight:700; color:#fff;">Oscar Rodríguez 🌴 (MWM Activo)</span>
+                  <span style="font-family:var(--font-mono); font-weight:bold; color:var(--text-muted);">0/6 Pts (0%)</span>
+                </div>
+                <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                  <div style="width:0%; height:100%; background:var(--green); border-radius:3px;"></div>
+                </div>
+                <span style="font-size:10px; color:var(--text-muted);">Asignados: Ninguno (Bloqueado por Vacaciones Programadas)</span>
+              </div>
+            </div>
+
+            <!-- Suggestion Engine Box -->
+            <div style="margin-top:4px; padding:10px; background:rgba(240,135,0,0.07); border:1px solid rgba(240,135,0,0.15); border-radius:4px; font-size:10.5px; color:#ffb050; display:flex; align-items:center; gap:8px;">
+              <span>💡</span>
+              <span><strong>Recomendación I.A.:</strong> Karen Tovar se encuentra saturada (SLA Crítico). Incomings deben derivarse a <strong>Rodrigo Vergara (Laguna Layouts)</strong> con capacidad al 100% disponible.</span>
+            </div>
+          </div>
+
+          <!-- Charts Column -->
+          <div class="card" style="padding:20px; background:rgba(13,17,23,0.3); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:14px;">
+            <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">📊 Segmentación de Cartera</span>
+            
+            <div style="display:flex; flex-direction:column; gap:16px; margin-top:4px;">
+              <!-- Magnitud Distribution -->
+              <div>
+                <span style="font-size:11px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:6px;">Distribución por Magnitud</span>
+                <div style="display:flex; height:22px; background:rgba(255,255,255,0.03); border-radius:4px; overflow:hidden; font-family:var(--font-mono); font-size:10px; font-weight:bold; text-align:center;">
+                  ${(function() {
+                    let g = vProjects.filter(p => p.magn === 'Grande').length;
+                    let m = vProjects.filter(p => p.magn === 'Mediano').length;
+                    let c = vProjects.filter(p => p.magn === 'Chico').length;
+                    let tot = g + m + c || 1;
+                    let gPct = Math.round((g/tot)*100);
+                    let mPct = Math.round((m/tot)*100);
+                    let cPct = Math.round((c/tot)*100);
+                    return `
+                      <div style="width:${gPct}%; height:100%; background:var(--gold); color:#000; display:flex; align-items:center; justify-content:center;" title="Grande">G (${g})</div>
+                      <div style="width:${mPct}%; height:100%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center;" title="Mediano">M (${m})</div>
+                      <div style="width:${cPct}%; height:100%; background:var(--teal); color:#000; display:flex; align-items:center; justify-content:center;" title="Chico">Ch (${c})</div>
+                    `;
+                  })()}
+                </div>
+              </div>
+
+              <!-- Etapas Distribution -->
+              <div>
+                <span style="font-size:11px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:6px;">Distribución por Etapas CRM</span>
+                <div style="display:flex; height:10px; background:rgba(255,255,255,0.05); border-radius:2px; overflow:hidden;">
+                  ${(function() {
+                    let n = vProjects.filter(p => p.etapa.includes('NUEVO')).length;
+                    let m = vProjects.filter(p => p.etapa.includes('MODIF')).length;
+                    let r = vProjects.filter(p => p.etapa.includes('RENDER') || p.etapa.includes('SOLICITADO')).length;
+                    let v = vProjects.filter(p => p.etapa.includes('VALID')).length;
+                    let tot = n + m + r + v || 1;
+                    return `
+                      <div style="width:${Math.round((n/tot)*100)}%; height:100%; background:var(--blue); opacity:0.8;"></div>
+                      <div style="width:${Math.round((m/tot)*100)}%; height:100%; background:var(--red); opacity:0.8;"></div>
+                      <div style="width:${Math.round((r/tot)*100)}%; height:100%; background:var(--amber); opacity:0.8;"></div>
+                      <div style="width:${Math.round((v/tot)*100)}%; height:100%; background:var(--green); opacity:0.8;"></div>
+                    `;
+                  })()}
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:9.5px; color:var(--text-muted); margin-top:6px; font-family:var(--font-mono);">
+                  <span>🔵 Nuevo</span>
+                  <span>🔴 Modificación</span>
+                  <span>🟡 Render</span>
+                  <span>🟢 Validado</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Master Connected Projects Table -->
+        <div class="card p-0" style="background:rgba(18,22,30,0.4); border:1px solid var(--border); border-radius:8px;">
+          <div style="padding:16px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em;">📁 Consola Central de Proyectos</span>
+            <span style="font-size:10.5px; color:var(--text-muted);">Mostrando ${displayedProjects.length} de ${vProjects.length} Proyectos Filtrados</span>
+          </div>
+          
+          <table class="data-table" style="width:100%;">
+            <thead>
+              <tr>
+                <th style="padding-left:24px;">ID / Proyecto / Cliente</th>
+                <th>Presupuesto</th>
+                <th>Responsable Técnico</th>
+                <th>Fase Técnica</th>
+                <th>SLA / Alarmas</th>
+                <th style="text-align:right; padding-right:24px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${displayedProjects.map(p => {
+                const limitSla = p.diasSla || 5;
+                const phaseColor = p.etapa.includes('VALID') ? 'var(--green)' : p.etapa.includes('PEND') ? 'var(--red)' : p.etapa.includes('RENDER') ? 'var(--amber)' : 'var(--blue)';
+                return `
+                  <tr>
+                    <td style="padding-left:24px;">
+                      <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-family:var(--font-mono); font-size:11px; font-weight:700; background:rgba(255,255,255,0.05); padding:2px 6px; border:1px solid rgba(255,255,255,0.1); border-radius:4px; color:var(--gold);">${p.id}</span>
+                        <div style="display:flex; flex-direction:column;">
+                          <strong style="color:#fff; font-size:12.5px;">${p.cliente}</strong>
+                          <span style="font-size:10.5px; color:var(--text-muted);">${p.subCliente}</span>
+                        </div>
+                      </div>
+                    </td>
+                    <td style="font-family:var(--font-mono); font-weight:bold; color:var(--green); font-size:12.5px;">
+                      ${p.monto}
+                    </td>
+                    <td>
+                      <div style="display:flex; align-items:center; gap:8px;">
+                        <select onchange="window.masterReassignProject('${p.id}', this.value)" style="background:var(--surface-2); border:1px solid var(--border); color:#fff; font-size:11px; padding:3px 6px; border-radius:4px; outline:none; cursor:pointer;">
+                          <option value="Karen Tovar" ${p.proyectista === 'Karen Tovar' ? 'selected' : ''}>Karen Tovar</option>
+                          <option value="Rodrigo Vergara" ${p.proyectista === 'Rodrigo Vergara' ? 'selected' : ''}>Rodrigo Vergara</option>
+                          <option value="Oscar Rodríguez" ${p.proyectista === 'Oscar Rodríguez' ? 'selected' : ''}>Oscar Rodríguez</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td>
+                      <span class="badge" style="border-color:${phaseColor}; color:${phaseColor}; background:rgba(${phaseColor === 'var(--green)' ? '63,185,80' : phaseColor === 'var(--red)' ? '248,81,73' : '240,135,0'}, 0.05); font-size:10px; font-weight:bold;">
+                        ${p.etapa}.
+                      </span>
+                    </td>
+                    <td>
+                      ${p.urgente ? `
+                        <span class="badge red animate-pulse" style="font-size:10px; font-weight:bold; background:rgba(248,81,73,0.1);">
+                          ⚠️ ¡URGENTE SLA CRÍTICO!
+                        </span>
+                      ` : `
+                        <span style="font-size:11px; color:var(--text-secondary); font-family:var(--font-mono);">
+                          SLA ${limitSla}d disponible
+                        </span>
+                      `}
+                    </td>
+                    <td style="text-align:right; padding-right:24px;">
+                      <div style="display:flex; gap:6px; justify-content:flex-end;">
+                        <button onclick="openProjectDetails('${p.id}')" class="btn-outline-proy" style="padding:4px 8px; font-size:11px; border-radius:4px; border:1px solid var(--border); background:rgba(255,255,255,0.02);">
+                          📂 Expediente
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  } else if (window.activeMasterSection === 'semaforo') {
+    // --- II. WORKLOADS SEMÁFORO / PROJECT BALANCER ---
+    activeHTML = `
+      <div class="content-header">
+        <h1 class="display-title" style="color: var(--gold); font-family: var(--font-display); font-size: 24px;">Semáforo de Carga & Balanceador Digital</h1>
+        <div class="subtitle" style="margin-top: 4px; color: var(--text-muted); font-size:12px;">Prevención de cuellos de botella e interrupción operativa en la fábrica de Gebesa</div>
+      </div>
+
+      <div class="scroll-area" style="padding: 24px; display:flex; flex-direction:column; gap:24px;">
+        
+        <!-- Live Team Dashboard Cards -->
+        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px;">
+          
+          <!-- Karen Tovar -->
+          ${(function() {
+            const isVac = localStorage.getItem('proyVacationsActive') === 'true';
+            let pts = 0;
+            let list = [];
+            vProjects.forEach(p => {
+              if (p.proyectista.includes('Karen')) {
+                const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
+                pts += pVal;
+                list.push(p);
+              }
+            });
+            const pct = Math.min(100, Math.round((pts / 6) * 100));
+            const barColor = isVac ? '#ff8585' : pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
+            return `
+              <div class="card" style="padding:20px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:16px; background:rgba(18,22,30,0.3); position:relative;">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="width:36px; height:36px; background:rgba(88,166,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--blue); font-weight:bold; font-size:14px;">KT</div>
+                    <div>
+                      <strong style="color:#fff; font-size:14px; display:block;">Karen Tovar</strong>
+                      <span style="font-size:11px; color:var(--text-muted);">Proyectista CDMX</span>
+                    </div>
+                  </div>
+                  <div>
+                    ${isVac ? `
+                      <span style="font-size:9.5px; background:rgba(248,81,73,0.12); color:#ff8585; font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(248,81,73,0.3);">VACACIONES</span>
+                    ` : pts >= 6 ? `
+                      <span style="font-size:9.5px; background:rgba(248,81,73,0.12); color:var(--red); font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(248,81,73,0.3);">SATURADO</span>
+                    ` : `
+                      <span style="font-size:9.5px; background:rgba(63,185,80,0.12); color:var(--green); font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(63,185,80,0.3);">DISPONIBLE</span>
+                    `}
+                  </div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                    <span style="color:var(--text-secondary); font-weight:500;">Puntos de Trabajo:</span>
+                    <span style="font-family:var(--font-mono); font-weight:bold; color:${barColor};">${pts} de 6 pts (${pct}%)</span>
+                  </div>
+                  <div style="width:100%; height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden;">
+                    <div style="width:${pct}%; height:100%; background:${barColor}; border-radius:4px;"></div>
+                  </div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <span style="font-size:11px; font-weight:700; color:#fff; display:block; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">Proyectos En Curso (${list.length})</span>
+                  ${list.length === 0 ? `
+                    <span style="font-size:11px; color:var(--text-muted); italic">Sin proyectos</span>
+                  ` : list.map(p => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:4px; border:1px solid rgba(255,255,255,0.03);">
+                      <div style="display:flex; flex-direction:column;">
+                        <strong style="font-size:11px; color:#fff;">${p.cliente}</strong>
+                        <span style="font-size:10px; font-family:var(--font-mono); color:var(--text-muted);">${p.id} · ${p.magn}</span>
+                      </div>
+                      <button onclick="openProjectDetails('${p.id}')" style="background:none; border:none; cursor:pointer; color:var(--blue); font-size:11px;" title="Ver expediente">📂</button>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <!-- Vacation Switcher -->
+                <div style="margin-top:auto; padding-top:12px; border-t:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Modo Vacaciones (MWM)</span>
+                  <input type="checkbox" onchange="window.masterToggleProyectistaVacations('karen', this.checked)" ${isVac ? 'checked' : ''} style="cursor:pointer; width:34px; height:18px;">
+                </div>
+              </div>
+            `;
+          })()}
+
+          <!-- Rodrigo Vergara -->
+          ${(function() {
+            let pts = 0;
+            let list = [];
+            vProjects.forEach(p => {
+              if (p.proyectista.includes('Rodrigo')) {
+                const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
+                pts += pVal;
+                list.push(p);
+              }
+            });
+            const pct = Math.min(100, Math.round((pts / 6) * 100));
+            const barColor = pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
+            return `
+              <div class="card" style="padding:20px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:16px; background:rgba(18,22,30,0.3);">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                  <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="width:36px; height:36px; background:rgba(201,169,110,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--gold); font-weight:bold; font-size:14px;">RV</div>
+                    <div>
+                      <strong style="color:#fff; font-size:14px; display:block;">Rodrigo Vergara</strong>
+                      <span style="font-size:11px; color:var(--text-muted);">Proyectista Laguna</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span style="font-size:9.5px; background:rgba(63,185,80,0.12); color:var(--green); font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(63,185,80,0.3);">DISPONIBLE</span>
+                  </div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                    <span style="color:var(--text-secondary); font-weight:500;">Puntos de Trabajo:</span>
+                    <span style="font-family:var(--font-mono); font-weight:bold; color:${barColor};">${pts} de 6 pts (${pct}%)</span>
+                  </div>
+                  <div style="width:100%; height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden;">
+                    <div style="width:${pct}%; height:100%; background:${barColor}; border-radius:4px;"></div>
+                  </div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <span style="font-size:11px; font-weight:700; color:#fff; display:block; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">Proyectos En Curso (${list.length})</span>
+                  ${list.length === 0 ? `
+                    <span style="font-size:11px; color:var(--text-muted); italic; padding: 12px 0; text-align:center;">Sin proyectos asignados.</span>
+                  ` : list.map(p => `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:4px; border:1px solid rgba(255,255,255,0.03);">
+                      <div style="display:flex; flex-direction:column;">
+                        <strong style="font-size:11px; color:#fff;">${p.cliente}</strong>
+                        <span style="font-size:10px; font-family:var(--font-mono); color:var(--text-muted);">${p.id} · ${p.magn}</span>
+                      </div>
+                      <button onclick="openProjectDetails('${p.id}')" style="background:none; border:none; cursor:pointer; color:var(--blue); font-size:11px;" title="Ver expediente">📂</button>
+                    </div>
+                  `).join('')}
+                </div>
+
+                <!-- Vacation Switcher -->
+                <div style="margin-top:auto; padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Modo Vacaciones (MWM)</span>
+                  <input type="checkbox" style="cursor:pointer;" disabled>
+                </div>
+              </div>
+            `;
+          })()}
+
+          <!-- Oscar Rodriguez (Strictly simulated as vacant) -->
+          <div class="card" style="padding:20px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:16px; background:rgba(18,22,30,0.3); opacity: 0.65;">
+            <div style="display:flex; justify-content:space-between; align-items:start;">
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div style="width:36px; height:36px; background:rgba(248,81,73,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--red); font-weight:bold; font-size:14px;">OR</div>
+                <div>
+                  <strong style="color:#fff; font-size:14px; display:block;">Oscar Rodríguez</strong>
+                  <span style="font-size:11px; color:var(--text-muted);">Proyectista MTY</span>
+                </div>
+              </div>
+              <div>
+                <span style="font-size:9.5px; background:rgba(248,81,73,0.12); color:#ff8585; font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(248,81,73,0.3);">VACACIONES</span>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+                <span style="color:var(--text-secondary); font-weight:500;">Puntos de Trabajo:</span>
+                <span style="font-family:var(--font-mono); font-weight:bold; color:var(--green);">0 de 6 pts (0%)</span>
+              </div>
+              <div style="width:100%; height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden;">
+                <div style="width:0%; height:100%; background:var(--green); border-radius:4px;"></div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <span style="font-size:11px; font-weight:700; color:#fff; display:block; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">Proyectos En Curso (0)</span>
+              <span style="font-size:11.5px; color:var(--text-muted); text-align:center; padding: 20px 0;">Bloqueado por MWM Vacaciones Activo</span>
+            </div>
+
+            <div style="margin-top:auto; padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Modo Vacaciones (MWM)</span>
+              <input type="checkbox" style="cursor:pointer;" checked disabled>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dynamic Balancer Form -->
+        <div class="card" style="padding:24px; background:rgba(18,22,30,0.4); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:16px;">
+          <span style="font-size:13px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">⚖️ Balanceador Inteligente de Proyectos (Desviar Carga)</span>
+          
+          <div style="display:grid; grid-template-columns: 1.5fr 1fr 1fr; gap:16px; align-items:end;">
+            <div>
+              <label style="display:block; font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-transform:uppercase;">1. Elige proyecto a balancear:</label>
+              <select id="balance-proj-select" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; height:40px;">
+                ${vProjects.map(p => {
+                  return `<option value="${p.id}">${p.id} · ${p.cliente} (${p.proyectista})</option>`;
+                }).join('')}
+              </select>
+            </div>
+            
+            <div>
+              <label style="display:block; font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-transform:uppercase;">2. Transferir a responsable:</label>
+              <select id="balance-target-select" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; height:40px;">
+                <option value="Rodrigo Vergara">Rodrigo Vergara (DISPONIBLE - Laguna)</option>
+                <option value="Karen Tovar">Karen Tovar (CDMX Escritorio)</option>
+                <option value="Oscar Rodríguez">Oscar Rodríguez (Monterrey)</option>
+              </select>
+            </div>
+
+            <div>
+              <button onclick="
+                const pId = document.getElementById('balance-proj-select').value;
+                const targetName = document.getElementById('balance-target-select').value;
+                window.masterReassignProject(pId, targetName);
+              " class="btn-solid-proy" style="width:100%; height:40px; border-radius:4px; font-weight:bold; font-size:12px;">
+                Re-direccionar Proyecto ➡️
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (window.activeMasterSection === 'kanban') {
+    // --- III. CONNECTED DRAG-LIKE KANBAN VIEW ---
+    activeHTML = `
+      <div class="content-header">
+        <h1 class="display-title" style="color: var(--gold); font-family: var(--font-display); font-size: 24px;">Executive Kanban Board</h1>
+        <div class="subtitle" style="margin-top: 4px; color: var(--text-muted); font-size:12px;">Seguimiento visual y transiciones de fase técnica en tiempo real</div>
+      </div>
+
+      <div class="scroll-area" style="padding: 24px; height:100%; display:flex; flex-direction:column; overflow:hidden;">
+        
+        <div style="display:flex; gap:16px; flex:1; overflow-x:auto;">
+          <!-- COLUMN 1: NUEVO -->
+          <div style="flex:1; min-width:240px; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--blue); padding-bottom:8px;">
+              <strong style="color:var(--blue); font-size:11.5px; text-transform:uppercase;">📥 Cola / Nuevo</strong>
+              <span style="font-family:var(--font-mono); background:rgba(56,139,253,0.15); color:var(--blue); font-size:10px; font-weight:bold; padding:1px 6px; border-radius:10px;">
+                ${vProjects.filter(p => p.etapa.includes('NUEVO') || p.etapa.includes('REBA')).length}
+              </span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1;">
+              ${vProjects.filter(p => p.etapa.includes('NUEVO') || p.etapa.includes('REBA')).map(p => `
+                <div style="padding:12px; background:rgba(18,22,30,0.6); border:1px solid rgba(255,255,255,0.04); border-radius:4px; display:flex; flex-direction:column; gap:8px;">
+                  <div style="display:flex; justify-content:space-between; font-size:10px;">
+                    <span style="font-family:var(--font-mono); font-weight:bold; color:var(--gold);">${p.id}</span>
+                    <span style="color:var(--text-muted); font-family:var(--font-sans);">${p.proyectista}</span>
+                  </div>
+                  <strong style="font-size:11.5px; color:#fff; display:block;">${p.cliente}</strong>
+                  <div style="font-size:10.5px; color:var(--green); font-weight:bold; font-family:var(--font-mono);">${p.monto}</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.03); padding-top:8px; margin-top:4px;">
+                    <button onclick="openProjectDetails('${p.id}')" style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;">📂 Expediente</button>
+                    <button onclick="window.masterAdvanceProjectStage('${p.id}')" style="background:rgba(56,139,253,0.1); border:1px solid rgba(56,139,253,0.2); color:var(--blue); border-radius:3px; font-size:10px; padding:2px 6px; cursor:pointer;">Modelado ➡️</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- COLUMN 2: MODELADO -->
+          <div style="flex:1; min-width:240px; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--amber); padding-bottom:8px;">
+              <strong style="color:var(--amber); font-size:11.5px; text-transform:uppercase;">💻 Modelado & SLA</strong>
+              <span style="font-family:var(--font-mono); background:rgba(240,135,0,0.15); color:var(--amber); font-size:10px; font-weight:bold; padding:1px 6px; border-radius:10px;">
+                ${vProjects.filter(p => p.etapa.includes('RENDER') || p.etapa.includes('PROCESO')).length}
+              </span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1;">
+              ${vProjects.filter(p => p.etapa.includes('RENDER') || p.etapa.includes('PROCESO')).map(p => `
+                <div style="padding:12px; background:rgba(18,22,30,0.6); border:1px solid rgba(255,255,255,0.04); border-radius:4px; display:flex; flex-direction:column; gap:8px;">
+                  <div style="display:flex; justify-content:space-between; font-size:10px;">
+                    <span style="font-family:var(--font-mono); font-weight:bold; color:var(--gold);">${p.id}</span>
+                    <span style="color:var(--text-muted); font-family:var(--font-sans);">${p.proyectista}</span>
+                  </div>
+                  <strong style="font-size:11.5px; color:#fff; display:block;">${p.cliente}</strong>
+                  <div style="font-size:10.5px; color:var(--green); font-weight:bold; font-family:var(--font-mono);">${p.monto}</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.03); padding-top:8px; margin-top:4px;">
+                    <button onclick="openProjectDetails('${p.id}')" style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;">📂 Expediente</button>
+                    <button onclick="window.masterAdvanceProjectStage('${p.id}')" style="background:rgba(240,135,0,0.1); border:1px solid rgba(240,135,0,0.2); color:var(--amber); border-radius:3px; font-size:10px; padding:2px 6px; cursor:pointer;">Modificaciones ➡️</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- COLUMN 3: REVISION / AJUSTES -->
+          <div style="flex:1; min-width:240px; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--red); padding-bottom:8px;">
+              <strong style="color:var(--red); font-size:11.5px; text-transform:uppercase;">🔄 Revisión / Ajustes</strong>
+              <span style="font-family:var(--font-mono); background:rgba(248,81,73,0.15); color:var(--red); font-size:10px; font-weight:bold; padding:1px 6px; border-radius:10px;">
+                ${vProjects.filter(p => p.etapa.includes('PEND') || p.etapa.includes('VALIDAR') || p.etapa.includes('PROPUESTA')).length}
+              </span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1;">
+              ${vProjects.filter(p => p.etapa.includes('PEND') || p.etapa.includes('VALIDAR') || p.etapa.includes('PROPUESTA')).map(p => `
+                <div style="padding:12px; background:rgba(18,22,30,0.6); border:1px solid rgba(255,255,255,0.04); border-radius:4px; display:flex; flex-direction:column; gap:8px;">
+                  <div style="display:flex; justify-content:space-between; font-size:10px;">
+                    <span style="font-family:var(--font-mono); font-weight:bold; color:var(--gold);">${p.id}</span>
+                    <span style="color:var(--text-muted); font-family:var(--font-sans);">${p.proyectista}</span>
+                  </div>
+                  <strong style="font-size:11.5px; color:#fff; display:block;">${p.cliente}</strong>
+                  <div style="font-size:10.5px; color:var(--green); font-weight:bold; font-family:var(--font-mono);">${p.monto}</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.03); padding-top:8px; margin-top:4px;">
+                    <button onclick="openProjectDetails('${p.id}')" style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;">📂 Expediente</button>
+                    <button onclick="window.masterAdvanceProjectStage('${p.id}')" style="background:rgba(248,81,73,0.1); border:1px solid rgba(248,81,73,0.2); color:var(--red); border-radius:3px; font-size:10px; padding:2px 6px; cursor:pointer;">Validar ➡️</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- COLUMN 4: VALIDADO -->
+          <div style="flex:1; min-width:240px; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:6px; padding:12px; display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--green); padding-bottom:8px;">
+              <strong style="color:var(--green); font-size:11.5px; text-transform:uppercase;">✅ Validado & Listo</strong>
+              <span style="font-family:var(--font-mono); background:rgba(63,185,80,0.15); color:var(--green); font-size:10px; font-weight:bold; padding:1px 6px; border-radius:10px;">
+                ${vProjects.filter(p => p.etapa.includes('VALIDA') || p.etapa.includes('ENTREG')).length}
+              </span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1;">
+              ${vProjects.filter(p => p.etapa.includes('VALIDA') || p.etapa.includes('ENTREG')).map(p => `
+                <div style="padding:12px; background:rgba(18,22,30,0.6); border:1px solid rgba(255,255,255,0.04); border-radius:4px; display:flex; flex-direction:column; gap:8px;">
+                  <div style="display:flex; justify-content:space-between; font-size:10px;">
+                    <span style="font-family:var(--font-mono); font-weight:bold; color:var(--gold);">${p.id}</span>
+                    <span style="color:var(--text-muted); font-family:var(--font-sans);">${p.proyectista}</span>
+                  </div>
+                  <strong style="font-size:11.5px; color:#fff; display:block;">${p.cliente}</strong>
+                  <div style="font-size:10.5px; color:var(--green); font-weight:bold; font-family:var(--font-mono);">${p.monto}</div>
+                  <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.03); padding-top:8px; margin-top:4px;">
+                    <button onclick="openProjectDetails('${p.id}')" style="background:none; border:none; color:var(--text-muted); font-size:11px; cursor:pointer;">📂 Expediente</button>
+                    <span style="font-size:10px; font-weight:bold; color:var(--green);">✓ Compilado</span>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (window.activeMasterSection === 'proyectos') {
+    // --- IV. REAL-TIME TIMELINE ASSIGNMENT & SLA CONTROLLER ---
+    activeHTML = `
+      <div class="content-header">
+        <h1 class="display-title" style="color: var(--gold); font-family: var(--font-display); font-size: 24px;">Gestión de Proyectos & Prórrogas de SLA</h1>
+        <div class="subtitle" style="margin-top: 4px; color: var(--text-muted); font-size:12px;">Calibración de tiempos límite, extensiones de cortesía y control de urgencias corporativas</div>
+      </div>
+
+      <div class="scroll-area" style="padding: 24px; display:flex; flex-direction:column; gap:20px;">
+        
+        <!-- Search bar layout -->
+        <div class="card" style="padding:16px; background:rgba(18,22,30,0.4); border-radius:6px; display:flex; gap:16px; align-items:center;">
+          <input type="text" id="master-search-inp" placeholder="Buscar por cliente o ID de proyecto..." oninput="
+            const q = this.value.toLowerCase();
+            document.querySelectorAll('.master-project-card').forEach(card => {
+              const text = card.textContent.toLowerCase();
+              card.style.display = text.includes(q) ? 'flex' : 'none';
+            });
+          " style="flex:1; background:var(--surface-2); border:1px solid var(--border); color:#fff; padding:10px 14px; font-size:13px; border-radius:4px; outline:none;">
+          <span style="font-size:12px; color:var(--text-muted); font-family:var(--font-mono);">Escribe para buscar al instante</span>
+        </div>
+
+        <!-- Project Grid -->
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:16px;">
+          ${vProjects.map(p => {
+            const percentage = p.etapa.includes('VALID') ? 100 : p.etapa.includes('PEND') ? 60 : p.etapa.includes('RENDER') ? 40 : 20;
+            return `
+              <div class="card master-project-card" style="padding:20px; background:rgba(18,22,30,0.3); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:14px;">
+                <div style="display:flex; justify-content:space-between; align-items:start;">
+                  <div>
+                    <span style="font-family:var(--font-mono); font-size:10px; font-weight:700; color:var(--gold); background:rgba(255,255,255,0.05); padding:2px 6px; border-radius:3px;">${p.id}</span>
+                    <strong style="color:#fff; font-size:14px; display:block; margin-top:4px;">${p.cliente}</strong>
+                    <span style="font-size:11px; color:var(--text-muted);">${p.subCliente}</span>
+                  </div>
+                  <div style="text-align:right;">
+                    <span style="font-size:11px; color:var(--green); font-family:var(--font-mono); font-weight:bold;">${p.monto}</span>
+                    <span style="font-size:10px; display:block; color:var(--text-muted); margin-top:2px;">SLA Límite: ${p.diasSla || 5} días</span>
+                  </div>
+                </div>
+
+                <!-- Step completion indicator -->
+                <div style="display:flex; flex-direction:column; gap:4px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:10.5px; color:var(--text-secondary);">
+                    <span>Progreso de fases técnicas:</span>
+                    <span style="font-family:var(--font-mono); font-weight:bold;">${percentage}%</span>
+                  </div>
+                  <div style="width:100%; height:4px; background:rgba(255,255,255,0.05); border-radius:2px; overflow:hidden;">
+                    <div style="width:${percentage}%; height:100%; background:var(--blue); border-radius:2px;"></div>
+                  </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:4px; text-align:center; font-size:10.5px;">
+                  <div>
+                    <span style="color:var(--text-muted); display:block;">Responsable</span>
+                    <strong style="color:#fff;">${p.proyectista.split(' ')[0]}</strong>
+                  </div>
+                  <div>
+                    <span style="color:var(--text-muted); display:block;">Renders Req.</span>
+                    <strong style="color:var(--gold);">${p.renders ? 'Sí (3 vistas)' : 'No'}</strong>
+                  </div>
+                  <div>
+                    <span style="color:var(--text-muted); display:block;">Fila CRM</span>
+                    <strong style="color:var(--blue);">${p.tipoCliente || 'B2B'}</strong>
+                  </div>
+                </div>
+
+                <!-- Direct Admin Actions -->
+                <div style="border-top:1px solid rgba(255,255,255,0.04); padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
+                  <button onclick="window.masterToggleUrgency('${p.id}')" class="btn-outline-proy" style="padding:6px 12px; font-size:11px; border-color:${p.urgente ? 'var(--red)' : 'rgba(255,255,255,0.1)'}; color:${p.urgente ? 'var(--red)' : 'var(--text-primary)'}; background:${p.urgente ? 'rgba(248,81,73,0.07)' : 'none'}; border-radius:4px;">
+                    ${p.urgente ? '🔥 URGENCE ACTIVO' : '⭐ PRIORIZAR'}
+                  </button>
+                  <div style="display:flex; gap:6px;">
+                    <button onclick="window.masterProrrogaSLA('${p.id}', 2)" class="btn-outline-proy" style="padding:6px 12px; font-size:11px; border-color:var(--border); border-radius:4px;">
+                      ⏱️ +2d SLA
+                    </button>
+                    <button onclick="openProjectDetails('${p.id}')" class="btn-solid-proy" style="padding:6px 12px; font-size:11px; border-radius:4px;">
+                      📁 Expediente
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
+  } else if (window.activeMasterSection === 'equipo') {
+    // --- V. HUMAN RESOURCES & TEAM MATRIX ROSTER ---
+    activeHTML = `
+      <div class="content-header">
+        <h1 class="display-title" style="color: var(--gold); font-family: var(--font-display); font-size: 24px;">Gestión de Equipo & Productividad</h1>
+        <div class="subtitle" style="margin-top: 4px; color: var(--text-muted); font-size:12px;">Planilla técnica, velocidad de modelado, y auditoría de calidad técnica Gebesa</div>
+      </div>
+
+      <div class="scroll-area" style="padding: 24px; display:flex; flex-direction:column; gap:24px;">
+        
+        <!-- Team roster grid -->
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:16px;">
+          
+          <div class="card" style="padding:20px; background:rgba(18,22,30,0.3); border:1px solid var(--border); border-radius:8px; display:flex; gap:16px; align-items:center;">
+            <div style="width:48px; height:48px; background:rgba(88,166,255,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--blue); font-weight:bold; font-size:18px;">KT</div>
+            <div style="flex:1;">
+              <strong style="color:#fff; font-size:15px; display:block;">Karen Tovar</strong>
+              <span style="font-size:11px; color:var(--text-muted);">Especialista en Oficinas Premium · CDMX · Vel: 9.2 pts</span>
+              
+              <div style="display:flex; gap:12px; font-size:11px; color:var(--text-secondary); margin-top:8px;">
+                <span>⭐ Calidad: <strong>4.8/5</strong></span>
+                <span>⏱️ SLA Medio: <strong>21h</strong></span>
+                <span>📋 Proy: <strong>${vProjects.filter(p => p.proyectista.includes('Karen')).length}</strong></span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:10px; color:var(--green); display:block; font-weight:700;">ACTIVO</span>
+              <!-- Vacation Checkbox -->
+              <div style="margin-top:8px;">
+                <label style="font-size:10px; color:var(--text-muted); display:block;">Vacaciones MWM</label>
+                <input type="checkbox" onchange="window.masterToggleProyectistaVacations('karen', this.checked)" ${localStorage.getItem('proyVacationsActive') === 'true' ? 'checked' : ''} style="cursor:pointer; margin-top:2px;">
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:20px; background:rgba(18,22,30,0.3); border:1px solid var(--border); border-radius:8px; display:flex; gap:16px; align-items:center;">
+            <div style="width:48px; height:48px; background:rgba(201,169,110,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--gold); font-weight:bold; font-size:18px;">RV</div>
+            <div style="flex:1;">
+              <strong style="color:#fff; font-size:15px; display:block;">Rodrigo Vergara</strong>
+              <span style="font-size:11px; color:var(--text-muted);">Sistemas Modulares & Naves · Laguna · Vel: 8.8 pts</span>
+              
+              <div style="display:flex; gap:12px; font-size:11px; color:var(--text-secondary); margin-top:8px;">
+                <span>⭐ Calidad: <strong>4.7/5</strong></span>
+                <span>⏱️ SLA Medio: <strong>24h</strong></span>
+                <span>📋 Proy: <strong>${vProjects.filter(p => p.proyectista.includes('Rodrigo')).length}</strong></span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:10px; color:var(--green); display:block; font-weight:700;">ACTIVO</span>
+              <div style="margin-top:8px;">
+                <label style="font-size:10px; color:var(--text-muted); display:block;">Vacaciones MWM</label>
+                <input type="checkbox" style="cursor:pointer; margin-top:2px;" disabled>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:20px; background:rgba(18,22,30,0.3); border:1px solid var(--border); border-radius:8px; display:flex; gap:16px; align-items:center; opacity: 0.65;">
+            <div style="width:48px; height:48px; background:rgba(248,81,73,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; color:#ff8585; font-weight:bold; font-size:18px;">OR</div>
+            <div style="flex:1;">
+              <strong style="color:#fff; font-size:15px; display:block;">Oscar Rodríguez</strong>
+              <span style="font-size:11px; color:var(--text-muted);">Estructuras AutoCAD Complejas · Monterrey · Vel: 9.0 pts</span>
+              
+              <div style="display:flex; gap:12px; font-size:11px; color:var(--text-secondary); margin-top:8px;">
+                <span>⭐ Calidad: <strong>4.9/5</strong></span>
+                <span>⏱️ SLA Medio: <strong>18h</strong></span>
+                <span>📋 Proy: <strong>0</strong></span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:10px; color:#ff8585; display:block; font-weight:700;">VACACIONES</span>
+              <div style="margin-top:8px;">
+                <label style="font-size:10px; color:var(--text-muted); display:block;">Vacaciones MWM</label>
+                <input type="checkbox" checked style="cursor:pointer; margin-top:2px;" disabled>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding:20px; background:rgba(18,22,30,0.3); border:1px solid var(--border); border-radius:8px; display:flex; gap:16px; align-items:center;">
+            <div style="width:48px; height:48px; background:rgba(63,185,80,0.15); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--green); font-weight:bold; font-size:18px;">SG</div>
+            <div style="flex:1;">
+              <strong style="color:#fff; font-size:15px; display:block;">Susana de la Garza</strong>
+              <span style="font-size:11px; color:var(--text-muted);">Asistente de Renderizado & Maquetas · Metrópoli · Vel: 8.5 pts</span>
+              
+              <div style="display:flex; gap:12px; font-size:11px; color:var(--text-secondary); margin-top:8px;">
+                <span>⭐ Calidad: <strong>4.5/5</strong></span>
+                <span>⏱️ SLA Medio: <strong>32h</strong></span>
+                <span>📋 Proy: <strong>0</strong></span>
+              </div>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:10px; color:var(--green); display:block; font-weight:700;">ACTIVO</span>
+              <div style="margin-top:8px;">
+                <label style="font-size:10px; color:var(--text-muted); display:block;">Vacaciones MWM</label>
+                <input type="checkbox" style="cursor:pointer; margin-top:2px;" disabled>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulator capacity block -->
+        <div class="card" style="padding:20px; background:rgba(18,22,30,0.4); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:14px;">
+          <span style="font-size:12.5px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">📈 Simulador de Carga Óptima Operativa</span>
+          
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
+            <p style="font-size:11.5px; color:var(--text-secondary); margin:0;">Ajuste el volumen estimado de nuevos leads para proyectar el nivel de estrés del equipo de diseñadores:</p>
+            
+            <div style="display:flex; align-items:center; gap:16px;">
+              <input type="range" min="1" max="15" value="5" id="sim-slider" oninput="
+                const val = this.value;
+                document.getElementById('sim-val-display').textContent = val + ' Leads estim.';
+                const level = val > 10 ? '¡CRÍTICO!' : val > 6 ? 'Saturación Temprana' : 'Sano / Holgado';
+                const color = val > 10 ? 'var(--red)' : val > 6 ? 'var(--amber)' : 'var(--green)';
+                document.getElementById('sim-status-display').textContent = level;
+                document.getElementById('sim-status-display').style.color = color;
+              " style="flex:1; cursor:pointer;">
+              <strong id="sim-val-display" style="font-family:var(--font-mono); color:var(--gold); font-size:13px; width:100px;">5 Leads estim.</strong>
+              <strong id="sim-status-display" style="font-size:13px; color:var(--green); width:150px;">Sano / Holgado</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Inject computed section HTML to wrapper
+  wrapper.innerHTML = activeHTML;
+};
+
+
 // Global Message Listener for Parent Container (Gebesa React Shell) Synchronization
 window.addEventListener('message', function(event) {
   if (!event.data) return;
@@ -9475,8 +12344,16 @@ window.addEventListener('message', function(event) {
       switchRoleWorkspace(event.data.role);
     }
   } else if (event.data.type === 'NAVIGATE_SECTION') {
-    if (typeof proyShowSection === 'function') {
-      proyShowSection(event.data.section);
+    const selector = document.getElementById('role-selector');
+    const currentRole = selector ? selector.value : 'ventas';
+    if (currentRole === 'master') {
+      if (typeof switchMasterSection === 'function') {
+        switchMasterSection(event.data.section);
+      }
+    } else {
+      if (typeof proyShowSection === 'function') {
+        proyShowSection(event.data.section);
+      }
     }
   }
 });

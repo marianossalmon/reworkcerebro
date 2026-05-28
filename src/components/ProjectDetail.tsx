@@ -167,7 +167,8 @@ export function ProjectDetail({ project, onUpdateProject }: ProjectDetailProps) 
           )}
         </button>
         <button onClick={() => setActiveTab('boveda')} className={`text-xs px-3.5 py-3 flex items-center gap-1.5 font-semibold border-b-2 transition-all shrink-0 ${activeTab === 'boveda' ? 'text-teal-400 border-teal-400 font-bold bg-white/5' : 'text-text-muted border-transparent hover:text-text-main'}`}>
-          <Paperclip className="w-3.5 h-3.5 text-amber-400" /> 📁 Bóveda interna <span className="bg-bg4 border border-border2 text-text-dim text-[9px] px-1.5 rounded-full">{project.files.length}</span>
+          <Paperclip className="w-3.5 h-3.5 text-amber-400" /> 📁 Bóveda 
+          <span className="bg-bg4 border border-border2 text-text-dim text-[9px] px-1.5 rounded-full">{project.files.length}</span>
         </button>
         <button onClick={() => setActiveTab('entregar')} className={`text-xs px-3.5 py-3 flex items-center gap-1.5 font-semibold border-b-2 transition-all shrink-0 ${activeTab === 'entregar' ? 'text-teal-400 border-teal-400 font-bold bg-white/5' : 'text-text-muted border-transparent hover:text-text-main'}`}>
           <CheckCircle className="w-3.5 h-3.5 text-emerald-400" /> 📦 Entregar
