@@ -3439,14 +3439,19 @@ body.immersive-briefing .breadcrumb-nav {
 
                 <!-- NUEVO: MATRIZ DE ESPECIFICACIÓN TÉCNICA RELACIONAL -->
                 <div class="matrix-card">
-                  <div class="matrix-card-header">
+                  <div class="matrix-card-header" style="flex-wrap: wrap; gap: 10px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
                       <span style="font-size: 18px;">📦</span>
                       <h3 style="font-family: var(--font-display); font-style: italic; font-size: 16.5px; margin: 0; color: var(--text-primary);">Despiece Técnico y Acabados por Área</h3>
                     </div>
-                    <button type="button" onclick="addMatrixRow()" style="background: var(--gold); color: #000; font-weight: 700; border-radius: 4px; font-size: 11px; padding: 5px 12px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.3px;">
-                      + Añadir Componente
-                    </button>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <button type="button" onclick="importFromCanvas()" style="background: rgba(201, 169, 110, 0.12); color: var(--gold2); border: 1px dashed var(--gold); font-weight: 700; border-radius: 4px; font-size: 11px; padding: 5px 12px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.3px; transition: all 0.2s;" onmouseover="this.style.background='rgba(201,169,110,0.22)'" onmouseout="this.style.background='rgba(201,169,110,0.12)'" title="Prellenar automáticamente usando el mobiliario y las zonas colocadas en el Lienzo">
+                        ✨ Importar desde Lienzo
+                      </button>
+                      <button type="button" onclick="addMatrixRow()" style="background: var(--gold); color: #000; font-weight: 700; border-radius: 4px; font-size: 11px; padding: 5px 12px; border: none; cursor: pointer; text-transform: uppercase; letter-spacing: 0.3px;">
+                        + Añadir Componente
+                      </button>
+                    </div>
                   </div>
                   <div style="padding: 0; background: rgba(0,0,0,0.1);">
                     <div style="padding: 10px 24px; border-bottom: 1px solid rgba(255,255,255,0.03);">
@@ -8084,22 +8089,37 @@ window.closeFullscreenPreview = function(e, force = false) {
 };
 
 // Matriz de Despiece Técnico Ultra Compacta
-window.addMatrixRow = function() {
+window.addMatrixRow = function(presetData = null) {
   const container = document.getElementById('contenedor-matriz-despiece');
-  const rowId = 'row-' + Date.now();
+  if (!container) return;
+  const rowId = 'row-' + Math.random().toString(36).substr(2, 9) + '-' + Date.now();
   
   const div = document.createElement('div');
   div.className = 'matrix-row';
   div.id = rowId;
   
+  const areaVal = presetData ? presetData.area : '';
+  const prodVal = presetData ? presetData.productName : '';
+  const prodSku = presetData ? presetData.sku : '';
+  
+  let optionsHTML = `
+    <option value="" disabled ${!prodVal ? 'selected' : ''}>Mobiliario / Componente</option>
+    <option value="Mesa Juntas G-Connect|GCON-305" ${prodVal.includes('Mesa Juntas G-Connect') ? 'selected' : ''}>Mesa Juntas G-Connect</option>
+    <option value="Escritorio Synergy|SYN-120" ${prodVal.includes('Escritorio Synergy') ? 'selected' : ''}>Escritorio Synergy</option>
+    <option value="Archivero Pedestal Elite|ELT-PED" ${prodVal.includes('Archivero Pedestal Elite') ? 'selected' : ''}>Archivero Pedestal Elite</option>
+    <option value="Silla Operativa Aeron|AER-01" ${prodVal.includes('Silla Operativa Aeron') ? 'selected' : ''}>Silla Operativa Aeron</option>
+  `;
+  
+  const standardProds = ['Mesa Juntas G-Connect', 'Escritorio Synergy', 'Archivero Pedestal Elite', 'Silla Operativa Aeron'];
+  const isStandard = standardProds.some(p => prodVal.includes(p));
+  if (prodVal && !isStandard) {
+    optionsHTML += `<option value="${prodVal}|${prodSku}" selected>${prodVal}</option>`;
+  }
+  
   div.innerHTML = `
-    <input type="text" class="form-input" placeholder="Área / Zona" oninput="compilarMatrizHaciaReporte()">
+    <input type="text" class="form-input" placeholder="Área / Zona" value="${areaVal}" oninput="compilarMatrizHaciaReporte()">
     <select class="form-select" onchange="compilarMatrizHaciaReporte()">
-      <option value="" disabled selected>Mobiliario / Componente</option>
-      <option value="Mesa Juntas G-Connect|GCON-305">Mesa Juntas G-Connect</option>
-      <option value="Escritorio Synergy|SYN-120">Escritorio Synergy</option>
-      <option value="Archivero Pedestal Elite|ELT-PED">Archivero Pedestal Elite</option>
-      <option value="Silla Operativa Aeron|AER-01">Silla Operativa Aeron</option>
+      ${optionsHTML}
     </select>
     <select class="form-select" onchange="compilarMatrizHaciaReporte()">
       <option value="" disabled selected>Acabado Cubierta</option>
@@ -8118,6 +8138,60 @@ window.addMatrixRow = function() {
   
   container.appendChild(div);
   compilarMatrizHaciaReporte();
+};
+
+window.importFromCanvas = function() {
+  const canvasDataStr = localStorage.getItem('cerebro_canvas');
+  if (!canvasDataStr) {
+    showToast('info', 'Sin lienzo guardado', 'Por favor, primero ingresa la información de amueblado en el Lienzo y haz clic en Guardar borrador.');
+    return;
+  }
+  
+  let canvasData;
+  try {
+    canvasData = JSON.parse(canvasDataStr);
+  } catch (e) {
+    showToast('error', 'Error de lienzo', 'No se pudieron recuperar datos válidos del lienzo.');
+    return;
+  }
+  
+  const items = canvasData.placedItems || [];
+  const furnitureItems = items.filter(i => i.type !== 'text' && i.name);
+  
+  if (furnitureItems.length === 0) {
+    showToast('warning', 'Lienzo de amueblado vacío', 'El lienzo guardado actualmente no tiene mobiliario colocado para transferir.');
+    return;
+  }
+  
+  let addedCount = 0;
+  
+  // Clean default/empty rows
+  const container = document.getElementById('contenedor-matriz-despiece');
+  if (container) {
+    const existingRows = container.querySelectorAll('.matrix-row');
+    existingRows.forEach(row => {
+      const input = row.querySelector('input');
+      const select = row.querySelector('select');
+      if (input && (!input.value || input.value.trim() === '') && select && select.selectedIndex === 0) {
+        row.remove();
+      }
+    });
+  }
+  
+  furnitureItems.forEach(item => {
+    let sku = item.id ? item.id.split('-')[0].toUpperCase() : 'GEB-MOB';
+    let icon = item.icon || '📦';
+    let fullName = `${icon} ${item.name}`;
+    
+    window.addMatrixRow({
+      area: item.zone || 'General',
+      productName: fullName,
+      sku: sku
+    });
+    addedCount++;
+  });
+  
+  showToast('success', 'Sincronización exitosa ✓', `Se importaron e integraron ${addedCount} componente(s) del lienzo organizados por Área.`);
 };
 
 window.removeMatrixRow = function(id) {

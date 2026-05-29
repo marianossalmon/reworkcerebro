@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Home, Briefcase, Settings, Target, Users, LayoutDashboard, ChevronRight, ChevronDown, Sun, Plus, LayoutGrid, X } from 'lucide-react';
+import GebesaPresenterMain from './wizard/GebesaPresenterMain';
 
 export type ProyectistaSubView =
   | 'projects'
@@ -284,13 +285,17 @@ export function GebesaShell({
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#f0f2f5]">
         {/* Inner layout wrapper */}
         <div className="flex-1 overflow-hidden relative flex bg-bg text-text-main m-4 rounded-b-xl border border-border shadow-2xl rounded-t-lg">
-          <iframe 
-            ref={iframeRef} 
-            src={currentView === 'Ventas' && ventasActiveSubNav === 'Agenda de Proyectos' ? '/cerebro-calendar.html' : '/cerebro.html'} 
-            className="w-full h-full border-none bg-[#0d1117]" 
-            title="Cerebro App" 
-            onLoad={handleIframeLoad}
-          />
+          {currentView === 'Ventas' && ventasActiveSubNav === 'Mis Presentaciones' ? (
+            <GebesaPresenterMain />
+          ) : (
+            <iframe 
+              ref={iframeRef} 
+              src={currentView === 'Ventas' && ventasActiveSubNav === 'Agenda de Proyectos' ? '/cerebro-calendar.html' : '/cerebro.html'} 
+              className="w-full h-full border-none bg-[#0d1117]" 
+              title="Cerebro App" 
+              onLoad={handleIframeLoad}
+            />
+          )}
         </div>
       </div>
     </div>
