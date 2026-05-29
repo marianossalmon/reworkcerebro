@@ -12,8 +12,12 @@
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* Hide duplicate internal Proyectista sidebar as it is now managed by the master Gebesa shell */
-.proy-sidebar {
+/* Hide duplicate internal Proyectista, Ventas, and Dirección General sidebars as they are now managed by the master Gebesa shell */
+.proy-sidebar,
+#left-sidebar,
+#left-sidebar-master,
+#resizer-left,
+#resizer-left-master {
   display: none !important;
 }
 
@@ -3104,14 +3108,14 @@ body.immersive-briefing .breadcrumb-nav {
   <div id="role-ventas" class="role-container active">
 
     <!-- LEFT SIDEBAR -->
-  <aside class="sidebar" id="left-sidebar" style="display: none;">
+  <aside class="sidebar" id="left-sidebar" style="width: var(--sidebar-w);">
     <div class="subtitle" style="padding: 0 40px 24px;">Gestión Ventas</div>
-    <a class="nav-item active" onclick="goToDashboard()">📊 Mis Negocios (Home)</a>
+    <a class="nav-item active" id="v-nav-home" onclick="goToDashboard()">📊 Mis Negocios (Home)</a>
     <a class="nav-item" onclick="showToast('info', 'Mis Presentaciones', 'Cargando repositorio de presentaciones personalizadas...')">🎞️ Mis Presentaciones</a>
-    <a class="nav-item" href="/cerebro-calendar.html" style="color: var(--gold); border-left: 2px solid var(--gold); background: rgba(201, 169, 110, 0.05); font-weight: 600; font-size:13px; display:flex; align-items:center;">📅 Agenda de Proyectos</a>
+    <a class="nav-item" id="v-nav-calendar" onclick="goToCalendar()" style="color: var(--gold); background: rgba(201, 169, 110, 0.02); font-weight: 600; font-size:13px; display:flex; align-items:center;">📅 Agenda de Proyectos</a>
   </aside>
   
-  <div class="resizer" id="resizer-left" style="display: none;"></div>
+  <div class="resizer" id="resizer-left"></div>
 
 
   <!-- CENTRAL VIEW WRAPPER -->
@@ -3222,6 +3226,81 @@ body.immersive-briefing .breadcrumb-nav {
             </tbody>
           </table>
         </div>
+      </div>
+    </div>
+
+
+    <!-- ==========================================
+         SCREEN 3: CALENDAR / AGENDA (NUEVO)
+         ========================================== -->
+    <div id="screen-calendar" class="spa-screen">
+      <div class="content-header" style="padding-bottom: 16px; border-bottom: 1px solid var(--border);">
+        <div style="display:flex; justify-content:space-between; align-items:flex-end; padding-right: 40px;">
+          <div>
+            <h1 class="display-title" style="color: var(--gold); font-family: var(--font-display); font-size: 24px;">Agenda de Proyectos & Clientes</h1>
+            <div class="subtitle" style="margin-top: 4px; color: var(--text-muted); font-size:12px;">Programación estimada de layouts de diseño y calendarización de reuniones comerciales</div>
+          </div>
+          <button class="btn-solid" onclick="openCreateMeetingModal()" style="font-weight: bold; background: linear-gradient(135deg, var(--gold), var(--gold2)); border: none; color: #020d1a;">👥 Programar Reunión</button>
+        </div>
+      </div>
+      
+      <div class="scroll-area" style="padding: 24px; display: flex; flex-direction: column; gap: 24px; overflow-y: auto;">
+         
+         <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: stretch; margin-bottom: 40px;">
+           
+           <!-- Left Column: Calendar Grid -->
+           <div class="card" style="padding:24px; background:rgba(18,22,30,0.3); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:16px;">
+             <div style="display:flex; justify-content:space-between; align-items:center;">
+               <div style="display:flex; align-items:center; gap:12px;">
+                 <h2 id="ventas-calendar-title-label" style="font-size:20px; font-weight:700; color:#fff; margin:0;">Mayo 2026</h2>
+                 <span style="font-size:10px; background:rgba(201,169,110,0.12); color:var(--gold); font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(201,169,110,0.3);">PLAN INTEGRAL DE VENTAS</span>
+               </div>
+               <div style="display:flex; gap:8px;">
+                 <button onclick="changeVentasMonth(-1)" class="btn-clear" style="padding:6px 12px; font-size:12px; min-width:32px; border: 1px solid var(--border); border-radius: 4px; color:#fff; cursor:pointer; background:rgba(255,255,255,0.02);">◀ Anterior</button>
+                 <button onclick="changeVentasMonth(1)" class="btn-clear" style="padding:6px 12px; font-size:12px; min-width:32px; border: 1px solid var(--border); border-radius: 4px; color:#fff; cursor:pointer; background:rgba(255,255,255,0.02);">Siguiente ▶</button>
+               </div>
+             </div>
+             
+             <!-- Days of the week header -->
+             <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; text-align:center; font-size:11px; font-weight:bold; color:var(--text-muted); text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
+               <div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div>
+             </div>
+             
+             <!-- Calendar Cells Container -->
+             <div id="ventas-calendar-grid" style="display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; min-height:450px;">
+               <!-- Rendered dynamically by javascript -->
+             </div>
+           </div>
+
+           <!-- Right Column: Sidebar of SLA and Estimations -->
+           <div style="display:flex; flex-direction:column; gap:20px;">
+             <!-- Deliveries estimation card -->
+             <div class="card" style="padding:20px; background:rgba(18,22,30,0.35); border:1px solid var(--border); border-radius:8px;">
+               <h3 style="font-size:12px; font-weight:bold; text-transform:uppercase; color:#fff; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px; letter-spacing: 0.05em; display:flex; justify-content:space-between; align-items:center;">
+                 <span>🚚 Entregas Estimadas (SLA)</span>
+                 <span style="font-size:10px; color: var(--gold); text-transform: none;">Por Magnitud</span>
+               </h3>
+               <div style="font-size:11px; color:var(--text-muted); margin-bottom:12px; line-height:1.4;">
+                 Los plazos se calculan a partir de la fecha de ingreso: <br>
+                 <b style="color:var(--green)">Chico: +1 día</b> · <b style="color:var(--amber)">Mediano: +3 días</b> · <b style="color:var(--red)">Grande: +5 días</b>.
+               </div>
+               <div id="ventas-calculator-list" style="display:flex; flex-direction:column; gap:10px; max-height:240px; overflow-y:auto; padding-right:4px;">
+                 <!-- Populated dynamically -->
+               </div>
+             </div>
+
+             <!-- Scheduled Meetings card -->
+             <div class="card" style="padding:20px; background:rgba(18,22,30,0.35); border:1px solid var(--border); border-radius:8px; flex:1; display:flex; flex-direction:column; gap:12px;">
+               <h3 style="font-size:12px; font-weight:bold; text-transform:uppercase; color:#fff; margin-bottom:4px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:6px; letter-spacing:0.05em;">
+                 👥 Reuniones Programadas
+               </h3>
+               <div id="ventas-upcoming-meetings" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; max-height:230px; padding-right:4px;">
+                 <!-- Populated dynamically -->
+               </div>
+             </div>
+           </div>
+
+         </div>
       </div>
     </div>
 
@@ -3535,17 +3614,7 @@ body.immersive-briefing .breadcrumb-nav {
        ============================================== -->
   <div id="role-master" class="role-container">
     
-    <!-- LEFT SIDEBAR MASTER (Hidden because functionality is moved to outer Gebesa Shell) -->
-    <aside class="sidebar" id="left-sidebar-master" style="width: var(--sidebar-w); display: none !important;">
-      <div class="subtitle" style="padding: 0 40px 24px;">Dirección General</div>
-      <a class="nav-item active" onclick="switchMasterSection('dashboard', this)">📊 Dashboard Ejecutivo</a>
-      <a class="nav-item" onclick="switchMasterSection('semaforo', this)">📈 Semáforo de Ocupación</a>
-      <a class="nav-item" onclick="switchMasterSection('kanban', this)">📋 Kanban</a>
-      <a class="nav-item" onclick="switchMasterSection('proyectos', this)">🏗️ Gestión de Proyectos</a>
-      <a class="nav-item" onclick="switchMasterSection('equipo', this)">🧑‍🤝‍🧑 Gestión de Equipo</a>
-    </aside>
 
-    <div class="resizer" id="resizer-left-master" style="display: none !important;"></div>
 
     <div class="main-view-wrapper" id="master-main-wrapper">
       <!-- Dynamic workspace content in Dirección role rendered here -->
@@ -5457,14 +5526,464 @@ function renderTable() {
   `).join('');
 }
 
-function goToDashboard() {
-  document.getElementById('screen-form').classList.remove('active');
-  document.getElementById('screen-dashboard').classList.add('active');
-  renderBreadcrumb([
-    { label: 'CEREBRO 2.0', onclick: 'goToDashboard()' },
-    { label: 'Mis Negocios' }
-  ]);
+// ==========================================
+// VENTAS AGENDA & CALENDAR LOGIC (NUEVO)
+// ==========================================
+
+// Current viewed month and year on Ventas calendar view (Default: May 2026)
+window.ventasCalendarMonth = 4; // May (0-indexed)
+window.ventasCalendarYear = 2026;
+
+// Default meetings seed
+const defaultVentasMeetings = [
+  {
+    id: "meet-001",
+    projectId: "LAG-011",
+    cliente: "Sala de Juntas Saulo",
+    subCliente: "Autosistemas de Torreón",
+    tipo: "Toma de Medidas 📐",
+    fecha: "2026-05-25",
+    hora: "11:00",
+    lugar: "Presencial - Oficinas Cliente (Torreón)",
+    notas: "Revisar espacio de mesa Kenza y pasar niveles de contactos."
+  },
+  {
+    id: "meet-002",
+    projectId: "QRO-022",
+    cliente: "Oficinas Mexi Energi",
+    subCliente: "Coipa Grupo Constructor",
+    tipo: "Presentación de Layouts 🎨",
+    fecha: "2026-05-28",
+    hora: "16:00",
+    lugar: "Virtual - Microsoft Teams",
+    notas: "Presentación inicial del Layout 3D de la Línea Ascend."
+  }
+];
+
+if (!localStorage.getItem('ventasMeetings')) {
+  localStorage.setItem('ventasMeetings', JSON.stringify(defaultVentasMeetings));
 }
+
+window.goToCalendar = function() {
+  const sDash = document.getElementById('screen-dashboard');
+  const sForm = document.getElementById('screen-form');
+  const sCal = document.getElementById('screen-calendar');
+  
+  if (sDash) sDash.classList.remove('active');
+  if (sForm) sForm.classList.remove('active');
+  if (sCal) sCal.classList.add('active');
+  
+  const navHome = document.getElementById('v-nav-home');
+  const navCal = document.getElementById('v-nav-calendar');
+  if (navHome) navHome.classList.remove('active');
+  if (navCal) navCal.classList.add('active');
+  
+  if (typeof renderBreadcrumb === 'function') {
+    renderBreadcrumb([
+      { label: 'CEREBRO 2.0', onclick: 'goToDashboard()' },
+      { label: 'Agenda de Proyectos & SLA' }
+    ]);
+  }
+  
+  renderVentasCalendar();
+};
+
+window.goToDashboard = function() {
+  const sCal = document.getElementById('screen-calendar');
+  if (sCal) sCal.classList.remove('active');
+  
+  const sForm = document.getElementById('screen-form');
+  if (sForm) sForm.classList.remove('active');
+  
+  const sDash = document.getElementById('screen-dashboard');
+  if (sDash) sDash.classList.add('active');
+  
+  const navHome = document.getElementById('v-nav-home');
+  const navCal = document.getElementById('v-nav-calendar');
+  if (navHome) navHome.classList.add('active');
+  if (navCal) navCal.classList.remove('active');
+  
+  if (typeof renderBreadcrumb === 'function') {
+    renderBreadcrumb([
+      { label: 'CEREBRO 2.0', onclick: 'goToDashboard()' },
+      { label: 'Mis Negocios' }
+    ]);
+  }
+};
+
+window.changeVentasMonth = function(direction) {
+  window.ventasCalendarMonth += direction;
+  if (window.ventasCalendarMonth < 0) {
+    window.ventasCalendarMonth = 11;
+    window.ventasCalendarYear -= 1;
+  } else if (window.ventasCalendarMonth > 11) {
+    window.ventasCalendarMonth = 0;
+    window.ventasCalendarYear += 1;
+  }
+  renderVentasCalendar();
+};
+
+window.renderVentasCalendar = function() {
+  const grid = document.getElementById('ventas-calendar-grid');
+  const titleLabel = document.getElementById('ventas-calendar-title-label');
+  if (!grid) return;
+  
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  if (titleLabel) {
+    titleLabel.textContent = `${monthNames[window.ventasCalendarMonth]} ${window.ventasCalendarYear}`;
+  }
+  
+  // Calculate delivery date calendar events dynamically
+  const pList = JSON.parse(localStorage.getItem('vProjects')) || defaultProjects;
+  const deliveries = [];
+  pList.forEach(p => {
+    if (p.fechaIngreso) {
+      let daysToAdd = p.magn === 'Chico' ? 1 : p.magn === 'Mediano' ? 3 : 5;
+      const ingDate = new Date(p.fechaIngreso + 'T00:00:00');
+      
+      let count = 0;
+      const calcDate = new Date(ingDate);
+      while (count < daysToAdd) {
+        calcDate.setDate(calcDate.getDate() + 1);
+        const dayOfWeek = calcDate.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) { 
+          count++;
+        }
+      }
+      
+      const yyyy = calcDate.getFullYear();
+      const mm = String(calcDate.getMonth() + 1).padStart(2, '0');
+      const dd = String(calcDate.getDate()).padStart(2, '0');
+      const targetDateStr = `${yyyy}-${mm}-${dd}`;
+      
+      deliveries.push({
+        date: targetDateStr,
+        projectId: p.id,
+        cliente: p.cliente,
+        etapa: p.etapa,
+        magn: p.magn
+      });
+    }
+  });
+  
+  // Load commercial meetings
+  const meetings = JSON.parse(localStorage.getItem('ventasMeetings')) || [];
+  
+  // Generate calendar grid array
+  grid.innerHTML = '';
+  
+  // First day of Viewed Month
+  const firstDayIndex = new Date(window.ventasCalendarYear, window.ventasCalendarMonth, 1).getDay();
+  // Total days in Month
+  const totalDays = new Date(window.ventasCalendarYear, window.ventasCalendarMonth + 1, 0).getDate();
+  // Total days in previous month for padding
+  const prevMonthTotalDays = new Date(window.ventasCalendarYear, window.ventasCalendarMonth, 0).getDate();
+
+  // 1. Render Padding Days from previous month
+  for (let i = firstDayIndex - 1; i >= 0; i--) {
+    const padDayNum = prevMonthTotalDays - i;
+    const padDiv = document.createElement('div');
+    padDiv.className = 'calendar-cell-pad';
+    padDiv.style.cssText = 'background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.01); border-radius:4px; opacity:0.1; height:80px; padding:6px;';
+    padDiv.innerHTML = `<span style="font-size:10px; font-family:var(--font-mono); color:var(--text-muted);">${padDayNum}</span>`;
+    grid.appendChild(padDiv);
+  }
+  
+  // 2. Render Viewed Month Days
+  for (let d = 1; d <= totalDays; d++) {
+    const currentDayStr = `${window.ventasCalendarYear}-${String(window.ventasCalendarMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const isToday = currentDayStr === '2026-05-25'; // Simulating today as May 25, 2026 to fit the pipeline perfectly
+    
+    const dayCell = document.createElement('div');
+    dayCell.className = 'calendar-cell-day';
+    
+    // Aesthetic base layout
+    let cellStyle = 'min-height:85px; padding:6px; display:flex; flex-direction:column; gap:4px; border-radius:4px; transition:all 0.15s; cursor:pointer; font-size:11px;';
+    if (isToday) {
+      cellStyle += 'background:rgba(201,169,110,0.06); border:1px solid rgba(201,169,110,0.3); box-shadow: inset 0 0 10px rgba(201,169,110,0.1);';
+    } else {
+      cellStyle += 'background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04);';
+    }
+    
+    dayCell.style.cssText = cellStyle;
+    dayCell.setAttribute('onclick', `openCreateMeetingModal('${currentDayStr}')`);
+    
+    dayCell.onmouseover = function() {
+      dayCell.style.borderColor = 'var(--gold)';
+      dayCell.style.background = 'rgba(255,255,255,0.04)';
+    };
+    dayCell.onmouseout = function() {
+      if (isToday) {
+        dayCell.style.borderColor = 'rgba(201,169,110,0.3)';
+        dayCell.style.background = 'rgba(201,169,110,0.06)';
+      } else {
+        dayCell.style.borderColor = 'rgba(255,255,255,0.04)';
+        dayCell.style.background = 'rgba(255,255,255,0.02)';
+      }
+    };
+    
+    // Day Label
+    const isTodayLabel = isToday ? '<span style="font-size:8px; font-weight:700; color:var(--gold); margin-left:6px; background:rgba(201,169,110,0.15); padding:1px 4px; border-radius:3px;">HOY</span>' : '';
+    let dayLabelHTML = `<div style="display:flex; justify-content:space-between; align-items:center; font-weight:600; color:${isToday ? 'var(--gold)' : '#fff'};">
+                          <span style="font-family:var(--font-mono); font-size:12px;">${d}</span>
+                          ${isTodayLabel}
+                        </div>`;
+    
+    // Events list inside cell
+    let eventsHTML = '<div style="display:flex; flex-direction:column; gap:2px; flex:1; overflow:hidden;">';
+    
+    // Find matching deliveries
+    const matchedDeliveries = deliveries.filter(del => del.date === currentDayStr);
+    matchedDeliveries.forEach(del => {
+      const color = del.magn === 'Chico' ? '#3fb950' : del.magn === 'Mediano' ? '#e3b341' : '#f85149';
+      eventsHTML += `
+        <div style="background:rgba(255,255,255,0.02); border-left:2.5px solid ${color}; padding:2px 4px; border-radius:2px; font-size:8.5px; line-height:1.2; font-weight:700; color:#fff;" title="Layout Listo para Entrega Est.">
+          🚚 ${del.projectId}
+        </div>
+      `;
+    });
+    
+    // Find matching meetings
+    const matchedMeets = meetings.filter(m => m.fecha === currentDayStr);
+    matchedMeets.forEach(m => {
+      eventsHTML += `
+        <div style="background:rgba(88,166,255,0.15); border-left:2.5px solid #58a6ff; padding:2px 4px; border-radius:2px; font-size:8.5px; line-height:1.2; font-weight:700; color:#c9d1d9;" title="${m.tipo} - ${m.cliente} (${m.hora})">
+          👥 ${m.hora} ${m.cliente.slice(0, 8)}..
+        </div>
+      `;
+    });
+    
+    eventsHTML += '</div>';
+    
+    dayCell.innerHTML = dayLabelHTML + eventsHTML;
+    grid.appendChild(dayCell);
+  }
+  
+  // 3. Render next month trailing days if needed
+  const totalCellsRendered = firstDayIndex + totalDays;
+  const remainingCells = 42 - totalCellsRendered;
+  for (let d = 1; d <= remainingCells; d++) {
+    const padDiv = document.createElement('div');
+    padDiv.className = 'calendar-cell-pad';
+    padDiv.style.cssText = 'background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.01); border-radius:4px; opacity:0.1; height:85px; padding:6px;';
+    padDiv.innerHTML = `<span style="font-size:10px; font-family:var(--font-mono); color:var(--text-muted);">${d}</span>`;
+    grid.appendChild(padDiv);
+  }
+  
+  // Render Sidebar helper views
+  renderVentasCalculatorList();
+  renderUpcomingMeetings();
+};
+
+window.renderVentasCalculatorList = function() {
+  const container = document.getElementById('ventas-calculator-list');
+  if (!container) return;
+  
+  const pList = JSON.parse(localStorage.getItem('vProjects')) || defaultProjects;
+  
+  container.innerHTML = pList.map(p => {
+    let daysToAdd = p.magn === 'Chico' ? 1 : p.magn === 'Mediano' ? 3 : 5;
+    const ingDate = new Date(p.fechaIngreso + 'T00:00:00');
+    
+    let count = 0;
+    const calcDate = new Date(ingDate);
+    while (count < daysToAdd) {
+      calcDate.setDate(calcDate.getDate() + 1);
+      const dayOfWeek = calcDate.getDay();
+      if (dayOfWeek !== 0 && dayOfWeek !== 6) { 
+        count++;
+      }
+    }
+    
+    const options = { weekday: 'short', month: 'short', day: 'numeric' };
+    const dateFormatted = calcDate.toLocaleDateString('es-MX', options);
+    const color = p.magn === 'Chico' ? 'var(--green)' : p.magn === 'Mediano' ? 'var(--amber)' : 'var(--red)';
+    
+    return `
+      <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); padding:10px; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="display:flex; flex-direction:column; gap:2px;">
+          <div style="display:flex; align-items:center; gap:6px;">
+            <strong style="color:#fff; font-size:11.5px;">${p.cliente}</strong>
+            <span style="font-size:9.5px; font-family:var(--font-mono); color:var(--text-muted);">${p.id}</span>
+          </div>
+          <span style="font-size:10.5px; color:var(--text-muted);">
+            Ingreso: ${p.fechaIngreso} · <span style="color:${color}; font-weight:700;">Est. Entrega: ${dateFormatted}</span>
+          </span>
+        </div>
+        <button onclick="window.openCreateMeetingModal('${p.fechaIngreso}', '${p.id}')" class="btn-clear" style="padding:4px 8px; font-size:10.5px; font-weight:700; border:1px dashed var(--gold); border-radius:4px; color:var(--gold); cursor:pointer;" title="Agendar fecha o reunión">
+          📅 Agendar
+        </button>
+      </div>
+    `;
+  }).join('');
+};
+
+window.renderUpcomingMeetings = function() {
+  const container = document.getElementById('ventas-upcoming-meetings');
+  if (!container) return;
+  
+  const meetings = JSON.parse(localStorage.getItem('ventasMeetings')) || [];
+  if (meetings.length === 0) {
+    container.innerHTML = `<span style="font-size:11px; color:var(--text-muted); italic; text-align:center; padding: 20px 0;">No hay reuniones programadas este mes.</span>`;
+    return;
+  }
+  
+  meetings.sort((a, b) => new Date(a.fecha + 'T' + a.hora) - new Date(b.fecha + 'T' + b.hora));
+  
+  container.innerHTML = meetings.map(m => {
+    return `
+      <div style="background:rgba(88,166,255,0.05); border:1px solid rgba(88,166,255,0.1); padding:10px; border-radius:6px; display:flex; flex-direction:column; gap:4px; position:relative;">
+        <button onclick="window.deleteVentasMeeting('${m.id}')" style="position:absolute; right:8px; top:8px; background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:11px;" title="Cancelar reunión">✖</button>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-size:10px; background:rgba(88,166,255,0.2); color:#58a6ff; font-weight:bold; padding:2px 6px; border-radius:4px;">${m.tipo}</span>
+          <span style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);">${m.projectId}</span>
+        </div>
+        <strong style="color:#fff; font-size:12px; margin-top:2px;">${m.cliente}</strong>
+        <div style="font-size:11px; color:var(--text-secondary); display:flex; gap:12px; margin-top:2px;">
+          <span>📅 ${m.fecha}</span>
+          <span>⏰ ${m.hora} hrs</span>
+        </div>
+        ${m.notas ? `<p style="font-size:10.5px; color:var(--text-muted); margin:4px 0 0; font-style:italic;">"${m.notas}"</p>` : ''}
+      </div>
+    `;
+  }).join('');
+};
+
+window.deleteVentasMeeting = function(meetId) {
+  let meetings = JSON.parse(localStorage.getItem('ventasMeetings')) || [];
+  meetings = meetings.filter(m => m.id !== meetId);
+  localStorage.setItem('ventasMeetings', JSON.stringify(meetings));
+  showToast('warning', 'Reunión Cancelada', 'La reunión comercial ha sido cancelada con éxito.');
+  renderVentasCalendar();
+};
+
+window.openCreateMeetingModal = function(prefilledDate = '', projectId = '') {
+  let modal = document.getElementById('ventas-meeting-creator-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'ventas-meeting-creator-modal';
+    modal.style.cssText = 'display:none; align-items:center; justify-content:center; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:99999; padding:20px;';
+    document.body.appendChild(modal);
+  }
+  
+  const pList = JSON.parse(localStorage.getItem('vProjects')) || defaultProjects;
+  const projectOptionsHTML = pList.map(p => {
+    const isSelected = p.id === projectId ? 'selected' : '';
+    return `<option value="${p.id}" ${isSelected} data-cliente="${p.cliente}" data-sub="${p.subCliente}">${p.id} · ${p.cliente} (${p.subCliente})</option>`;
+  }).join('');
+  
+  const defaultDateValue = prefilledDate || '2026-05-25';
+  
+  modal.innerHTML = `
+    <div class="card" style="width:100%; max-width:480px; padding:28px; background:var(--bg-card); border:1px solid var(--border); box-shadow:0 12px 40px rgba(0,0,0,0.8); display:flex; flex-direction:column; gap:16px; position:relative;">
+      <button onclick="document.getElementById('ventas-meeting-creator-modal').style.display='none'" style="position:absolute; top:20px; right:20px; background:none; border:none; color:var(--text-muted); font-size:16px; cursor:pointer;" title="Cerrar">✕</button>
+      
+      <div style="display:flex; flex-direction:column; gap:4px;">
+        <h2 style="font-size:18px; font-weight:700; color:var(--gold); margin:0;">🗓️ Agendar Reunión / Entrega</h2>
+        <span style="font-size:11px; color:var(--text-muted);">Establece un hito de reunión comercial o reprograma la presentación de diseño</span>
+      </div>
+      
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:8px;">
+        <div>
+          <label style="display:block; font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">1. Elige el Proyecto del Pipeline:</label>
+          <select id="meet-proj-selector" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; height:40px;">
+            ${projectOptionsHTML}
+          </select>
+        </div>
+
+        <div>
+          <label style="display:block; font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">2. Tipo de Hito / Reunión:</label>
+          <select id="meet-type-selector" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; height:40px;">
+            <option value="Toma de Medidas 📐">Toma de Medidas en Sitio 📐</option>
+            <option value="Presentación Layouts 🎨">Presentación de Layouts 🎨</option>
+            <option value="Reunión de Feedback 👥">Reunión de Feedback 👥</option>
+            <option value="Revisión de Cambios 🔄">Revisión de Cambios & Modificaciones 🔄</option>
+            <option value="Firma de Pedido ✍️">Cierre & Firma de Pedido ✍️</option>
+          </select>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
+          <div>
+            <label style="display:block; font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Fecha:</label>
+            <input type="date" id="meet-date-input" value="${defaultDateValue}" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; height:40px;" />
+          </div>
+          <div>
+            <label style="display:block; font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Hora:</label>
+            <input type="time" id="meet-time-input" value="11:30" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; height:40px;" />
+          </div>
+        </div>
+
+        <div>
+          <label style="display:block; font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Lugar / Plataforma:</label>
+          <input type="text" id="meet-location-input" value="Presencial - Oficinas Cliente" placeholder="e.g. Virtual - Teams, Oficinas de Gebesa, etc." style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; height:40px;" />
+        </div>
+
+        <div>
+          <label style="display:block; font-size:10.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:6px;">Notas Adicionales:</label>
+          <textarea id="meet-notes-input" placeholder="p.ej., Revisión de acabados para panel divisor de la Línea Nova..." style="width:100%; height:60px; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; resize:none;"></textarea>
+        </div>
+      </div>
+      
+      <div style="display:flex; gap:12px; margin-top:8px;">
+        <button onclick="document.getElementById('ventas-meeting-creator-modal').style.display='none'" class="btn-clear" style="flex:1; padding:10px; border-radius:4px; font-weight:bold; font-size:12px; border:1px solid var(--border); height:40px; cursor:pointer; color:#fff; background:transparent;">Descartar</button>
+        <button onclick="window.confirmCreateVentasMeeting()" class="btn-solid" style="flex:1; padding:10px; border-radius:4px; font-weight:bold; font-size:12px; background:linear-gradient(135deg, var(--gold), var(--gold2)); border:none; height:40px; cursor:pointer; color:#020d1a;">Confirmar Agendado ➡️</button>
+      </div>
+    </div>
+  `;
+  
+  modal.style.display = 'flex';
+};
+
+window.confirmCreateVentasMeeting = function() {
+  const pSelector = document.getElementById('meet-proj-selector');
+  const typeSelector = document.getElementById('meet-type-selector');
+  const dInput = document.getElementById('meet-date-input');
+  const tInput = document.getElementById('meet-time-input');
+  const locInput = document.getElementById('meet-location-input');
+  const notesInput = document.getElementById('meet-notes-input');
+  
+  if (!pSelector || !dInput || !tInput) return;
+  
+  const projectId = pSelector.value;
+  const selectedOption = pSelector.options[pSelector.selectedIndex];
+  const clientName = selectedOption.getAttribute('data-cliente');
+  const subClient = selectedOption.getAttribute('data-sub');
+  
+  const newMeet = {
+    id: 'meet-' + Math.floor(Math.random()*10000 + 1000),
+    projectId: projectId,
+    cliente: clientName,
+    subCliente: subClient,
+    tipo: typeSelector.value,
+    fecha: dInput.value,
+    hora: tInput.value,
+    lugar: locInput.value,
+    notes: notesInput.value
+  };
+  
+  const meetings = JSON.parse(localStorage.getItem('ventasMeetings')) || [];
+  meetings.push(newMeet);
+  localStorage.setItem('ventasMeetings', JSON.stringify(meetings));
+  
+  // Immutably log in project's internal timeline
+  const pList = JSON.parse(localStorage.getItem('vProjects')) || defaultProjects;
+  const projIndex = pList.findIndex(p => p.id === projectId);
+  if (projIndex !== -1) {
+    if (!pList[projIndex].auditoriaLog) {
+      pList[projIndex].auditoriaLog = [];
+    }
+    const logStamp = `[${new Date().toLocaleDateString('es-MX')} ${new Date().toLocaleTimeString('es-MX')}] Hito Comercial Programado: (${newMeet.tipo}) para el día ${newMeet.fecha} a las ${newMeet.hora} hrs.`;
+    pList[projIndex].auditoriaLog.push(logStamp);
+    localStorage.setItem('vProjects', JSON.stringify(pList));
+  }
+  
+  document.getElementById('ventas-meeting-creator-modal').style.display = 'none';
+  showToast('success', 'Hito Agendado ✅', `Se calendarizó con éxito la reunión para ${clientName}.`);
+  renderVentasCalendar();
+};
 
 function goToForm(isEdit = false) {
   document.getElementById('screen-dashboard').classList.remove('active');
@@ -6593,6 +7112,50 @@ function openProjectDetails(pId) {
   if (elMeetingStatus) elMeetingStatus.value = proj.meetingStatus || 'pendiente';
   
   updateMeetingStatusBadge(proj.meetingStatus || 'pendiente');
+
+  // Render immutable audit logs in mpanel-historial
+  const histContainer = document.getElementById('mpanel-historial');
+  if (histContainer) {
+    if (!proj.auditoriaLog) {
+      proj.auditoriaLog = [
+        {
+          timestamp: proj.fechaIngreso ? `${proj.fechaIngreso}T${proj.horaIngreso || '09:00'}:00.000Z` : new Date().toISOString(),
+          autor: "Sistema CRM",
+          accion: "Creación de Folio",
+          descripcion: `Ingreso de proyecto ${proj.id} bajo el cliente ${proj.cliente}.`
+        }
+      ];
+    }
+    
+    let logsHtml = proj.auditoriaLog.map(log => {
+      const dateStr = new Date(log.timestamp).toLocaleString('es-MX', { 
+        year: 'numeric', month: 'short', day: 'numeric', 
+        hour: '2-digit', minute: '2-digit', second: '2-digit' 
+      });
+      return `
+        <div style="padding:12px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:6px; margin-bottom:10px; display:flex; flex-direction:column; gap:4px; text-align: left;">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
+            <span style="font-family:var(--font-mono); color:var(--text-muted); font-size:10.5px;">${dateStr}</span>
+            <span style="font-weight:700; color:var(--gold); font-size:10px; background:rgba(210,153,34,0.1); padding:2px 6px; border-radius:3px; font-family:var(--font-mono); border:1px solid rgba(210,153,34,0.15);">${log.accion}</span>
+          </div>
+          <p style="margin: 4px 0 0; font-size:12px; color:#fff; font-family:var(--font-sans);">${log.descripcion}</p>
+          <span style="font-size:10.5px; color:var(--text-secondary); margin-top:2px;">Responsable: <strong>${log.autor}</strong></span>
+        </div>
+      `;
+    }).join('');
+
+    histContainer.innerHTML = `
+      <div class="card" style="padding: 24px; background:rgba(18,22,30,0.3); border:1px solid var(--border); display:flex; flex-direction:column; gap:16px; min-height: 250px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
+          <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em; font-family:var(--font-display);">🛡️ Bitácora Inmutable de Auditoría S.O.D.</span>
+          <span style="font-size:10px; color:var(--text-secondary); font-family:var(--font-mono); font-weight:bold;">FOLIO: ${proj.id}</span>
+        </div>
+        <div style="max-height: 280px; overflow-y:auto; padding-right:6px;" class="custom-scrollbar">
+          ${logsHtml}
+        </div>
+      </div>
+    `;
+  }
 
   // Resetear siempre a la pestaña de Resumen al abrir el expediente
   switchModalTab('resumen');
@@ -11411,11 +11974,31 @@ window.masterReassignProject = function(projId, newProyectistaName) {
   const proj = vProjects.find(p => p.id === projId);
   if (!proj) return;
   
-  const oldName = proj.proyectista;
+  const oldName = proj.proyectista || 'Sin Asignar';
   proj.proyectista = newProyectistaName;
+  
+  // Inject immutable audit log entry
+  if (!proj.auditoriaLog) {
+    proj.auditoriaLog = [
+      {
+        timestamp: proj.fechaIngreso ? `${proj.fechaIngreso}T${proj.horaIngreso || '09:00'}:00.000Z` : new Date().toISOString(),
+        autor: "Sistema CRM",
+        accion: "Creación de Folio",
+        descripcion: `Ingreso de proyecto ${proj.id} bajo el cliente ${proj.cliente}.`
+      }
+    ];
+  }
+  
+  proj.auditoriaLog.push({
+    timestamp: new Date().toISOString(),
+    autor: "Dirección General (Master)",
+    accion: "⚡ RE-ASIGNACIÓN / OVERRULE",
+    descripcion: `Intervención directiva y transferencia forzada de titularidad: El folio ${proj.id} ha sido transferido administrativamente de la bandeja de ${oldName} a ${newProyectistaName} con estatus prioritario.`
+  });
+  
   saveProjectsToStorage();
   
-  showToast('success', 'Re-asignación Completada', `Proyecto ${projId} transferido de ${oldName} a ${newProyectistaName} con éxito.`);
+  showToast('success', 'Overrule Realizado', `Folio ${projId} transferido de ${oldName} a ${newProyectistaName} con estampa inmutable.`);
   
   // Sync changes across all panels if open
   window.renderMasterWorkspace();
@@ -11481,13 +12064,22 @@ window.masterAdvanceProjectStage = function(projId) {
 
 // Master vacation switcher linked automatically to Technical MWM Warning
 window.masterToggleProyectistaVacations = function(nameKey, isChecked) {
+  localStorage.setItem('vacation_' + nameKey, isChecked ? 'true' : 'false');
+  
   if (nameKey === 'karen') {
     localStorage.setItem('proyVacationsActive', isChecked ? 'true' : 'false');
     CLINIC_PROYECTISTAS.karen.enVacaciones = isChecked;
-    showToast(isChecked ? 'error' : 'success', 'Modo Vacaciones', `Karen Tovar se encuentra ahora ${isChecked ? 'DE VACACIONES' : 'DISPONIBLE'}.`);
   } else if (nameKey === 'oscar') {
-    showToast('info', 'Control de Vacaciones', `Estado del proyectista Oscar Rodríguez actualizado.`);
+    CLINIC_PROYECTISTAS.oscar.enVacaciones = isChecked;
   }
+  
+  let label = 'Proyectista';
+  if (nameKey === 'karen') label = 'Karen Tovar';
+  else if (nameKey === 'rodrigo') label = 'Rodrigo Vergara';
+  else if (nameKey === 'oscar') label = 'Oscar Rodríguez';
+  else if (nameKey === 'karla') label = 'Karla Cerón';
+
+  showToast(isChecked ? 'error' : 'success', 'Modo Vacaciones', `${label} se encuentra ahora ${isChecked ? 'DE VACACIONES' : 'DISPONIBLE'}.`);
   
   window.renderMasterWorkspace();
   if (typeof renderProyectistaWorkspace === 'function') renderProyectistaWorkspace();
@@ -11498,9 +12090,16 @@ window.renderMasterWorkspace = function() {
   const wrapper = document.getElementById('master-main-wrapper');
   if (!wrapper) return;
   
+  // Guarantee default values for project files & stagnation status
+  vProjects.forEach(p => {
+    if (p.estancamientoDias === undefined) {
+      p.estancamientoDias = p.id === "LAG-011" ? 5 : p.id === "QRO-022" ? 4 : p.id === "LAG-031" ? 3 : 1;
+    }
+  });
+
   // Calculate dynamic data metrics
   let totalActive = vProjects.length;
-  let reworkCount = vProjects.filter(p => p.modificaciones && p.modificaciones.length > 0).length;
+  let reworkCount = vProjects.filter(p => (p.modificaciones && p.modificaciones.length > 0) || p.etapa.toLowerCase().includes('modif')).length;
   let reworkRate = Math.round((reworkCount / (totalActive || 1)) * 100);
   
   let totalBudget = 0;
@@ -11510,19 +12109,96 @@ window.renderMasterWorkspace = function() {
   });
   let formattedBudget = '$' + (totalBudget / 1000000).toFixed(2) + 'M MXN';
   
-  let criticalAlerts = vProjects.filter(p => p.urgente || p.etapa.includes('PEND')).length;
-  let avgTctVal = (vProjects.reduce((sum, p) => sum + (p.diasSla || 5), 0) / (totalActive || 1)).toFixed(1);
+  // KPI 2 Bloqueado count filter by inactivity days
+  let minDaysKpi = parseInt(window.activeEstancamientoKpiFilter || "0", 10);
+  let blockedOrAlertCount = vProjects.filter(p => {
+    const isCritical = p.urgente || p.etapa.includes('PEND') || p.etapa.includes('BLOQUEADO');
+    const meetsDays = p.estancamientoDias >= minDaysKpi;
+    return isCritical && meetsDays;
+  }).length;
+
+  // KPI 4 SLA Deliveries count
+  let onTimeCount = vProjects.filter(p => !p.diasSla || p.diasSla >= 0).length;
+  let slaPercentage = Math.round((onTimeCount / (totalActive || 1)) * 100);
 
   // Active projects filtered by sucursal
   let displayedProjects = vProjects;
-  if (window.activeMasterSucursal !== 'all') {
-    displayedProjects = vProjects.filter(p => p.id.toUpperCase().startsWith(window.activeMasterSucursal.toUpperCase()));
+  if (window.activeMasterSucursal && window.activeMasterSucursal !== 'all') {
+    displayedProjects = displayedProjects.filter(p => p.id.toUpperCase().startsWith(window.activeMasterSucursal.toUpperCase()));
   }
+
+  // Define designer loading function
+  const getDesignerLoad = (nameKey) => {
+    let namePatterns = {
+      'oscar': ['oscar', 'rodríguez', 'rodriguez', 'macías', 'macias'],
+      'karla': ['karla', 'cerón', 'ceron'],
+      'karen': ['karen', 'tovar'],
+      'rodrigo': ['rodrigo', 'vergara']
+    };
+    
+    let fullName = '';
+    let shortName = '';
+    let zoneLabel = '';
+    if (nameKey === 'oscar') { fullName = 'Oscar Rodríguez'; shortName = 'OR'; zoneLabel = 'Proyectista MTY'; }
+    else if (nameKey === 'karla') { fullName = 'Karla Cerón'; shortName = 'KC'; zoneLabel = 'Proyectista GOM'; }
+    else if (nameKey === 'karen') { fullName = 'Karen Tovar'; shortName = 'KT'; zoneLabel = 'Proyectista CDMX'; }
+    else if (nameKey === 'rodrigo') { fullName = 'Rodrigo Vergara'; shortName = 'RV'; zoneLabel = 'Proyectista LAG'; }
+
+    let pts = 0;
+    let list = [];
+    vProjects.forEach(p => {
+      if (p.proyectista) {
+        let matched = namePatterns[nameKey].some(pat => p.proyectista.toLowerCase().includes(pat));
+        if (matched) {
+          const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
+          pts += pVal;
+          list.push(p);
+        }
+      }
+    });
+
+    const isVac = localStorage.getItem('vacation_' + nameKey) === 'true' || (nameKey === 'oscar' && localStorage.getItem('vacation_oscar') === null);
+    const pct = Math.min(100, Math.round((pts / 6) * 100));
+    const barColor = isVac ? 'var(--text-muted)' : pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
+    const statusLabel = isVac ? 'VACACIONES' : pts >= 6 ? '🔴 SATURADO' : pts >= 4 ? '🟡 ALERTA' : '🟢 DISPONIBLE';
+    const statusColor = isVac ? 'var(--text-secondary)' : pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
+
+    return {
+      key: nameKey,
+      fullName,
+      shortName,
+      zoneLabel,
+      pts,
+      list,
+      isVac,
+      pct,
+      barColor,
+      statusLabel,
+      statusColor
+    };
+  };
 
   // Define HTML of active section
   let activeHTML = '';
 
   if (window.activeMasterSection === 'dashboard') {
+    // Apply console table filters before rendering
+    let tableProjects = displayedProjects;
+    if (window.activeMasterMagnitudFilter && window.activeMasterMagnitudFilter !== 'all') {
+      tableProjects = tableProjects.filter(p => p.magn === window.activeMasterMagnitudFilter);
+    }
+    if (window.activeMasterPlazaFilter && window.activeMasterPlazaFilter !== 'all') {
+      if (window.activeMasterPlazaFilter === 'LAG') {
+        tableProjects = tableProjects.filter(p => p.id.toUpperCase().startsWith('LAG'));
+      } else if (window.activeMasterPlazaFilter === 'GOM') {
+        tableProjects = tableProjects.filter(p => p.id.toUpperCase().startsWith('GOM') || p.id.toUpperCase().includes('GOM'));
+      } else if (window.activeMasterPlazaFilter === 'MTY') {
+        tableProjects = tableProjects.filter(p => p.id.toUpperCase().startsWith('MTY'));
+      } else if (window.activeMasterPlazaFilter === 'CDMX') {
+        tableProjects = tableProjects.filter(p => p.id.toUpperCase().startsWith('CDMX') || p.id.toUpperCase().startsWith('QRO'));
+      }
+    }
+
     // --- I. EXECUTIVE HIGH-METRICS DASHBOARD ---
     activeHTML = `
       <div class="content-header">
@@ -11546,176 +12222,122 @@ window.renderMasterWorkspace = function() {
 
       <div class="scroll-area" style="padding: 24px; display:flex; flex-direction:column; gap:24px;">
         
-        <!-- Metrics Row -->
+        <!-- Metrics Row (Dynamic KPI Dashboard) -->
         <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); gap:16px;">
-          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px;">
-            <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Ciclo Técnico Promedio (SLA)</span>
-            <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--blue);">${avgTctVal} días</div>
-            <span style="display:inline-block; font-size:10px; padding:2px 6px; background:rgba(88,166,255,0.1); color:var(--blue); border-radius:12px; margin-top:8px; font-weight:600;">SLA Prometido</span>
+          <!-- KPI 1: Pipeline Value -->
+          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Pipeline de Lienzos (S.O.D)</span>
+              <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--green);">${formattedBudget}</div>
+            </div>
+            <span style="display:inline-block; align-self:flex-start; font-size:10px; padding:2px 6px; background:rgba(63,185,80,0.1); color:var(--green); border-radius:12px; margin-top:8px; font-weight:600;">Volumen de Negocio</span>
           </div>
-          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px;">
-            <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Tasa de Iteración (Re-diseño)</span>
-            <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--amber);">${reworkRate}%</div>
-            <span style="display:inline-block; font-size:10px; padding:2px 6px; background:rgba(240,135,0,0.1); color:var(--amber); border-radius:12px; margin-top:8px; font-weight:600;">Iteraciones Técnicas</span>
+
+          <!-- KPI 2: Bottleneck Alerts Filterable -->
+          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Alertas de Bloqueo</span>
+                <select onchange="window.activeEstancamientoKpiFilter = this.value; window.renderMasterWorkspace();" class="form-select" style="background:var(--surface-3); border:1px solid var(--border); color:#fff; font-size:9px; padding:1px 4px; border-radius:3px; outline:none; cursor:pointer; height:18px;">
+                  <option value="0" ${(window.activeEstancamientoKpiFilter || "0") === "0" ? "selected" : ""}>Todos</option>
+                  <option value="3" ${(window.activeEstancamientoKpiFilter || "0") === "3" ? "selected" : ""}>3+ días</option>
+                  <option value="5" ${(window.activeEstancamientoKpiFilter || "0") === "5" ? "selected" : ""}>5+ días</option>
+                </select>
+              </div>
+              <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--red);">${blockedOrAlertCount}</div>
+            </div>
+            <span style="display:inline-block; align-self:flex-start; font-size:10px; padding:2px 6px; background:rgba(248,81,73,0.1); color:var(--red); border-radius:12px; margin-top:8px; font-weight:600;">Respuesta Crítica</span>
           </div>
-          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px;">
-            <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Valor de Cartera Activa</span>
-            <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--green);">${formattedBudget}</div>
-            <span style="display:inline-block; font-size:10px; padding:2px 6px; background:rgba(63,185,80,0.1); color:var(--green); border-radius:12px; margin-top:8px; font-weight:600;">Volumen de Negocio</span>
+
+          <!-- KPI 3: Rework Comparison -->
+          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Tasa de Retrabajo (Meta: &lt;8%)</span>
+              <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:${reworkRate < 8 ? 'var(--green)' : 'var(--amber)'};">${reworkRate}%</div>
+            </div>
+            <span style="display:inline-block; align-self:flex-start; font-size:10px; padding:2px 6px; background:${reworkRate < 8 ? 'rgba(63,185,80,0.1)' : 'rgba(240,135,0,0.1)'}; color:${reworkRate < 8 ? 'var(--green)' : 'var(--amber)'}; border-radius:12px; margin-top:8px; font-weight:600;">
+              ${reworkRate < 8 ? '✓ Cumple Meta' : '⚠️ Excede Meta (<8%)'}
+            </span>
           </div>
-          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px;">
-            <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Alertas de Cuello de Botella</span>
-            <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--red);">${criticalAlerts}</div>
-            <span style="display:inline-block; font-size:10px; padding:2px 6px; background:rgba(248,81,73,0.1); color:var(--red); border-radius:12px; margin-top:8px; font-weight:600;">Respuesta Crítica</span>
+
+          <!-- KPI 4: SLA Delivery Efficiency -->
+          <div class="card p-0" style="padding:16px; background:rgba(30,35,45,0.4); border:1px solid rgba(255,255,255,0.05); border-radius:6px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <span style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Eficacia de SLA Plazas</span>
+              <div style="font-size:28px; font-family:var(--font-mono); font-weight:700; margin-top:12px; color:var(--green);">${slaPercentage}%</div>
+            </div>
+            <span style="display:inline-block; align-self:flex-start; font-size:10px; padding:2px 6px; background:rgba(63,185,80,0.1); color:var(--green); border-radius:12px; margin-top:8px; font-weight:600;">Desempeño a Tiempo</span>
           </div>
         </div>
 
-        <!-- Team Workloads & Breakdown Row -->
-        <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:16px;">
+        <!-- MÓDULO B: Team Workloads Side-by-Side Grid (4 Members) -->
+        <div class="card" style="padding:20px; background:rgba(13,17,23,0.3); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
+            <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em;">⚖️ Semáforo de Carga del Equipo (MTY, GOM, CDMX, LAG)</span>
+            <span style="font-size:10px; color:var(--text-muted); font-weight:500;">Capacidad Inteligente Max: 6 Puntos</span>
+          </div>
           
-          <!-- Balance de Ocupación por Puntos -->
-          <div class="card" style="padding:20px; background:rgba(13,17,23,0.3); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:14px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">
-              <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em;">⚖️ Semáforo de Carga del Equipo</span>
-              <span style="font-size:10px; color:var(--text-muted); font-weight:500;">Capacidad Inteligente Max: 6 Puntos</span>
-            </div>
-            
-            <div style="display:flex; flex-direction:column; gap:12px; margin-top:4px;">
-              <!-- Karen Tovar Load -->
-              ${(function() {
-                const isVac = localStorage.getItem('proyVacationsActive') === 'true';
-                let pts = 0;
-                let list = [];
-                vProjects.forEach(p => {
-                  if (p.proyectista.includes('Karen')) {
-                    const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
-                    pts += pVal;
-                    list.push(p.id);
-                  }
-                });
-                const pct = Math.min(100, Math.round((pts / 6) * 100));
-                const barColor = pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
-                return `
-                  <div style="display:flex; flex-direction:column; gap:4px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
-                      <span style="font-weight:700; color:#fff;">Karen Tovar ${isVac ? '🌴 (MWM Activo)' : ''}</span>
-                      <span style="font-family:var(--font-mono); font-weight:bold; color:${barColor};">${pts}/6 Pts (${pct}%)</span>
-                    </div>
-                    <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
-                      <div style="width:${pct}%; height:100%; background:${barColor}; border-radius:3px;"></div>
-                    </div>
-                    <span style="font-size:10px; color:var(--text-muted);">Asignados: ${list.length > 0 ? list.join(', ') : 'Ninguno'}</span>
+          <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px; margin-top:4px;">
+            ${['karen', 'rodrigo', 'oscar', 'karla'].map(k => {
+              const d = getDesignerLoad(k);
+              return `
+                <div style="display:flex; flex-direction:column; gap:4px; opacity: ${d.isVac ? 0.5 : 1}; padding: 10px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.03); border-radius: 6px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
+                    <span style="font-weight:700; color:#fff; display:flex; align-items:center; gap:4px;">
+                      ${d.fullName.split(' ')[0]} ${d.isVac ? '🌴' : ''}
+                    </span>
+                    <span style="font-family:var(--font-mono); font-size:10.5px; font-weight:bold; color:${d.barColor};">${d.pts}/6 Pts</span>
                   </div>
-                `;
-              })()}
-
-              <!-- Rodrigo Vergara Load -->
-              ${(function() {
-                let pts = 0;
-                let list = [];
-                vProjects.forEach(p => {
-                  if (p.proyectista.includes('Rodrigo')) {
-                    const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
-                    pts += pVal;
-                    list.push(p.id);
-                  }
-                });
-                const pct = Math.min(100, Math.round((pts / 6) * 100));
-                const barColor = pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
-                return `
-                  <div style="display:flex; flex-direction:column; gap:4px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
-                      <span style="font-weight:700; color:#fff;">Rodrigo Vergara</span>
-                      <span style="font-family:var(--font-mono); font-weight:bold; color:${barColor};">${pts}/6 Pts (${pct}%)</span>
-                    </div>
-                    <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
-                      <div style="width:${pct}%; height:100%; background:${barColor}; border-radius:3px;"></div>
-                    </div>
-                    <span style="font-size:10px; color:var(--text-muted);">Asignados: ${list.length > 0 ? list.join(', ') : 'Ninguno'}</span>
+                  <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden; margin: 4px 0;">
+                    <div style="width:${d.pct}%; height:100%; background:${d.barColor}; border-radius:3px;"></div>
                   </div>
-                `;
-              })()}
-
-              <!-- Oscar Rodriguez Load (Always simulated or vacant) -->
-              <div style="display:flex; flex-direction:column; gap:4px; opacity: 0.6;">
-                <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px;">
-                  <span style="font-weight:700; color:#fff;">Oscar Rodríguez 🌴 (MWM Activo)</span>
-                  <span style="font-family:var(--font-mono); font-weight:bold; color:var(--text-muted);">0/6 Pts (0%)</span>
+                  <span style="font-size:9.5px; color:${d.statusColor}; font-weight:700;">${d.statusLabel}</span>
+                  <span style="font-size:9.5px; color:var(--text-muted); text-overflow:ellipsis; overflow:hidden; white-space:nowrap; margin-top:2px;">
+                    Asignados: ${d.list.length > 0 ? d.list.map(p => p.id).join(', ') : 'Ninguno'}
+                  </span>
                 </div>
-                <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
-                  <div style="width:0%; height:100%; background:var(--green); border-radius:3px;"></div>
-                </div>
-                <span style="font-size:10px; color:var(--text-muted);">Asignados: Ninguno (Bloqueado por Vacaciones Programadas)</span>
-              </div>
-            </div>
-
-            <!-- Suggestion Engine Box -->
-            <div style="margin-top:4px; padding:10px; background:rgba(240,135,0,0.07); border:1px solid rgba(240,135,0,0.15); border-radius:4px; font-size:10.5px; color:#ffb050; display:flex; align-items:center; gap:8px;">
-              <span>💡</span>
-              <span><strong>Recomendación I.A.:</strong> Karen Tovar se encuentra saturada (SLA Crítico). Incomings deben derivarse a <strong>Rodrigo Vergara (Laguna Layouts)</strong> con capacidad al 100% disponible.</span>
-            </div>
+              `;
+            }).join('')}
           </div>
 
-          <!-- Charts Column -->
-          <div class="card" style="padding:20px; background:rgba(13,17,23,0.3); border:1px solid var(--border); border-radius:8px; display:flex; flex-direction:column; gap:14px;">
-            <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:8px;">📊 Segmentación de Cartera</span>
-            
-            <div style="display:flex; flex-direction:column; gap:16px; margin-top:4px;">
-              <!-- Magnitud Distribution -->
-              <div>
-                <span style="font-size:11px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:6px;">Distribución por Magnitud</span>
-                <div style="display:flex; height:22px; background:rgba(255,255,255,0.03); border-radius:4px; overflow:hidden; font-family:var(--font-mono); font-size:10px; font-weight:bold; text-align:center;">
-                  ${(function() {
-                    let g = vProjects.filter(p => p.magn === 'Grande').length;
-                    let m = vProjects.filter(p => p.magn === 'Mediano').length;
-                    let c = vProjects.filter(p => p.magn === 'Chico').length;
-                    let tot = g + m + c || 1;
-                    let gPct = Math.round((g/tot)*100);
-                    let mPct = Math.round((m/tot)*100);
-                    let cPct = Math.round((c/tot)*100);
-                    return `
-                      <div style="width:${gPct}%; height:100%; background:var(--gold); color:#000; display:flex; align-items:center; justify-content:center;" title="Grande">G (${g})</div>
-                      <div style="width:${mPct}%; height:100%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center;" title="Mediano">M (${m})</div>
-                      <div style="width:${cPct}%; height:100%; background:var(--teal); color:#000; display:flex; align-items:center; justify-content:center;" title="Chico">Ch (${c})</div>
-                    `;
-                  })()}
-                </div>
-              </div>
-
-              <!-- Etapas Distribution -->
-              <div>
-                <span style="font-size:11px; font-weight:600; color:var(--text-muted); display:block; margin-bottom:6px;">Distribución por Etapas CRM</span>
-                <div style="display:flex; height:10px; background:rgba(255,255,255,0.05); border-radius:2px; overflow:hidden;">
-                  ${(function() {
-                    let n = vProjects.filter(p => p.etapa.includes('NUEVO')).length;
-                    let m = vProjects.filter(p => p.etapa.includes('MODIF')).length;
-                    let r = vProjects.filter(p => p.etapa.includes('RENDER') || p.etapa.includes('SOLICITADO')).length;
-                    let v = vProjects.filter(p => p.etapa.includes('VALID')).length;
-                    let tot = n + m + r + v || 1;
-                    return `
-                      <div style="width:${Math.round((n/tot)*100)}%; height:100%; background:var(--blue); opacity:0.8;"></div>
-                      <div style="width:${Math.round((m/tot)*100)}%; height:100%; background:var(--red); opacity:0.8;"></div>
-                      <div style="width:${Math.round((r/tot)*100)}%; height:100%; background:var(--amber); opacity:0.8;"></div>
-                      <div style="width:${Math.round((v/tot)*100)}%; height:100%; background:var(--green); opacity:0.8;"></div>
-                    `;
-                  })()}
-                </div>
-                <div style="display:flex; justify-content:space-between; font-size:9.5px; color:var(--text-muted); margin-top:6px; font-family:var(--font-mono);">
-                  <span>🔵 Nuevo</span>
-                  <span>🔴 Modificación</span>
-                  <span>🟡 Render</span>
-                  <span>🟢 Validado</span>
-                </div>
-              </div>
-            </div>
+          <!-- Suggestion Engine Box -->
+          <div style="margin-top:4px; padding:10px; background:rgba(240,135,0,0.07); border:1px solid rgba(240,135,0,0.15); border-radius:4px; font-size:10.5px; color:#ffb050; display:flex; align-items:center; gap:8px;">
+            <span>💡</span>
+            <span><strong>Recomendación I.A.:</strong> ${reworkRate > 8 ? 'Tasa de retrabajo excede meta (<8%). El master log de Dirección registrará los cambios de titularidad de folios.' : 'Cargas generales mapeadas óptimamente en el Semáforo de Ocupación por Puntos.'}</span>
           </div>
         </div>
 
-        <!-- Master Connected Projects Table -->
+        <!-- MÓDULO C: Table Risk Tray with filters -->
         <div class="card p-0" style="background:rgba(18,22,30,0.4); border:1px solid var(--border); border-radius:8px;">
-          <div style="padding:16px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-            <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em;">📁 Consola Central de Proyectos</span>
-            <span style="font-size:10.5px; color:var(--text-muted);">Mostrando ${displayedProjects.length} de ${vProjects.length} Proyectos Filtrados</span>
+          <div style="padding:16px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <span style="font-size:12px; font-weight:700; color:#fff; text-transform:uppercase; letter-spacing:0.05em;">📁 Consola Central de Proyectos & Bandeja de Riesgo</span>
+            
+            <div style="display:flex; align-items:center; gap:16px;">
+              <!-- Magnitud Filter -->
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Magnitud:</span>
+                <select class="form-select" onchange="window.activeMasterMagnitudFilter = this.value; window.renderMasterWorkspace();" style="padding: 3px 6px; background: var(--surface-2); border:1px solid var(--border); color:#fff; font-size:10.5px; font-weight:600; border-radius:4px; outline:none; cursor:pointer; height:24px;">
+                  <option value="all" ${(window.activeMasterMagnitudFilter || 'all') === 'all' ? 'selected' : ''}>Todas</option>
+                  <option value="Grande" ${(window.activeMasterMagnitudFilter || 'all') === 'Grande' ? 'selected' : ''}>Grande (3 Pts)</option>
+                  <option value="Mediano" ${(window.activeMasterMagnitudFilter || 'all') === 'Mediano' ? 'selected' : ''}>Mediano (2 Pts)</option>
+                  <option value="Chico" ${(window.activeMasterMagnitudFilter || 'all') === 'Chico' ? 'selected' : ''}>Chico (1 Pt)</option>
+                </select>
+              </div>
+
+              <!-- Plaza Filter -->
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:10px; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Plaza/Región:</span>
+                <select class="form-select" onchange="window.activeMasterPlazaFilter = this.value; window.renderMasterWorkspace();" style="padding: 3px 6px; background: var(--surface-2); border:1px solid var(--border); color:#fff; font-size:10.5px; font-weight:600; border-radius:4px; outline:none; cursor:pointer; height:24px;">
+                  <option value="all" ${(window.activeMasterPlazaFilter || 'all') === 'all' ? 'selected' : ''}>Todas</option>
+                  <option value="LAG" ${(window.activeMasterPlazaFilter || 'all') === 'LAG' ? 'selected' : ''}>Torreón (LAG)</option>
+                  <option value="GOM" ${(window.activeMasterPlazaFilter || 'all') === 'GOM' ? 'selected' : ''}>Gómez Palacio (GOM)</option>
+                  <option value="MTY" ${(window.activeMasterPlazaFilter || 'all') === 'MTY' ? 'selected' : ''}>Monterrey (MTY)</option>
+                  <option value="CDMX" ${(window.activeMasterPlazaFilter || 'all') === 'CDMX' ? 'selected' : ''}>Centro (CDMX/QRO)</option>
+                </select>
+              </div>
+            </div>
+
+            <span style="font-size:10.5px; color:var(--text-muted);">Mostrando ${tableProjects.length} de ${vProjects.length} Proyectos</span>
           </div>
           
           <table class="data-table" style="width:100%;">
@@ -11730,7 +12352,7 @@ window.renderMasterWorkspace = function() {
               </tr>
             </thead>
             <tbody>
-              ${displayedProjects.map(p => {
+              ${tableProjects.map(p => {
                 const limitSla = p.diasSla || 5;
                 const phaseColor = p.etapa.includes('VALID') ? 'var(--green)' : p.etapa.includes('PEND') ? 'var(--red)' : p.etapa.includes('RENDER') ? 'var(--amber)' : 'var(--blue)';
                 return `
@@ -11753,18 +12375,19 @@ window.renderMasterWorkspace = function() {
                           <option value="Karen Tovar" ${p.proyectista === 'Karen Tovar' ? 'selected' : ''}>Karen Tovar</option>
                           <option value="Rodrigo Vergara" ${p.proyectista === 'Rodrigo Vergara' ? 'selected' : ''}>Rodrigo Vergara</option>
                           <option value="Oscar Rodríguez" ${p.proyectista === 'Oscar Rodríguez' ? 'selected' : ''}>Oscar Rodríguez</option>
+                          <option value="Karla Cerón" ${p.proyectista === 'Karla Cerón' ? 'selected' : ''}>Karla Cerón</option>
                         </select>
                       </div>
                     </td>
                     <td>
                       <span class="badge" style="border-color:${phaseColor}; color:${phaseColor}; background:rgba(${phaseColor === 'var(--green)' ? '63,185,80' : phaseColor === 'var(--red)' ? '248,81,73' : '240,135,0'}, 0.05); font-size:10px; font-weight:bold;">
-                        ${p.etapa}.
+                        ${p.etapa}
                       </span>
                     </td>
                     <td>
                       ${p.urgente ? `
                         <span class="badge red animate-pulse" style="font-size:10px; font-weight:bold; background:rgba(248,81,73,0.1);">
-                          ⚠️ ¡URGENTE SLA CRÍTICO!
+                          ⚠️ ¡SLA CRÍTICO!
                         </span>
                       ` : `
                         <span style="font-size:11px; color:var(--text-secondary); font-family:var(--font-mono);">
@@ -11773,7 +12396,15 @@ window.renderMasterWorkspace = function() {
                       `}
                     </td>
                     <td style="text-align:right; padding-right:24px;">
-                      <div style="display:flex; gap:6px; justify-content:flex-end;">
+                      <div style="display:flex; gap:6px; justify-content:flex-end; align-items:center;">
+                        <button onclick="
+                          const designers = ['Karen Tovar', 'Rodrigo Vergara', 'Oscar Rodríguez', 'Karla Cerón'];
+                          const current = '${p.proyectista}';
+                          const nextIdx = (designers.indexOf(current) + 1) % designers.length;
+                          window.masterReassignProject('${p.id}', designers[nextIdx]);
+                        " class="btn-outline-proy" style="padding:4px 8px; font-size:11px; border-radius:4px; border:1px solid var(--red); color:var(--red); background:rgba(248,81,73,0.02);" title="Intervenir y reasignar inmediatamente">
+                          ⚡ Intervenir
+                        </button>
                         <button onclick="openProjectDetails('${p.id}')" class="btn-outline-proy" style="padding:4px 8px; font-size:11px; border-radius:4px; border:1px solid var(--border); background:rgba(255,255,255,0.02);">
                           📂 Expediente
                         </button>
@@ -11784,6 +12415,1311 @@ window.renderMasterWorkspace = function() {
               }).join('')}
             </tbody>
           </table>
+        </div>
+      </div>
+    `;
+  } else if (window.activeMasterSection === 'dashboard_nacional') {
+    const activeFilter = window.dashNacionalFilter || 'semana';
+    const btnStyle = (f) => f === activeFilter 
+      ? 'background: rgba(201, 169, 110, 0.15); border: 1px solid var(--gold); color: var(--gold2);' 
+      : 'background: transparent; border: 1px solid transparent; color: var(--text-secondary);';
+      
+    activeHTML = `
+      <style>
+        .bar-chart-hover:hover {
+          filter: brightness(1.2) !important;
+          transform: translateY(-2px);
+        }
+        .alert-list-hover:hover {
+          background: rgba(255, 255, 255, 0.06) !important;
+        }
+      </style>
+      <div class="content-header" style="border-bottom: 1px solid var(--border); padding-bottom: 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h1 class="display-title" style="margin:0; font-size: 24px; color: var(--gold); font-family: var(--font-display);">Dashboard · Dirección nacional</h1>
+            <div class="subtitle" style="margin-top: 4px; color: var(--text-muted); font-size:12px; font-family: var(--font-mono); letter-spacing: 0.5px; text-transform:none;">
+              Cerebro 2.0 • <span id="dash-realtime-date">viernes 30 may 2025 • 09:41</span>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.03); padding: 4px; border-radius: 6px; border: 1px solid var(--border);">
+            <button onclick="window.dashNacionalFilter = 'hoy'; window.renderMasterWorkspace()" style="padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all 0.2s; ${btnStyle('hoy')}">Hoy</button>
+            <button onclick="window.dashNacionalFilter = 'semana'; window.renderMasterWorkspace()" style="padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all 0.2s; ${btnStyle('semana')}">Semana</button>
+            <button onclick="window.dashNacionalFilter = 'mes'; window.renderMasterWorkspace()" style="padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all 0.2s; ${btnStyle('mes')}">Mes</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-area" style="padding: 24px; display:flex; flex-direction:column; gap:24px;">
+        
+        <!-- LEVEL 1: SEMÁFORO EJECUTIVO -->
+        <div>
+          <span style="font-size: 10.5px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase;">NIVEL 1 · SEMÁFORO EJECUTIVO</span>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 8px;">
+            <!-- CARD 1 -->
+            <div class="card" style="padding: 16px; background: rgba(30,35,45,0.4); border:1px solid var(--border); border-radius: 8px; display:flex; flex-direction:column; justify-content:space-between; min-height: 120px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Proyectos Activos</span>
+                <span style="font-size: 18px;">🏗️</span>
+              </div>
+              <div style="margin: 12px 0 4px 0;">
+                <div style="font-size: 34px; font-family: var(--font-mono); font-weight: 700; color: #fff; line-height: 1;">128</div>
+                <div style="display:flex; align-items:center; gap: 4px; font-size:11px; color: var(--green); font-weight: 600; margin-top: 6px;">
+                  <span style="background: rgba(63,185,80,0.1); padding: 1px 6px; border-radius: 4px;">📈 +12 vs semana anterior</span>
+                </div>
+              </div>
+              <div style="font-size: 10.5px; color: var(--text-muted);">Nacional · todos los roles</div>
+            </div>
+
+            <!-- CARD 2 -->
+            <div class="card" style="padding: 16px; background: rgba(30,35,45,0.4); border:1px solid var(--border); border-radius: 8px; display:flex; flex-direction:column; justify-content:space-between; min-height: 120px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Tasa de Cierre</span>
+                <span style="font-size: 18px;">🎯</span>
+              </div>
+              <div style="margin: 12px 0 4px 0;">
+                <div style="font-size: 34px; font-family: var(--font-mono); font-weight: 700; color: var(--green); line-height: 1;">64%</div>
+                <div style="display:flex; align-items:center; gap: 4px; font-size:11px; color: var(--green); font-weight: 600; margin-top: 6px;">
+                  <span>Meta 60% superada ✓</span>
+                </div>
+              </div>
+              <div style="font-size: 10.5px; color: var(--text-muted);">Proyectos G + M + Ch</div>
+            </div>
+
+            <!-- CARD 3 -->
+            <div class="card" style="padding: 16px; background: rgba(30,35,45,0.4); border:1px solid var(--border); border-radius: 8px; display:flex; flex-direction:column; justify-content:space-between; min-height: 120px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Bloqueados Críticos</span>
+                <span style="font-size: 18px;">⚠️</span>
+              </div>
+              <div style="margin: 12px 0 4px 0;">
+                <div style="font-size: 34px; font-family: var(--font-mono); font-weight: 700; color: var(--red); line-height: 1;">18</div>
+                <div style="display:flex; align-items:center; gap: 4px; font-size:11px; color: var(--red); font-weight: 600; margin-top: 6px;">
+                  <span style="background: rgba(248,81,73,0.1); padding: 1px 6px; border-radius: 4px;">🟨 +3 vs semana anterior</span>
+                </div>
+              </div>
+              <div style="font-size: 10.5px; color: var(--text-muted);">&gt;7 días sin movimiento</div>
+            </div>
+
+            <!-- CARD 4 -->
+            <div class="card" style="padding: 16px; background: rgba(30,35,45,0.4); border:1px solid var(--border); border-radius: 8px; display:flex; flex-direction:column; justify-content:space-between; min-height: 120px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Valor en Pausa</span>
+                <span style="font-size: 18px;">💵</span>
+              </div>
+              <div style="margin: 12px 0 4px 0;">
+                <div style="font-size: 34px; font-family: var(--font-mono); font-weight: 700; color: #ff9a8d; line-height: 1;">$2.1M</div>
+                <div style="display:flex; align-items:center; gap: 4px; font-size:11px; color: #ff9a8d; font-weight: 600; margin-top: 6px;">
+                  <span>mix G/M/Ch</span>
+                </div>
+              </div>
+              <div style="font-size: 10.5px; color: var(--red); font-weight: bold;">Requiere intervención</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 2: VELOCIDAD OPERATIVA -->
+        <div>
+          <span style="font-size: 10.5px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase;">NIVEL 2 · VELOCIDAD OPERATIVA</span>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 8px;">
+            <!-- CARD 1 -->
+            <div class="card" style="padding: 16px; background: rgba(30,35,45,0.4); border:1px solid var(--border); border-radius: 8px; display:flex; flex-direction:column; justify-content:space-between; min-height: 120px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Tiempo Respuesta Inbox</span>
+                <span style="font-size: 18px;">⚡</span>
+              </div>
+              <div style="margin: 12px 0 4px 0;">
+                <div style="font-size: 34px; font-family: var(--font-mono); font-weight: 700; color: var(--teal); line-height: 1;">1.8h</div>
+                <div style="display:flex; align-items:center; gap: 4px; font-size:11px; color: var(--green); font-weight: 600; margin-top: 6px;">
+                  <span>Meta &lt;2h ✓</span>
+                </div>
+              </div>
+              <div style="font-size: 10.5px; color: var(--text-muted);">Promedio semanal</div>
+            </div>
+
+            <!-- CARD 2 -->
+            <div class="card" style="padding: 16px; background: rgba(30,35,45,0.4); border:1px solid var(--border); border-radius: 8px; display:flex; flex-direction:column; justify-content:space-between; min-height: 120px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Tiempo Entrega</span>
+                <span style="font-size: 18px;">📅</span>
+              </div>
+              <div style="margin: 12px 0 4px 0;">
+                <div style="font-size: 34px; font-family: var(--font-mono); font-weight: 700; color: var(--amber); line-height: 1;">4.5d</div>
+                <div style="display:flex; align-items:center; gap: 4px; font-size:10.5px; color: var(--red); font-weight: 600; margin-top: 6px;">
+                  <span style="background: rgba(248,81,73,0.1); padding: 1px 6px; border-radius: 4px;">⚠️ +1.5d sobre meta (3d)</span>
+                </div>
+              </div>
+              <div style="font-size: 10.5px; color: var(--text-muted);">Días hábiles promedio</div>
+            </div>
+
+            <!-- CARD 3 -->
+            <div class="card" style="padding: 16px; background: rgba(30,35,45,0.4); border:1px solid var(--border); border-radius: 8px; display:flex; flex-direction:column; justify-content:space-between; min-height: 120px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Retrabajo</span>
+                <span style="font-size: 18px;">🔄</span>
+              </div>
+              <div style="margin: 12px 0 4px 0;">
+                <div style="font-size: 34px; font-family: var(--font-mono); font-weight: 700; color: var(--amber); line-height: 1;">11%</div>
+                <div style="display:flex; align-items:center; gap: 4px; font-size:11px; color: var(--amber); font-weight: 600; margin-top: 6px;">
+                  <span>Meta &lt;8% • +3pp</span>
+                </div>
+              </div>
+              <div style="font-size: 10.5px; color: var(--text-muted);">Fase 3 concentra 38%</div>
+            </div>
+
+            <!-- CARD 4 -->
+            <div class="card" style="padding: 16px; background: rgba(30,35,45,0.4); border:1px solid var(--border); border-radius: 8px; display:flex; flex-direction:column; justify-content:space-between; min-height: 120px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Alertas Resueltas &lt;4h</span>
+                <span style="font-size: 18px;">✅</span>
+              </div>
+              <div style="margin: 12px 0 4px 0;">
+                <div style="font-size: 34px; font-family: var(--font-mono); font-weight: 700; color: var(--amber); line-height: 1;">61%</div>
+                <div style="display:flex; align-items:center; gap: 4px; font-size:11px; color: var(--text-secondary); font-weight: 600; margin-top: 6px;">
+                  <span>Meta &gt;80%</span>
+                </div>
+              </div>
+              <div style="font-size: 10.5px; color: var(--teal); font-weight: 600;">Nuevo KPI activo</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MID CHART -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px;">
+          <!-- COLUMN 1: Weekly Delivered Bar Chart -->
+          <div class="card" style="padding: 20px; background: rgba(30,35,45,0.2); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 16px;">
+              <span style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase;">Proyectos entregados por semana (últimas 8 semanas)</span>
+              <span style="font-size: 11px; color: var(--text-secondary); font-family:var(--font-mono);">meta = 22 / sem</span>
+            </div>
+            
+            <div style="position: relative; height: 180px; display: flex; align-items: flex-end; justify-content: space-between; padding-top: 20px;">
+              <div style="position: absolute; left: 0; right: 0; bottom: calc(140px * (22 / 28) + 16px); border-bottom: 1px dashed var(--amber); opacity: 0.6; z-index: 1;">
+                <span style="position: absolute; right: 0; top: -14px; font-size: 9px; color: var(--amber); font-weight: 700; font-family: var(--font-mono);">META (22)</span>
+              </div>
+              
+              ${[
+                { s: 'S1', val: 16 },
+                { s: 'S2', val: 19 },
+                { s: 'S3', val: 21 },
+                { s: 'S4', val: 18 },
+                { s: 'S5', val: 20 },
+                { s: 'S6', val: 15 },
+                { s: 'S7', val: 24, met: true },
+                { s: 'S8', val: 18 }
+              ].map(bar => `
+                <div style="flex: 1; margin: 0 4px; display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                  <div style="position: relative; width: 100%; max-width: 24px; height: calc(140px * (\${bar.val} / 28)); background: \${bar.met ? 'linear-gradient(to top, var(--teal), #56d364)' : 'linear-gradient(to top, #367243, var(--green))'}; border-radius: 4px 4px 0 0; transition: all var(--transition); cursor: pointer; display: flex; align-items: flex-end; justify-content: center;" class="bar-chart-hover" title="\${bar.val} proyectos">
+                    <span style="position: absolute; top: -18px; font-size: 10px; font-family: var(--font-mono); font-weight: bold; color: #fff;">\${bar.val}</span>
+                  </div>
+                  <span style="font-size: 10px; color: var(--text-secondary); font-family: var(--font-mono); margin-top: 6px;">\${bar.s}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- COLUMN 2: Pipeline por Fase -->
+          <div class="card" style="padding: 20px; background: rgba(30,35,45,0.2); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 16px;">
+              <span style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase;">Pipeline por fase</span>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 11px; flex: 1; justify-content: center;">
+              ${[
+                { phase: 'Sin asignar', val: 18, color: '#f85149', pct: 36 },
+                { phase: 'Fase 1: Brief', val: 31, color: '#58a6ff', pct: 62 },
+                { phase: 'Fase 2: Layout', val: 35, color: '#3ecfb2', pct: 70 },
+                { phase: 'Fase 3: Modific.', val: 24, color: '#d29922', pct: 48 },
+                { phase: 'Fase 4: Cierre', val: 20, color: '#3fb950', pct: 40 }
+              ].map(r => `
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; justify-content: space-between; font-size: 11.5px;">
+                    <span style="color: var(--text-primary); font-weight: 500; display: flex; align-items: center; gap: 6px;">
+                      <span style="width: 8px; height: 8px; border-radius: 50%; background: \dots; background:\${r.color}; display: inline-block;"></span>
+                      \${r.phase}
+                    </span>
+                    <span style="font-family: var(--font-mono); font-weight: bold; color: #fff;">\${r.val}</span>
+                  </div>
+                  <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                    <div style="width: \dots; width:\${r.pct}%; height: 100%; background: \dots; background:\${r.color}; border-radius: 3px;"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 3: EQUIPO Y CAPACIDAD -->
+        <div>
+          <span style="font-size: 10.5px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase;">NIVEL 3 · EQUIPO Y CAPACIDAD</span>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; margin-top: 8px;">
+            
+            <div class="card" style="padding: 20px; background: rgba(30,35,45,0.2); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; min-height: 240px;">
+              <div>
+                <div style="border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 16px;">
+                  <span style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase;">Carga del equipo ahora</span>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 24px; height: 24px; background: rgba(248,81,73,0.15); border: 1px solid var(--red); color: var(--red); font-size: 10px; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono);">KT</div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                      <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span style="color:#fff; font-weight: 600;">Karen Tovar</span>
+                        <span style="font-family: var(--font-mono); font-weight: bold; color: var(--red);">6/6 pts</span>
+                      </div>
+                      <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 100%; height: 100%; background: var(--red); border-radius: 3px;"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 24px; height: 24px; background: rgba(248,81,73,0.15); border: 1px solid var(--red); color: var(--red); font-size: 10px; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono);">OR</div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                      <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span style="color:#fff; font-weight: 600;">Oscar Rodríguez</span>
+                        <span style="font-family: var(--font-mono); font-weight: bold; color: var(--red);">6/6 pts</span>
+                      </div>
+                      <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 100%; height: 100%; background: var(--red); border-radius: 3px;"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 24px; height: 24px; background: rgba(63,185,80,0.15); border: 1px solid var(--green); color: var(--green); font-size: 10px; font-weight: bold; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono);">RV</div>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+                      <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                        <span style="color:#fff; font-weight: 600;">Rodrigo Vergara</span>
+                        <span style="font-family: var(--font-mono); font-weight: bold; color: var(--green);">2/6 pts</span>
+                      </div>
+                      <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                        <div style="width: 33.3%; height: 100%; background: var(--green); border-radius: 3px;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4;">
+                  Capacidad libre: <strong>4 pts</strong> · 1 proyecto G o 2 proyectos M disponibles.
+                </div>
+                <button onclick="window.switchMasterSection('dashboard', this)" class="btn-outline-proy" style="width: 100%; text-align: center; justify-content: center; display: flex; align-items: center; gap: 6px; border: 1px solid var(--gold); color: var(--gold2); font-weight: 600; padding: 10px; border-radius: 6px; background: rgba(201, 169, 110, 0.03);">
+                  Reasignar Proyectos ↗
+                </button>
+              </div>
+            </div>
+
+            <!-- Line chart of Rework -->
+            <div class="card" style="padding: 20px; background: rgba(30,35,45,0.2); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; min-height: 240px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 16px;">
+                <span style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase;">Retrabajo por proyectista — últimas 4 semanas</span>
+                <span style="font-size: 11px; color: var(--text-secondary); font-family:var(--font-mono);">meta &lt;8%</span>
+              </div>
+              
+              <div style="flex: 1; position: relative; min-height: 140px; display: flex; flex-direction: column; justify-content: space-between;">
+                <svg viewBox="0 0 320 120" style="width: 100%; height: 100%; border-radius: 4px; overflow: visible;">
+                  <line x1="0" y1="120" x2="320" y2="120" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" />
+                  <line x1="0" y1="90" x2="320" y2="90" stroke="rgba(255,255,255,0.03)" stroke-width="0.5" />
+                  <line x1="0" y1="60" x2="320" y2="60" stroke="rgba(255,255,255,0.03)" stroke-width="0.5" />
+                  <line x1="0" y1="30" x2="320" y2="30" stroke="rgba(255,255,255,0.03)" stroke-width="0.5" />
+                  
+                  <line x1="0" y1="72" x2="320" y2="72" stroke="var(--amber)" stroke-dasharray="3,3" stroke-width="1" opacity="0.7" />
+                  <text x="315" y="68" fill="var(--amber)" font-family="monospace" font-size="7" text-anchor="end" font-weight="bold">META (8%)</text>
+                  
+                  <path d="M 20 80 Q 120 70 220 75 T 300 80" fill="none" stroke="#f85149" stroke-width="2" />
+                  <circle cx="20" cy="80" r="3" fill="#f85149" />
+                  <circle cx="120" cy="70" r="3" fill="#f85149" />
+                  <circle cx="220" cy="75" r="3" fill="#f85149" />
+                  <circle cx="300" cy="80" r="3" fill="#f85149" />
+                  
+                  <path d="M 20 68 Q 120 60 220 56 T 300 60" fill="none" stroke="#58a6ff" stroke-width="2" />
+                  <circle cx="20" cy="68" r="3" fill="#58a6ff" />
+                  <circle cx="120" cy="60" r="3" fill="#58a6ff" />
+                  <circle cx="220" cy="56" r="3" fill="#58a6ff" />
+                  <circle cx="300" cy="60" r="3" fill="#58a6ff" />
+                  
+                  <path d="M 20 105 Q 120 100 220 102 T 300 105" fill="none" stroke="#3ecfb2" stroke-width="2" />
+                  <circle cx="20" cy="105" r="3" fill="#3ecfb2" />
+                  <circle cx="120" cy="100" r="3" fill="#3ecfb2" />
+                  <circle cx="220" cy="102" r="3" fill="#3ecfb2" />
+                  <circle cx="300" cy="105" r="3" fill="#3ecfb2" />
+                </svg>
+                
+                <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 9.5px; color: var(--text-secondary); margin-top: 6px; padding: 0 10px;">
+                  <span>S-4</span>
+                  <span>S-3</span>
+                  <span>S-2</span>
+                  <span>Actual</span>
+                </div>
+                
+                <div style="display: flex; gap: 14px; justify-content: center; font-size: 10px; margin-top: 10px; flex-wrap: wrap;">
+                  <span style="display: flex; align-items: center; gap: 4px; color: var(--text-primary);"><span style="width:8px; height:2px; background:#f85149; display:inline-block;"></span> Karen</span>
+                  <span style="display: flex; align-items: center; gap: 4px; color: var(--text-primary);"><span style="width:8px; height:2px; background:#58a6ff; display:inline-block;"></span> Oscar</span>
+                  <span style="display: flex; align-items: center; gap: 4px; color: var(--text-primary);"><span style="width:8px; height:2px; background:#3ecfb2; display:inline-block;"></span> Rodrigo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 4: ALERTAS ACTIVAS -->
+        <div>
+          <span style="font-size: 10.5px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase;">NIVEL 4 · ALERTAS ACTIVAS Y NEGOCIO</span>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 16px; margin-top: 8px;">
+            <!-- Column 1 -->
+            <div class="card" style="padding: 20px; background: rgba(30,35,45,0.2); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column;">
+              <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 16px;">
+                <span style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase;">Valor entregado vs meta (MXN · semana)</span>
+                <span style="font-size: 11px; color: var(--text-secondary); font-family:var(--font-mono);">meta $1.8M/sem</span>
+              </div>
+              
+              <div style="position: relative; height: 180px; display: flex; align-items: flex-end; justify-content: space-between; padding-top: 20px;">
+                <div style="position: absolute; left: 0; right: 0; bottom: calc(140px * (1.8 / 2.8) + 16px); border-bottom: 1px dashed var(--red); opacity: 0.6; z-index: 1;">
+                  <span style="position: absolute; right: 0; top: -14px; font-size: 9px; color: var(--red); font-weight: 700; font-family: var(--font-mono);">META LIMIT ($1.8M)</span>
+                </div>
+                
+                ${[
+                  { s: 'S1', val: 1.4 },
+                  { s: 'S2', val: 1.9, above: true },
+                  { s: 'S3', val: 1.8, above: true },
+                  { s: 'S4', val: 1.2 },
+                  { s: 'S5', val: 1.9, above: true },
+                  { s: 'S6', val: 1.5 },
+                  { s: 'S7', val: 2.1, above: true },
+                  { s: 'S8', val: 1.6 }
+                ].map(bar => `
+                  <div style="flex: 1; margin: 0 4px; display: flex; flex-direction: column; align-items: center; z-index: 2;">
+                    <div style="position: relative; width: 100%; max-width: 24px; height: calc(140px * (\${bar.val} / 2.8)); background: \${bar.above ? 'linear-gradient(to top, var(--teal), #56d364)' : 'linear-gradient(to top, #c74d46, var(--red))'}; border-radius: 4px 4px 0 0; transition: all var(--transition); cursor: pointer; display: flex; align-items: flex-end; justify-content: center;" class="bar-chart-hover" title="$\${bar.val}M entregados">
+                      <span style="position: absolute; top: -18px; font-size: 9.5px; font-family: var(--font-mono); font-weight: bold; color: #fff;">$\${bar.val}M</span>
+                    </div>
+                    <span style="font-size: 10px; color: var(--text-secondary); font-family: var(--font-mono); margin-top: 6px;">\${bar.s}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Column 2: Active Alerts List -->
+            <div class="card" style="padding: 20px; background: rgba(30,35,45,0.2); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; min-height: 240px;">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; margin-bottom: 12px;">
+                  <span style="font-size: 12px; font-weight: 700; color: #fff; text-transform: uppercase;">Alertas activas</span>
+                  <span style="font-size: 10px; background: rgba(248,81,73,0.15); color: var(--red); font-weight: bold; padding: 2px 8px; border-radius: 12px; font-family: var(--font-mono);">5 ahora</span>
+                </div>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px; max-height: 190px; overflow-y: auto;">
+                  <div style="padding: 8px 12px; background: rgba(248,81,73,0.04); border: 1px solid rgba(248,81,73,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; transition: background 0.2s;" onclick="openProjectDetails('QRO-041')" class="alert-list-hover">
+                    <span style="font-family: var(--font-mono); font-size: 10.5px; font-weight: bold; padding: 2px 5px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--gold);">QRO-041</span>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                      <span style="font-size: 11.5px; font-weight: 600; color: #fff;">Torre Norte</span>
+                      <span style="font-size: 10px; color: var(--text-secondary);">Sin asignar · $820k · 2h en bandeja</span>
+                    </div>
+                    <span style="font-size: 9px; padding: 2px 6px; border-radius: 12px; background: rgba(248,81,73,0.15); color: var(--red); font-weight: 700; text-transform: uppercase;">Crítico</span>
+                  </div>
+                  
+                  <div style="padding: 8px 12px; background: rgba(248,81,73,0.04); border: 1px solid rgba(248,81,73,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; transition: background 0.2s;" onclick="openProjectDetails('LAG-011')" class="alert-list-hover">
+                    <span style="font-family: var(--font-mono); font-size: 10.5px; font-weight: bold; padding: 2px 5px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--gold);">LAG-011</span>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                      <span style="font-size: 11.5px; font-weight: 600; color: #fff;">Sala Saulo</span>
+                      <span style="font-size: 10px; color: var(--text-secondary);">URGENTE • $620k · vence hoy</span>
+                    </div>
+                    <span style="font-size: 9px; padding: 2px 6px; border-radius: 12px; background: rgba(248,81,73,0.15); color: var(--red); font-weight: 700; text-transform: uppercase;">Crítico</span>
+                  </div>
+
+                  <div style="padding: 8px 12px; background: rgba(248,81,73,0.04); border: 1px solid rgba(248,81,73,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; transition: background 0.2s;" onclick="openProjectDetails('MTY-018')" class="alert-list-hover">
+                    <span style="font-family: var(--font-mono); font-size: 10.5px; font-weight: bold; padding: 2px 5px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--gold);">MTY-018</span>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                      <span style="font-size: 11.5px; font-weight: 600; color: #fff;">Hub Norte</span>
+                      <span style="font-size: 10px; color: var(--text-secondary);">9 días bloqueado • Oscar al límite</span>
+                    </div>
+                    <span style="font-size: 9px; padding: 2px 6px; border-radius: 12px; background: rgba(248,81,73,0.15); color: var(--red); font-weight: 700; text-transform: uppercase;">Crítico</span>
+                  </div>
+
+                  <div style="padding: 8px 12px; background: rgba(210,153,34,0.04); border: 1px solid rgba(210,153,34,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; transition: background 0.2s;" onclick="openProjectDetails('CDMX-001')" class="alert-list-hover">
+                    <span style="font-family: var(--font-mono); font-size: 10.5px; font-weight: bold; padding: 2px 5px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--gold);">CDMX-001</span>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                      <span style="font-size: 11.5px; font-weight: 600; color: #fff;">Huehuetoca</span>
+                      <span style="font-size: 10px; color: var(--text-secondary);">Entrega hoy • sin confirmar</span>
+                    </div>
+                    <span style="font-size: 9px; padding: 2px 6px; border-radius: 12px; background: rgba(210,153,34,0.15); color: var(--amber); font-weight: 700; text-transform: uppercase;">Atención</span>
+                  </div>
+
+                  <div style="padding: 8px 12px; background: rgba(88,166,255,0.04); border: 1px solid rgba(88,166,255,0.15); border-radius: 6px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; transition: background 0.2s;" onclick="openProjectDetails('LAG-031')" class="alert-list-hover">
+                    <span style="font-family: var(--font-mono); font-size: 10.5px; font-weight: bold; padding: 2px 5px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--gold);">LAG-031</span>
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                      <span style="font-size: 11.5px; font-weight: 600; color: #fff;">DHL México</span>
+                      <span style="font-size: 10px; color: var(--text-secondary);">En bandeja 4h • expediente 100%</span>
+                    </div>
+                    <span style="font-size: 9px; padding: 2px 6px; border-radius: 12px; background: rgba(88,166,255,0.15); color: var(--blue); font-weight: 700; text-transform: uppercase;">Pendiente</span>
+                  </div>
+                </div>
+              </div>
+              
+              <button onclick="window.switchMasterSection('dashboard', this)" class="btn-outline-proy" style="width: 100%; text-align: center; justify-content: center; display: flex; align-items: center; gap: 6px; border: 1px solid var(--border); color: var(--text-primary); font-weight: 500; padding: 10px; border-radius: 6px; background: rgba(255,255,255,0.02); margin-top: 10px;">
+                Ver panel de control completo ↗
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LEVEL 5: INSIGHTS AUTOMÁTICOS -->
+        <div style="margin-bottom: 24px;">
+          <span style="font-size: 10.5px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.15em; text-transform: uppercase;">NIVEL 5 · INSIGHTS AUTOMÁTICOS</span>
+          <div class="card" style="padding: 24px; background: rgba(30, 35, 45, 0.4); border: 1px solid rgba(201, 169, 110, 0.25); border-radius: 8px; margin-top: 8px;">
+            <div style="display:flex; align-items:center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; margin-bottom: 16px;">
+              <span style="font-size: 18px;">💡</span>
+              <span style="font-size: 13.5px; font-weight: bold; color: var(--gold2); text-transform: uppercase; letter-spacing: 0.05em;">Lo que el sistema detectó esta semana</span>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="background: rgba(248,81,73,0.1); color: var(--red); font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-top: 1px;">🔴</span>
+                <span style="font-size: 12.5px; color: var(--text-primary); line-height: 1.5;">
+                  <strong>Oscar Rodríguez</strong> tiene el retrabajo más alto del equipo (14%) y lleva 9 días sin avanzar en <strong>MTY-018</strong>. Señal de sobrecarga sostenida — candidato a redistribución de carga.
+                </span>
+              </div>
+              
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="background: rgba(63,185,80,0.1); color: var(--green); font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-top: 1px;">🟢</span>
+                <span style="font-size: 12.5px; color: var(--text-primary); line-height: 1.5;">
+                  <strong>Rodrigo Vergara</strong> tiene 4 puntos de carga disponibles y el retrabajo más bajo del equipo (4%). Capacidad ociosa que puede absorber proyectos G urgentes como <strong>QRO-041</strong>.
+                </span>
+              </div>
+
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="background: rgba(212,153,34,0.1); color: var(--amber); font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-top: 1px;">⚙️</span>
+                <span style="font-size: 12.5px; color: var(--text-primary); line-height: 1.5;">
+                  El <strong>38% del retrabajo</strong> ocurre en Fase 3 (Modificaciones). Patrón consistente en las últimas 4 semanas. Señal de briefs incompletos en el inicio — problema de proceso, no de proyectista.
+                </span>
+              </div>
+
+              <div style="display: flex; gap: 12px; align-items: flex-start;">
+                <span style="background: rgba(88,166,255,0.1); color: var(--blue); font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; margin-top: 1px;">📊</span>
+                <span style="font-size: 12.5px; color: var(--text-primary); line-height: 1.5;">
+                  Tasa de cierre en <strong>64%</strong>, 4pp por encima de la meta. Impulso de proyectos tipo G en Laguna y CDMX. Semana positiva en negocio pese a cuellos de botella operativos.
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (window.activeMasterSection === 'reportes') {
+    // Determine active filter categories for Reports view
+    window.activeReportCat = window.activeReportCat || 'todos';
+    
+    // Live calculations from Workspace
+    const totalProjectsCount = vProjects.length;
+    const urgentCount = vProjects.filter(p => p.urgente).length;
+    let totalBudgetVal = 0;
+    vProjects.forEach(p => {
+      let num = parseInt(p.monto.replace(/[^0-9]/g, ''), 10) || 0;
+      totalBudgetVal += num;
+    });
+    const formattedRealBudget = '$' + (totalBudgetVal / 1000000).toFixed(1) + 'M';
+
+    // Set styling for filter tab buttons
+    const repTabStyle = (cat) => cat === window.activeReportCat
+      ? 'background: rgba(201, 169, 110, 0.18); border: 1px solid var(--gold); color: var(--gold2); box-shadow: 0 0 10px rgba(201,169,110,0.1);' 
+      : 'background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.06); color: var(--text-secondary);';
+
+    // Interactive downloads
+    window.downloadReportDataCSV = function(reportType) {
+      let csvContent = "\ufeff"; // UTF-8 BOM
+      if (reportType === 'semanal') {
+        csvContent += "INFORMACIÓN GENERAL - REPORTE SEMANAL DE OPERACIONES\n";
+        csvContent += "Cerebro 2.0 - Grupo Gebesa S.A. de C.V.\n";
+        csvContent += "Generado: " + new Date().toLocaleDateString() + "\n\n";
+        csvContent += "FOLIO,CLIENTE,MONTO,PROYECTISTA,PLAZA,ETAPA,ESTATUS\n";
+        vProjects.forEach(p => {
+          csvContent += `"${p.id}","${p.cliente || 'Sin Cliente'}","${p.monto || '$0'}","${p.proyectista || 'Sin asignar'}","${p.plaza || 'Nacional'}","${p.etapa || 'NUEVO'}","${p.urgente ? 'Critico/Urgente' : 'Normal'}"\n`;
+        });
+      } else if (reportType === 'rendimiento') {
+        csvContent += "REPORTE DE RENDIMIENTO GENERAL POR PROYECTISTA\n";
+        csvContent += "Cerebro 2.0 - Grupo Gebesa S.A. de C.V.\n";
+        csvContent += "Generado: " + new Date().toLocaleDateString() + "\n\n";
+        csvContent += "Proyectista,Carga actual,Entrega Promedio,Retrabajo,Alertas Pendientes,Estado Operativo\n";
+        csvContent += "Karen Tovar,6 / 6 pts (100%),4.2 dias,9%,2 urgentes,Saturado/Al limite\n";
+        csvContent += "Oscar Rodriguez,6 / 6 pts (100%),5.1 dias,14%,1 bloqueado 9d,Saturado/Al limite\n";
+        csvContent += "Rodrigo Vergara,2 / 6 pts (33.3%),2.8 dias,4%,Ninguna,Disponible\n";
+      } else if (reportType === 'cobertura') {
+        csvContent += "DISTRIBUCIÓN GEOGRÁFICA Y COBERTURA DE PROYECTOS\n";
+        csvContent += "Cerebro 2.0 - Grupo Gebesa S.A. de C.V.\n";
+        csvContent += "Generado: " + new Date().toLocaleDateString() + "\n\n";
+        csvContent += "Region / Plaza,Proyectos Activos,Participacion por Carga,Estatus Cobertura\n";
+        csvContent += "Laguna (LAG),38,30%,Capacidad Optima\n";
+        csvContent += "Monterrey (MTY),32,25%,Sobrecargado (Oscar al limite)\n";
+        csvContent += "Queretaro (QRO),26,20%,Demanda Alta\n";
+        csvContent += "CDMX,19,15%,Capacidad limite\n";
+        csvContent += "Otras,13,10%,Estable\n";
+      } else if (reportType === 'riesgos') {
+        csvContent += "AUDITORÍA DE RIESGOS, SLA Y ALERTAS CRÍTICAS\n";
+        csvContent += "Cerebro 2.0 - Grupo Gebesa S.A. de C.V.\n";
+        csvContent += "Generado: " + new Date().toLocaleDateString() + "\n\n";
+        csvContent += "FOLIO,CLIENTE,MONTO,DÍAS BLOQUEADO,ALERTAS ACTIVAS,ACCIÓN REQUERIDA\n";
+        csvContent += "QRO-041,Torre Norte,$820,000,2 horas inactivo,Asignacion Urgente a Rodrigo Vergara\n";
+        csvContent += "LAG-011,Sala Saulo,$620,000,Entrega hoy,Validar entregables de inmediato\n";
+        csvContent += "MTY-018,Hub Norte,$450,000,9 dias estancado,Intervencion Directiva con Karen Tovar\n";
+        csvContent += "CDMX-001,Huehuetoca,$1,250,000,Revision de cambios,Confirmar Layout corregido\n";
+      }
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", `gebesa_reporte_${reportType}_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('success', 'Archivo Exportado ✓', `Se generó y descargó el reporte de ${reportType.toUpperCase()} con datos consolidados del sistema.`);
+    };
+
+    // Modal drawer controller inside iframe
+    window.openReportDrawerModal = function(type) {
+      const drawer = document.getElementById('report-drawer-panel');
+      if (!drawer) return;
+      
+      const titleEl = document.getElementById('report-drawer-title');
+      const bodyEl = document.getElementById('report-drawer-body');
+      const actionEl = document.getElementById('report-drawer-action-btn');
+      
+      actionEl.onclick = function() {
+        window.downloadReportDataCSV(type);
+      };
+
+      let tableHTML = '';
+      if (type === 'semanal') {
+        titleEl.innerHTML = '📄 Reporte Semanal de Operaciones <span style="font-size:11px; font-weight:normal; background:rgba(30,200,100,0.15); color:var(--green); border:1px solid var(--green); padding:2px 8px; border-radius:12px; margin-left:8px; font-family:var(--font-mono)">ESTRUCTURA PDF</span>';
+        tableHTML = `
+          <div style="background: rgba(255,255,255,0.02); border:1px solid var(--border); border-radius: 6px; padding: 20px; font-family: var(--font-sans);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--gold); padding-bottom:12px; margin-bottom:20px;">
+              <div>
+                <h3 style="margin:0; font-family:var(--font-display); color:var(--gold); font-size:16px;">GEBESA CEREBRO 2.0 • DIRECCIÓN</h3>
+                <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono)">ID DOCUMENTO: REP-OPS-WEEKLY-${new Date().getFullYear()}</span>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:11px; font-weight:bold; color:#fff;">CONFIDENCIAL</span><br/>
+                <span style="font-size:9.5px; color:var(--text-secondary); font-family:var(--font-mono)">Fecha: ${new Date().toLocaleDateString()}</span>
+              </div>
+            </div>
+            
+            <p style="font-size:12px; color:var(--text-primary); line-height:1.5; margin-bottom:16px;">
+              Este informe ejecutivo recopila la productividad consolidada en el panel nacional. Refleja las cargas operativas de diseñadores técnicos, índices de SLA y flujos de retrabajo para la toma de decisiones estratégicas de la Dirección General.
+            </p>
+
+            <h4 style="color:#fff; font-size:12px; font-weight:bold; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">I. RESUMEN DE COMPLIANCE (SLA Y RENDIMIENTO)</h4>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:20px;">
+              <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); padding:10px; border-radius:4px; text-align:center;">
+                <span style="font-size:9px; color:var(--text-secondary); text-transform:uppercase;">Tasa de Cierre</span>
+                <div style="font-size:18px; font-weight:bold; color:var(--green); font-family:var(--font-mono); margin-top:4px;">64%</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); padding:10px; border-radius:4px; text-align:center;">
+                <span style="font-size:9px; color:var(--text-secondary); text-transform:uppercase;">Valor en Pausa</span>
+                <div style="font-size:18px; font-weight:bold; color:var(--red); font-family:var(--font-mono); margin-top:4px;">$2.1M</div>
+              </div>
+              <div style="background:rgba(255,255,255,0.02); border:1px solid var(--border); padding:10px; border-radius:4px; text-align:center;">
+                <span style="font-size:9px; color:var(--text-secondary); text-transform:uppercase;">Consolidador Total</span>
+                <div style="font-size:18px; font-weight:bold; color:var(--gold); font-family:var(--font-mono); margin-top:4px;">${totalProjectsCount} Proys</div>
+              </div>
+            </div>
+
+            <h4 style="color:#fff; font-size:12px; font-weight:bold; margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">II. DESGLOSE DE PROYECTOS VIGENTES EN COLA</h4>
+            <table style="width:100%; border-collapse:collapse; font-size:10.5px; text-align:left;">
+              <thead>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.1); color:var(--text-secondary)">
+                  <th style="padding:6px 4px;">FOLIO</th>
+                  <th style="padding:6px 4px;">CLIENTE</th>
+                  <th style="padding:6px 4px;">MONTO</th>
+                  <th style="padding:6px 4px;">PROYECTISTA</th>
+                  <th style="padding:6px 4px;">ETAPA</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${vProjects.slice(0, 5).map(p => `
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.03); color:var(--text-primary)">
+                    <td style="padding:6px 4px; font-family:var(--font-mono); color:var(--gold); font-weight:bold;">${p.id}</td>
+                    <td style="padding:6px 4px; font-weight:600;">${p.cliente || 'S/C'}</td>
+                    <td style="padding:6px 4px; font-family:var(--font-mono)">${p.monto}</td>
+                    <td style="padding:6px 4px;">${p.proyectista || 'Sin asignar'}</td>
+                    <td style="padding:6px 4px;"><span style="font-size:9px; padding:2px 6px; background:rgba(255,255,255,0.04); border-radius:4px;">${p.etapa}</span></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            
+            <div style="margin-top:20px; font-size:9.5px; color:var(--text-muted); border-top:1px dashed var(--border); padding-top:10px; display:flex; justify-content:space-between;">
+              <span>Sello de Auditoría Inmutable: GEBESA-CEREBRO-A74B9</span>
+              <span>Página 1 de 1</span>
+            </div>
+          </div>
+        `;
+      } else if (type === 'rendimiento') {
+        titleEl.innerHTML = '👤 Reporte de Rendimiento por Proyectista <span style="font-size:11px; font-weight:normal; background:rgba(30,200,100,0.15); color:var(--green); border:1px solid var(--green); padding:2px 8px; border-radius:12px; margin-left:8px; font-family:var(--font-mono)">ESTRUCTURA ANALÍTICA</span>';
+        tableHTML = `
+          <div style="background: rgba(255,255,255,0.02); border:1px solid var(--border); border-radius: 6px; padding: 20px; font-family: var(--font-sans);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--blue); padding-bottom:12px; margin-bottom:20px;">
+              <div>
+                <h3 style="margin:0; font-family:var(--font-display); color:var(--blue); font-size:16px;">MEDICIÓN DE CAPACIDAD Y CONTROL SLA</h3>
+                <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono)">ID DOCUMENTO: REP-DESIGNER-HR-${new Date().getFullYear()}</span>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:11px; font-weight:bold; color:var(--amber);">ELEVADO RETRABAJO CDMX/MTY</span><br/>
+                <span style="font-size:9.5px; color:var(--text-secondary); font-family:var(--font-mono)">Fecha: ${new Date().toLocaleDateString()}</span>
+              </div>
+            </div>
+
+            <p style="font-size:12px; color:var(--text-primary); line-height:1.5; margin-bottom:16px;">
+              Auditoría individualizada del desempeño técnico. Este reporte identifica la carga viva expresada bajo el escalamiento de puntos relativos (G=3, M=2, Ch=1) y su correlación con la tasa de retrabajo originada en las modificaciones repetitivas.
+            </p>
+
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="background:rgba(248,81,73,0.04); border:1px solid rgba(248,81,73,0.15); border-radius:6px; padding:12px;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:12px;">
+                  <span style="color:#fff;">Karen Tovar (CDMX)</span>
+                  <span style="color:var(--red);">Al Límite (6/6 pts)</span>
+                </div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">
+                  • SLA Promedio: 4.2d | • Retrabajo: 9% | • Alertas Pendientes: 2 Urgentes
+                </div>
+              </div>
+
+              <div style="background:rgba(248,81,73,0.04); border:1px solid rgba(248,81,73,0.15); border-radius:6px; padding:12px;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:12px;">
+                  <span style="color:#fff;">Oscar Rodríguez (MTY)</span>
+                  <span style="color:var(--red);">Al Límite (6/6 pts)</span>
+                </div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">
+                  • SLA Promedio: 5.1d | • Retrabajo: 14% (Grave) | • Alertas Pendientes: 1 Bloqueado > 9d
+                </div>
+              </div>
+
+              <div style="background:rgba(63,185,80,0.04); border:1px solid rgba(63,185,80,0.15); border-radius:6px; padding:12px;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:12px;">
+                  <span style="color:#fff;">Rodrigo Vergara (LAG)</span>
+                  <span style="color:var(--green);">Disponible (2/6 pts)</span>
+                </div>
+                <div style="font-size:11px; color:var(--text-secondary); margin-top:4px;">
+                  • SLA Promedio: 2.8d | • Retrabajo: 4% | • Alertas Pendientes: Ninguna
+                </div>
+              </div>
+            </div>
+            
+            <div style="margin-top:20px; font-size:11px; color:var(--text-secondary); background:rgba(255,255,255,0.02); padding:10px; border-radius:4px; border:1px solid var(--border);">
+              <strong>Recomendación Operativa:</strong> Proceder con redistribución activa de folios de alta ponderación desde Monterrey (Oscar) hacia la plaza Laguna (Rodrigo).
+            </div>
+          </div>
+        `;
+      } else if (type === 'cobertura') {
+        titleEl.innerHTML = '🌐 Reporte de Cobertura Nacional <span style="font-size:11px; font-weight:normal; background:rgba(30,200,100,0.15); color:var(--green); border:1px solid var(--green); padding:2px 8px; border-radius:12px; margin-left:8px; font-family:var(--font-mono)">ESTRUCTURA GEOGRÁFICA</span>';
+        tableHTML = `
+          <div style="background: rgba(255,255,255,0.02); border:1px solid var(--border); border-radius: 6px; padding: 20px; font-family: var(--font-sans);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--gold); padding-bottom:12px; margin-bottom:20px;">
+              <div>
+                <h3 style="margin:0; font-family:var(--font-display); color:var(--gold); font-size:16px;">DISTRIBUCIÓN Y DEMANDA DE PLAZAS</h3>
+                <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono)">ID DOCUMENTO: REP-GEO-GEB-${new Date().getFullYear()}</span>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:11px; font-weight:bold; color:#fff;">DEMANDA NACIONAL</span><br/>
+                <span style="font-size:9.5px; color:var(--text-secondary); font-family:var(--font-mono)">Fecha: ${new Date().toLocaleDateString()}</span>
+              </div>
+            </div>
+
+            <p style="font-size:12px; color:var(--text-primary); line-height:1.5; margin-bottom:16px;">
+              Identificación de saturación regional. Permite evaluar las zonas donde el ingreso de proyectos de gran magnitud supera la velocidad conjunta de atención del equipo asignado a la sucursal.
+            </p>
+
+            <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:16px; align-items:center;">
+              <div>
+                <!-- Simulated Chart Elements in Drawer -->
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                  <div>
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                      <span style="color:#fff;">Laguna</span>
+                      <span style="font-weight:bold; color:var(--blue)">30%</span>
+                    </div>
+                    <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                      <div style="width:30%; height:100%; background:var(--blue)"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                      <span style="color:#fff;">Monterrey</span>
+                      <span style="font-weight:bold; color:var(--green)">25%</span>
+                    </div>
+                    <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                      <div style="width:25%; height:100%; background:var(--green)"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px;">
+                      <span style="color:#fff;">Querétaro</span>
+                      <span style="font-weight:bold; color:var(--amber)">20%</span>
+                    </div>
+                    <div style="height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                      <div style="width:20%; height:100%; background:var(--amber)"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="font-size:11px; color:var(--text-secondary); line-height:1.5; background:rgba(255,255,255,0.01); border:1px solid var(--border); padding:10px; border-radius:4px;">
+                <strong>Diagnóstico de Cobertura:</strong><br/>
+                La plaza <strong>Monterrey</strong> concentra proyectos de gran volumen que representan un <strong>45% del valor financiero</strong> en espera, operando bajo un grave déficit de personal en sitio.
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (type === 'riesgos') {
+        titleEl.innerHTML = '🚨 Auditoría de Riesgos y Alertas Críticas <span style="font-size:11px; font-weight:normal; background:rgba(30,200,100,0.15); color:var(--green); border:1px solid var(--green); padding:2px 8px; border-radius:12px; margin-left:8px; font-family:var(--font-mono)">ESTRUCTURA OPERACIONAL</span>';
+        tableHTML = `
+          <div style="background: rgba(255,255,255,0.02); border:1px solid var(--border); border-radius: 6px; padding: 20px; font-family: var(--font-sans);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid var(--red); padding-bottom:12px; margin-bottom:20px;">
+              <div>
+                <h3 style="margin:0; font-family:var(--font-display); color:var(--red); font-size:16px;">SEGUIMIENTO DE SEGURIDAD OPERATIVA (SLA)</h3>
+                <span style="font-size:10px; color:var(--text-muted); font-family:var(--font-mono)">ID DOCUMENTO: REP-RISKS-${new Date().getFullYear()}</span>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:11px; font-weight:bold; color:var(--red);">18 PROYECTOS BLOQUEADOS</span><br/>
+                <span style="font-size:9.5px; color:var(--text-secondary); font-family:var(--font-mono)">Fecha: ${new Date().toLocaleDateString()}</span>
+              </div>
+            </div>
+
+            <p style="font-size:12px; color:var(--text-primary); line-height:1.5; margin-bottom:16px;">
+              Log histórico de alarmas de inactividad que superan la ventana de atención estipulada de 4 horas o que acumulan más de 7 días naturales en fases críticas sin confirmación comercial.
+            </p>
+
+            <table style="width:100%; border-collapse:collapse; font-size:10px; text-align:left;">
+              <thead>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.1); color:var(--text-secondary)">
+                  <th style="padding:6px 2px;">FOLIO</th>
+                  <th style="padding:6px 2px;">MOTIVO</th>
+                  <th style="padding:6px 2px;">DÍAS</th>
+                  <th style="padding:6px 2px;">VALOR</th>
+                  <th style="padding:6px 2px;">PROYECTISTA</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03); color:var(--text-primary)">
+                  <td style="padding:6px 2px; font-family:var(--font-mono); color:var(--red); font-weight:bold;">MTY-018</td>
+                  <td style="padding:6px 2px;">Bloqueado por cliente</td>
+                  <td style="padding:6px 2px; font-weight:bold; color:var(--red)">9d</td>
+                  <td style="padding:6px 2px; font-family:var(--font-mono)">$450k</td>
+                  <td style="padding:6px 2px;">Oscar Rodríguez</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03); color:var(--text-primary)">
+                  <td style="padding:6px 2px; font-family:var(--font-mono); color:var(--red); font-weight:bold;">LAG-011</td>
+                  <td style="padding:6px 2px;">Cambio de última hora</td>
+                  <td style="padding:6px 2px; font-weight:bold; color:var(--amber)">5d</td>
+                  <td style="padding:6px 2px; font-family:var(--font-mono)">$620k</td>
+                  <td style="padding:6px 2px;">Rodrigo Vergara</td>
+                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03); color:var(--text-primary)">
+                  <td style="padding:6px 2px; font-family:var(--font-mono); color:var(--red); font-weight:bold;">QRO-041</td>
+                  <td style="padding:6px 2px;">Sin proyectista asignado</td>
+                  <td style="padding:6px 2px; font-weight:bold; color:var(--red)">2d</td>
+                  <td style="padding:6px 2px; font-family:var(--font-mono); color:var(--gold)">$820k</td>
+                  <td style="padding:6px 2px; color:var(--text-muted)">Ninguno</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      bodyEl.innerHTML = tableHTML;
+      drawer.style.right = '0';
+    };
+
+    window.closeReportDrawerModal = function() {
+      const drawer = document.getElementById('report-drawer-panel');
+      if (drawer) drawer.style.right = '-640px';
+    };
+
+    window.downloadAllReportsZip = function() {
+      showToast('info', 'Comprimiendo Reportes', 'Integrando consolidados de operaciones, capacidad, finanzas y riesgos...');
+      setTimeout(() => {
+        window.downloadReportDataCSV('semanal');
+        setTimeout(() => {
+          window.downloadReportDataCSV('rendimiento');
+          showToast('success', 'Paquete Descargado ✓', 'Se exportaron todos los módulos operativos en archivos CSV independientes.');
+        }, 500);
+      }, 500);
+    };
+
+    // Rendering Active Content View
+    activeHTML = `
+      <style>
+        .report-section-card {
+          background: rgba(30, 35, 45, 0.4); 
+          border: 1px solid var(--border); 
+          border-radius: 8px; 
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 220px;
+          transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .report-section-card:hover {
+          border-color: rgba(201, 169, 110, 0.4);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        .report-catalogo-card {
+          background: rgba(30, 35, 45, 0.5);
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          padding: 22px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 240px;
+          transition: all 0.25s ease-in-out;
+        }
+        .report-catalogo-card:hover {
+          transform: translateY(-3px);
+          border-color: var(--gold);
+          box-shadow: 0 6px 25px rgba(201, 169, 110, 0.08);
+        }
+        .report-tag {
+          font-size: 10px;
+          background: rgba(255,255,255,0.04);
+          color: var(--text-secondary);
+          padding: 3px 8px;
+          border-radius: 12px;
+          font-weight: 500;
+          font-family: var(--font-sans);
+        }
+        .table-rep th {
+          padding: 10px 14px;
+          font-size: 11px;
+          font-weight: 700;
+          color: var(--text-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .table-rep td {
+          padding: 12px 14px;
+          font-size: 12.5px;
+          border-bottom: 1px solid rgba(255,255,255,0.02);
+        }
+        .drawer-slide {
+          position: fixed;
+          top: 0;
+          right: -640px;
+          width: 580px;
+          height: 100vh;
+          background: #0d1117;
+          border-left: 1px solid var(--border);
+          box-shadow: -10px 0 30px rgba(0,0,0,0.8);
+          z-index: 9999;
+          transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+          display: flex;
+          flex-direction: column;
+        }
+      </style>
+
+      <div class="content-header" style="border-bottom: 1px solid var(--border); padding-bottom: 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h1 class="display-title" style="margin:0; font-size: 24px; color: var(--gold); font-family: var(--font-display);">Reportes, Productividad & SLA</h1>
+            <div class="subtitle" style="margin-top: 4px; color: var(--text-muted); font-size:12px; font-family: var(--font-mono); letter-spacing: 0.5px;">
+              Cerebro 2.0 • Auditoría Operativa de Proyectistas • ${new Date().toLocaleDateString('es-MX', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })}
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:6px; background: rgba(255,255,255,0.02); padding: 4px; border-radius: 6px; border: 1px solid var(--border);">
+              <button onclick="window.activeReportCat = 'todos'; window.renderMasterWorkspace()" style="padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all 0.2s; ${repTabStyle('todos')}">Todos</button>
+              <button onclick="window.activeReportCat = 'eficiencia'; window.renderMasterWorkspace()" style="padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all 0.2s; ${repTabStyle('eficiencia')}">Operativa y Eficiencia</button>
+              <button onclick="window.activeReportCat = 'equipo'; window.renderMasterWorkspace()" style="padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all 0.2s; ${repTabStyle('equipo')}">Rendimiento Equipo</button>
+              <button onclick="window.activeReportCat = 'negocio'; window.renderMasterWorkspace()" style="padding: 4px 12px; font-size: 11px; font-weight: 600; cursor: pointer; border-radius: 4px; transition: all 0.2s; ${repTabStyle('negocio')}">Negocio y Conversión</button>
+            </div>
+            <button onclick="window.downloadAllReportsZip()" class="btn-primary" style="background: var(--gold); border: 1px solid var(--gold); color: #000; font-weight:700; font-size:11px; padding: 8px 16px; border-radius: 6px; cursor:pointer;" title="Descargar paquete XLSX consolidados">
+              📥 Exportar Todo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="scroll-area" style="padding: 24px; display:flex; flex-direction:column; gap:28px;">
+        
+        <!-- BENTO SECTIONS: CONSOLIDADOS -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(430px, 1fr)); gap: 20px;">
+          
+          <!-- SECCIÓN 1: VELOCIDAD OPERATIVA -->
+          <div class="report-section-card" style="${window.activeReportCat === 'equipo' || window.activeReportCat === 'negocio' ? 'opacity: 0.35' : ''}">
+            <div style="border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 14px;">
+              <span style="font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.12em; text-transform: uppercase;">GRUPO 1 • VELOCIDAD OPERATIVA</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1;">
+              <!-- KPI 1 -->
+              <div style="background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); padding: 12px; border-radius: 6px; display:flex; flex-direction:column; justify-content:space-between;">
+                <span style="font-size: 10px; color: var(--text-secondary); font-weight:600;">Tiempo respuesta inbox</span>
+                <div style="margin-top: 6px;">
+                  <span style="font-size: 24px; font-weight:700; font-family:var(--font-mono); color:#fff;">1.8h</span>
+                  <div style="font-size:9.5px; color:var(--green); margin-top:2px;">📉 -0.4h vs sem anterior</div>
+                </div>
+                <span style="font-size: 9px; color:var(--text-muted);">Meta de respuesta: &lt;2h</span>
+              </div>
+              
+              <!-- KPI 2 -->
+              <div style="background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); padding: 12px; border-radius: 6px; display:flex; flex-direction:column; justify-content:space-between;">
+                <span style="font-size: 10px; color: var(--text-secondary); font-weight:600;">Tiempo medio de entrega</span>
+                <div style="margin-top: 6px;">
+                  <span style="font-size: 24px; font-weight:700; font-family:var(--font-mono); color:var(--amber);">4.5d</span>
+                  <div style="font-size:9.5px; color:var(--red); margin-top:2px;">📈 +0.5d vs meta</div>
+                </div>
+                <span style="font-size: 9px; color:var(--text-muted);">Meta comercial: 3 días</span>
+              </div>
+
+              <!-- KPI 3 -->
+              <div style="background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); padding: 12px; border-radius: 6px; display:flex; flex-direction:column; justify-content:space-between;">
+                <span style="font-size: 10px; color: var(--text-secondary); font-weight:600;">Proyectos bloqueados >7d</span>
+                <div style="margin-top: 6px;">
+                  <span style="font-size: 24px; font-weight:700; font-family:var(--font-mono); color:var(--red);">18</span>
+                  <div style="font-size:9.5px; color:var(--red); margin-top:2px;">⚠️ +3 vs sem anterior</div>
+                </div>
+                <span style="font-size: 9px; color:var(--text-muted);">Alta urgencia operativa</span>
+              </div>
+
+              <!-- KPI 4 -->
+              <div style="background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); padding: 12px; border-radius: 6px; display:flex; flex-direction:column; justify-content:space-between;">
+                <span style="font-size: 10px; color: var(--text-secondary); font-weight:600;">Valor total en pausa</span>
+                <div style="margin-top: 6px;">
+                  <span style="font-size: 24px; font-weight:700; font-family:var(--font-mono); color:#ff9a8d;">$2.1M</span>
+                  <div style="font-size:9.5px; color:#ff9a8d; margin-top:2px;">Asignados: ${totalProjectsCount} proyectos</div>
+                </div>
+                <span style="font-size: 9px; color:var(--text-muted);">Pendientes por responder</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 2: RENDIMIENTO DEL EQUIPO -->
+          <div class="report-section-card" style="${window.activeReportCat === 'eficiencia' || window.activeReportCat === 'negocio' ? 'opacity: 0.35' : ''}">
+            <div style="border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 14px;">
+              <span style="font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.12em; text-transform: uppercase;">GRUPO 2 • RENDIMIENTO DEL EQUIPO</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+              <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:4px; text-align:center;">
+                <span style="font-size:9px; color:var(--text-secondary)">Carga Media</span>
+                <div style="font-size:18px; font-family:var(--font-mono); font-weight:bold; color:var(--red); margin-top:3px;">93%</div>
+                <span style="font-size:8px; color:var(--text-muted)">2 de 3 al límite</span>
+              </div>
+              <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:4px; text-align:center;">
+                <span style="font-size:9px; color:var(--text-secondary)">Retrabajo</span>
+                <div style="font-size:18px; font-family:var(--font-mono); font-weight:bold; color:var(--amber); margin-top:3px;">11%</div>
+                <span style="font-size:8px; color:var(--red)">+3pp vs meta</span>
+              </div>
+              <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:4px; text-align:center;">
+                <span style="font-size:9px; color:var(--text-secondary)">Pases/Reasig.</span>
+                <div style="font-size:18px; font-family:var(--font-mono); font-weight:bold; color:var(--blue); margin-top:3px;">4</div>
+                <span style="font-size:8px; color:var(--text-muted)">3 saturación 1 urg.</span>
+              </div>
+            </div>
+
+            <!-- Team Workloads bars -->
+            <div style="background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.03); border-radius:6px; padding:12px;">
+              <span style="font-size: 10px; font-weight:bold; color:#fff; display:block; margin-bottom:8px;">Carga por proyectista (pts actuales / de 6 máximos)</span>
+              
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:2px;">
+                    <span style="color:var(--text-primary)">Karen Tovar (CDMX)</span>
+                    <span style="font-weight:bold; color:var(--red);">100% · Al Límite (6 pts)</span>
+                  </div>
+                  <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                    <div style="width:100%; height:100%; background:var(--red);"></div>
+                  </div>
+                </div>
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:2px;">
+                    <span style="color:var(--text-primary)">Oscar Rodríguez (MTY)</span>
+                    <span style="font-weight:bold; color:var(--red);">100% · Al Límite (6 pts)</span>
+                  </div>
+                  <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                    <div style="width:100%; height:100%; background:var(--red);"></div>
+                  </div>
+                </div>
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:10px; margin-bottom:2px;">
+                    <span style="color:var(--text-primary)">Rodrigo Vergara (LAG)</span>
+                    <span style="font-weight:bold; color:var(--green);">33% · Disponible (2 pts)</span>
+                  </div>
+                  <div style="width:100%; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; overflow:hidden;">
+                    <div style="width:33.3%; height:100%; background:var(--green);"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 3: CONVERSIÓN Y NEGOCIO -->
+          <div class="report-section-card" style="${window.activeReportCat === 'eficiencia' || window.activeReportCat === 'equipo' ? 'opacity: 0.35' : ''}">
+            <div style="border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 14px;">
+              <span style="font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.12em; text-transform: uppercase;">GRUPO 3 • CONVERSIÓN Y NEGOCIO</span>
+            </div>
+            
+            <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:16px;">
+              <!-- 4 Small Metrics -->
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:8px; border-radius:4px;">
+                  <span style="font-size:8.5px; color:var(--text-secondary); display:block;">Tasa Cierre</span>
+                  <span style="font-size:15px; font-family:var(--font-mono); font-weight:bold; color:var(--green);">64%</span>
+                  <span style="font-size:8px; color:var(--text-muted); display:block;">Meta 60% ✓</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:8px; border-radius:4px;">
+                  <span style="font-size:8.5px; color:var(--text-secondary); display:block;">Valor Entregado</span>
+                  <span style="font-size:15px; font-family:var(--font-mono); font-weight:bold; color:var(--gold);">${formattedRealBudget}</span>
+                  <span style="font-size:8px; color:var(--green); display:block;">+12% vs m.a.</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:8px; border-radius:4px;">
+                  <span style="font-size:8.5px; color:var(--text-secondary); display:block;">Sin Atender</span>
+                  <span style="font-size:15px; font-family:var(--font-mono); font-weight:bold; color:var(--red);">3</span>
+                  <span style="font-size:8px; color:var(--text-muted); display:block;">Urgentes >1h</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:8px; border-radius:4px;">
+                  <span style="font-size:8.5px; color:var(--text-secondary); display:block;">Incompletos</span>
+                  <span style="font-size:15px; font-family:var(--font-mono); font-weight:bold; color:#ff9a8d;">7</span>
+                  <span style="font-size:8px; color:var(--red); display:block;">&lt;70% carpeta</span>
+                </div>
+              </div>
+
+              <!-- Compact Donut -->
+              <div style="background:rgba(0,0,0,0.15); border:1px solid rgba(255,255,255,0.03); border-radius:6px; padding:10px; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                <span id="label-donut-geo" style="font-size:9.5px; color:var(--text-secondary); font-weight:bold; margin-bottom:6px; text-align:center;">Proyectos por Región</span>
+                
+                <div style="position:relative; width:90px; height:90px; display:flex; align-items:center; justify-content:center;">
+                  <svg viewBox="0 0 36 36" style="width:100%; height:100%; transform: rotate(-90deg);">
+                    <!-- Laguna: 30% -> dasharray="30 70" -->
+                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--blue)" stroke-width="3" stroke-dasharray="30 70" stroke-dashoffset="0"></circle>
+                    <!-- Monterrey: 25% -> dasharray="25 75", offset 30 -->
+                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--green)" stroke-width="3" stroke-dasharray="25 75" stroke-dashoffset="-30"></circle>
+                    <!-- Queretaro: 20% -> dasharray="20 80", offset 55 -->
+                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--amber)" stroke-width="3" stroke-dasharray="20 80" stroke-dashoffset="-55"></circle>
+                    <!-- CDMX: 15% -> dasharray="15 85", offset 75 -->
+                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--purple)" stroke-width="3" stroke-dasharray="15 85" stroke-dashoffset="-75"></circle>
+                    <!-- Otras: 10% -> dasharray="10 90", offset 90 -->
+                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="#8b949e" stroke-width="3" stroke-dasharray="10 90" stroke-dashoffset="-90"></circle>
+                  </svg>
+                  <div style="position:absolute; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+                    <span style="font-family:var(--font-mono); font-size:11px; font-weight:bold; color:#fff; line-height:1;">128</span>
+                    <span style="font-size:7px; color:var(--text-muted); text-transform:uppercase;">Folios</span>
+                  </div>
+                </div>
+
+                <div style="display:flex; justify-content:center; gap:4px; flex-wrap:wrap; margin-top:8px; font-size:7.5px;">
+                  <span style="color:var(--blue)">● LAG 30%</span>
+                  <span style="color:var(--green)">● MTY 25%</span>
+                  <span style="color:var(--amber)">● QRO 20%</span>
+                  <span style="color:var(--purple)">● CDX 15%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 4: CALIDAD DEL PROCESO -->
+          <div class="report-section-card" style="${window.activeReportCat === 'equipo' || window.activeReportCat === 'negocio' ? 'opacity: 0.35' : ''}">
+            <div style="border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 8px; margin-bottom: 14px;">
+              <span style="font-size: 10px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.12em; text-transform: uppercase;">GRUPO 4 • CALIDAD DEL PROCESO</span>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr; gap: 12px; flex: 1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:6px;">
+                <div style="display:flex; flex-direction:column;">
+                  <span style="font-size:11px; font-weight:bold; color:#fff;">Expedientes Semáforo Verde</span>
+                  <span style="font-size:9px; color:var(--text-muted);">Integración inicial completa</span>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:20px; font-family:var(--font-mono); font-weight:bold; color:var(--amber);">58%</span>
+                  <span style="display:block; font-size:8px; color:var(--red);">42% entra incompleto</span>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:6px;">
+                <div style="display:flex; flex-direction:column;">
+                  <span style="font-size:11px; font-weight:bold; color:#fff;">Fase de Máximo Retrabajo</span>
+                  <span style="font-size:9px; color:var(--text-muted);">Cuello de botella recurrente</span>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:16px; font-weight:bold; color:var(--amber);">Fase 3: Modif</span>
+                  <span style="display:block; font-size:8.5px; color:var(--red);">Concentra 38% del retrabajo</span>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.01); border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:6px;">
+                <div style="display:flex; flex-direction:column;">
+                  <span style="font-size:11px; font-weight:bold; color:#fff;">Alertas Resueltas &lt;4h</span>
+                  <span style="font-size:9px; color:var(--text-muted);">SLA de corrección ágil</span>
+                </div>
+                <div style="text-align:right;">
+                  <span style="font-size:20px; font-family:var(--font-mono); font-weight:bold; color:var(--amber);">61%</span>
+                  <span style="display:block; font-size:8px; color:var(--text-secondary);">Meta: &gt;80%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TABLA DE RENDIMIENTO POR PROYECTISTA -->
+        <div>
+          <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.15em; text-transform: uppercase;">TABLA DE RENDIMIENTO POR PROYECTISTA</span>
+          <div class="card" style="margin-top: 8px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: rgba(30, 35, 45, 0.25);">
+            <table class="table-rep" style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="background: rgba(255,255,255,0.01);">
+                  <th>Proyectista</th>
+                  <th>Carga Pts</th>
+                  <th>Proyectos Activos</th>
+                  <th>Entrega Prom.</th>
+                  <th>Retrabajo %</th>
+                  <th>Alertas Pendientes</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight: 600; color: #fff;">Karen Tovar</td>
+                  <td style="font-family: var(--font-mono); font-weight: bold; color: var(--red);">🔴 6 / 6 pts</td>
+                  <td>3 (2G + 1Ch)</td>
+                  <td style="font-family: var(--font-mono);">4.2 días</td>
+                  <td style="font-family: var(--font-mono); font-weight: bold; color: var(--amber)">9%</td>
+                  <td><span style="background:rgba(248,81,73,0.15); color:var(--red); padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600;">2 urgentes</span></td>
+                  <td><span style="background:rgba(248,81,73,0.15); color:var(--red); font-weight: bold; padding:3px 8px; border-radius:6px; font-size:10px;">Al límite</span></td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; color: #fff;">Oscar Rodríguez</td>
+                  <td style="font-family: var(--font-mono); font-weight: bold; color: var(--red);">🔴 6 / 6 pts</td>
+                  <td>2 (2G)</td>
+                  <td style="font-family: var(--font-mono);">5.1 días</td>
+                  <td style="font-family: var(--font-mono); font-weight: bold; color: var(--red)">14%</td>
+                  <td><span style="background:rgba(248,81,73,0.15); color:var(--red); padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600;">1 bloqueado 9d</span></td>
+                  <td><span style="background:rgba(248,81,73,0.15); color:var(--red); font-weight: bold; padding:3px 8px; border-radius:6px; font-size:10px;">Al límite</span></td>
+                </tr>
+                <tr>
+                  <td style="font-weight: 600; color: #fff;">Rodrigo Vergara</td>
+                  <td style="font-family: var(--font-mono); font-weight: bold; color: var(--green);">🟢 2 / 6 pts</td>
+                  <td>2 (2Ch)</td>
+                  <td style="font-family: var(--font-mono);">2.8 días</td>
+                  <td style="font-family: var(--font-mono); font-weight: bold; color: var(--green)">4%</td>
+                  <td><span style="background:rgba(63,185,80,0.15); color:var(--green); padding:2px 8px; border-radius:4px; font-size:10px; font-weight:600;">Ninguna</span></td>
+                  <td><span style="background:rgba(63,185,80,0.15); color:var(--green); font-weight: bold; padding:3px 8px; border-radius:6px; font-size:10px;">Disponible</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- CATALOGO DE REPORTES EXPORTABLES -->
+        <div>
+          <span style="font-size: 11px; font-weight: 700; color: var(--text-secondary); letter-spacing: 0.15em; text-transform: uppercase;">REPORTES EXPORTABLES — CATÁLOGO</span>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 8px;">
+            
+            <!-- CARD 1 -->
+            <div class="report-catalogo-card">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                  <span style="font-size: 13.5px; font-weight: bold; color: #fff; font-family:var(--font-display);">📄 Reporte semanal de operaciones</span>
+                  <span style="font-size: 16px;">📑</span>
+                </div>
+                <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; margin-bottom: 12px; height: 50px; overflow:hidden;">
+                  Resumen ejecutivo: proyectos entregados, bloqueados, valor generado y retrabajo. Formato PDF o Excel. Ideal para reunión de dirección los lunes.
+                </p>
+                <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom: 20px;">
+                  <span class="report-tag">Entregas/Sem</span>
+                  <span class="report-tag">Valor MXN</span>
+                  <span class="report-tag">Alertas</span>
+                </div>
+              </div>
+              <button onclick="window.openReportDrawerModal('semanal')" class="btn-outline-proy" style="width: 100%; border: 1px solid var(--gold); background: rgba(201, 169, 110, 0.05); color: var(--gold2); text-align: center; justify-content: center; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; transition: background 0.2s;">
+                Ver estructura ↗
+              </button>
+            </div>
+
+            <!-- CARD 2 -->
+            <div class="report-catalogo-card">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                  <span style="font-size: 13.5px; font-weight: bold; color: #fff; font-family:var(--font-display);">👤 Reporte de rendimiento por proyectista</span>
+                  <span style="font-size: 16px;">👥</span>
+                </div>
+                <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; margin-bottom: 12px; height: 50px; overflow:hidden;">
+                  Comparativa mensual de carga, velocidad de entrega, retrabajo y alertas por persona. Base para retroalimentación y coaching 1:1.
+                </p>
+                <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom: 20px;">
+                  <span class="report-tag">Carga general</span>
+                  <span class="report-tag">SLA individual</span>
+                  <span class="report-tag">Rendimiento</span>
+                </div>
+              </div>
+              <button onclick="window.openReportDrawerModal('rendimiento')" class="btn-outline-proy" style="width: 100%; border: 1px solid var(--gold); background: rgba(201, 169, 110, 0.05); color: var(--gold2); text-align: center; justify-content: center; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; transition: background 0.2s;">
+                Usar en feedback ↗
+              </button>
+            </div>
+
+            <!-- CARD 3 -->
+            <div class="report-catalogo-card">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                  <span style="font-size: 13.5px; font-weight: bold; color: #fff; font-family:var(--font-display);">🌐 Reporte de cobertura nacional</span>
+                  <span style="font-size: 16px;">📍</span>
+                </div>
+                <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; margin-bottom: 12px; height: 50px; overflow:hidden;">
+                  Distribución de proyectos activos y cerrados por región. Identifica zonas con mayor demanda y donde la capacidad es insuficiente.
+                </p>
+                <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom: 20px;">
+                  <span class="report-tag">Proy/Plaza</span>
+                  <span class="report-tag">Saturación GOM</span>
+                  <span class="report-tag">Tránsito</span>
+                </div>
+              </div>
+              <button onclick="window.openReportDrawerModal('cobertura')" class="btn-outline-proy" style="width: 100%; border: 1px solid var(--gold); background: rgba(201, 169, 110, 0.05); color: var(--gold2); text-align: center; justify-content: center; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; transition: background 0.2s;">
+                Ver mapa ↗
+              </button>
+            </div>
+
+            <!-- CARD 4 -->
+            <div class="report-catalogo-card">
+              <div>
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                  <span style="font-size: 13.5px; font-weight: bold; color: #fff; font-family:var(--font-display);">🚨 Reporte de riesgo y alertas</span>
+                  <span style="font-size: 16px;">⚠️</span>
+                </div>
+                <p style="font-size: 11.5px; color: var(--text-secondary); line-height: 1.5; margin-top: 8px; margin-bottom: 12px; height: 50px; overflow:hidden;">
+                  Log histórico de alertas: cuántas se generaron, en qué tiempo se resolvieron, quién intervino y cuántas escalaron a Dirección.
+                </p>
+                <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom: 20px;">
+                  <span class="report-tag">Alarmas/Sem</span>
+                  <span class="report-tag">Tiempo de SLA</span>
+                  <span class="report-tag">Escaladas</span>
+                </div>
+              </div>
+              <button onclick="window.openReportDrawerModal('riesgos')" class="btn-outline-proy" style="width: 100%; border: 1px solid var(--gold); background: rgba(201, 169, 110, 0.05); color: var(--gold2); text-align: center; justify-content: center; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 11px; cursor: pointer; transition: background 0.2s;">
+                Ver roadmap ↗
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- DRAWER MODAL COMPONENTE -->
+      <div id="report-drawer-panel" class="drawer-slide">
+        <!-- Drawer Header -->
+        <div style="padding: 24px; border-bottom: 1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:#161b22;">
+          <h2 id="report-drawer-title" style="margin:0; font-size:16px; color:#fff; font-family:var(--font-display); display:flex; align-items:center;">Reporte</h2>
+          <button onclick="window.closeReportDrawerModal()" style="background:transparent; border:none; color:var(--text-secondary); font-size:20px; font-family:monospace; cursor:pointer; width:30px; height:30px; display:flex; align-items:center; justify-content:center; hover:color:#fff;" title="Cerrar">×</button>
+        </div>
+        <!-- Drawer Content -->
+        <div id="report-drawer-body" style="padding: 24px; flex:1; overflow-y:auto;">
+          <!-- Content drops here dynamically -->
+        </div>
+        <!-- Drawer Footer -->
+        <div style="padding: 20px 24px; border-top:1px solid var(--border); background:#161b22; display:flex; justify-content:flex-end; gap:12px;">
+          <button onclick="window.closeReportDrawerModal()" class="btn-outline-proy" style="border:1px solid var(--border); background:transparent; color:var(--text-secondary); padding:8px 16px; border-radius:6px; font-size:12px; cursor:pointer;" onclick="window.closeReportDrawerModal()">Cerrar Vista</button>
+          <button id="report-drawer-action-btn" class="btn-primary" style="background:var(--gold); border:none; color:#000; font-weight:bold; padding:8px 18px; border-radius:6px; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+            📥 Descargar CSV Real Consolidado
+          </button>
         </div>
       </div>
     `;
@@ -11798,58 +13734,39 @@ window.renderMasterWorkspace = function() {
       <div class="scroll-area" style="padding: 24px; display:flex; flex-direction:column; gap:24px;">
         
         <!-- Live Team Dashboard Cards -->
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px;">
-          
-          <!-- Karen Tovar -->
-          ${(function() {
-            const isVac = localStorage.getItem('proyVacationsActive') === 'true';
-            let pts = 0;
-            let list = [];
-            vProjects.forEach(p => {
-              if (p.proyectista.includes('Karen')) {
-                const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
-                pts += pVal;
-                list.push(p);
-              }
-            });
-            const pct = Math.min(100, Math.round((pts / 6) * 100));
-            const barColor = isVac ? '#ff8585' : pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px;">
+          ${['karen', 'rodrigo', 'oscar', 'karla'].map(k => {
+            const d = getDesignerLoad(k);
             return `
-              <div class="card" style="padding:20px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:16px; background:rgba(18,22,30,0.3); position:relative;">
+              <div class="card" style="padding:20px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:16px; background:rgba(18,22,30,0.3); opacity: ${d.isVac ? 0.6 : 1}; position:relative;">
                 <div style="display:flex; justify-content:space-between; align-items:start;">
                   <div style="display:flex; gap:10px; align-items:center;">
-                    <div style="width:36px; height:36px; background:rgba(88,166,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--blue); font-weight:bold; font-size:14px;">KT</div>
+                    <div style="width:36px; height:36px; background:rgba(88,166,255,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--blue); font-weight:bold; font-size:14px;">${d.shortName}</div>
                     <div>
-                      <strong style="color:#fff; font-size:14px; display:block;">Karen Tovar</strong>
-                      <span style="font-size:11px; color:var(--text-muted);">Proyectista CDMX</span>
+                      <strong style="color:#fff; font-size:14px; display:block;">${d.fullName}</strong>
+                      <span style="font-size:11px; color:var(--text-muted);">${d.zoneLabel}</span>
                     </div>
                   </div>
                   <div>
-                    ${isVac ? `
-                      <span style="font-size:9.5px; background:rgba(248,81,73,0.12); color:#ff8585; font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(248,81,73,0.3);">VACACIONES</span>
-                    ` : pts >= 6 ? `
-                      <span style="font-size:9.5px; background:rgba(248,81,73,0.12); color:var(--red); font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(248,81,73,0.3);">SATURADO</span>
-                    ` : `
-                      <span style="font-size:9.5px; background:rgba(63,185,80,0.12); color:var(--green); font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(63,185,80,0.3);">DISPONIBLE</span>
-                    `}
+                    <span style="font-size:9.5px; background:rgba(255,255,255,0.05); color:${d.statusColor}; font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid ${d.statusColor};">${d.isVac ? 'VACACIONES' : d.pts >= 6 ? 'SATURADO' : 'DISPONIBLE'}</span>
                   </div>
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:6px;">
                   <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
                     <span style="color:var(--text-secondary); font-weight:500;">Puntos de Trabajo:</span>
-                    <span style="font-family:var(--font-mono); font-weight:bold; color:${barColor};">${pts} de 6 pts (${pct}%)</span>
+                    <span style="font-family:var(--font-mono); font-weight:bold; color:${d.barColor};">${d.pts} de 6 pts (${d.pct}%)</span>
                   </div>
                   <div style="width:100%; height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden;">
-                    <div style="width:${pct}%; height:100%; background:${barColor}; border-radius:4px;"></div>
+                    <div style="width:${d.pct}%; height:100%; background:${d.barColor}; border-radius:4px;"></div>
                   </div>
                 </div>
 
                 <div style="display:flex; flex-direction:column; gap:8px;">
-                  <span style="font-size:11px; font-weight:700; color:#fff; display:block; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">Proyectos En Curso (${list.length})</span>
-                  ${list.length === 0 ? `
-                    <span style="font-size:11px; color:var(--text-muted); italic">Sin proyectos</span>
-                  ` : list.map(p => `
+                  <span style="font-size:11px; font-weight:700; color:#fff; display:block; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">Proyectos En Curso (${d.list.length})</span>
+                  ${d.list.length === 0 ? `
+                    <span style="font-size:11px; color:var(--text-muted); italic; padding: 12px 0; text-align:center;">Sin proyectos</span>
+                  ` : d.list.map(p => `
                     <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:4px; border:1px solid rgba(255,255,255,0.03);">
                       <div style="display:flex; flex-direction:column;">
                         <strong style="font-size:11px; color:#fff;">${p.cliente}</strong>
@@ -11861,111 +13778,13 @@ window.renderMasterWorkspace = function() {
                 </div>
 
                 <!-- Vacation Switcher -->
-                <div style="margin-top:auto; padding-top:12px; border-t:1px solid rgba(255,255,255,0.05); display:flex; justify-content:space-between; align-items:center;">
+                <div style="margin-top:auto; padding-top:12px; display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.05);">
                   <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Modo Vacaciones (MWM)</span>
-                  <input type="checkbox" onchange="window.masterToggleProyectistaVacations('karen', this.checked)" ${isVac ? 'checked' : ''} style="cursor:pointer; width:34px; height:18px;">
+                  <input type="checkbox" onchange="window.masterToggleProyectistaVacations('${d.key}', this.checked)" ${d.isVac ? 'checked' : ''} style="cursor:pointer; width:34px; height:18px;">
                 </div>
               </div>
             `;
-          })()}
-
-          <!-- Rodrigo Vergara -->
-          ${(function() {
-            let pts = 0;
-            let list = [];
-            vProjects.forEach(p => {
-              if (p.proyectista.includes('Rodrigo')) {
-                const pVal = p.magn === 'Grande' ? 3 : p.magn === 'Mediano' ? 2 : 1;
-                pts += pVal;
-                list.push(p);
-              }
-            });
-            const pct = Math.min(100, Math.round((pts / 6) * 100));
-            const barColor = pts >= 6 ? 'var(--red)' : pts >= 4 ? 'var(--amber)' : 'var(--green)';
-            return `
-              <div class="card" style="padding:20px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:16px; background:rgba(18,22,30,0.3);">
-                <div style="display:flex; justify-content:space-between; align-items:start;">
-                  <div style="display:flex; gap:10px; align-items:center;">
-                    <div style="width:36px; height:36px; background:rgba(201,169,110,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--gold); font-weight:bold; font-size:14px;">RV</div>
-                    <div>
-                      <strong style="color:#fff; font-size:14px; display:block;">Rodrigo Vergara</strong>
-                      <span style="font-size:11px; color:var(--text-muted);">Proyectista Laguna</span>
-                    </div>
-                  </div>
-                  <div>
-                    <span style="font-size:9.5px; background:rgba(63,185,80,0.12); color:var(--green); font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(63,185,80,0.3);">DISPONIBLE</span>
-                  </div>
-                </div>
-
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
-                    <span style="color:var(--text-secondary); font-weight:500;">Puntos de Trabajo:</span>
-                    <span style="font-family:var(--font-mono); font-weight:bold; color:${barColor};">${pts} de 6 pts (${pct}%)</span>
-                  </div>
-                  <div style="width:100%; height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden;">
-                    <div style="width:${pct}%; height:100%; background:${barColor}; border-radius:4px;"></div>
-                  </div>
-                </div>
-
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                  <span style="font-size:11px; font-weight:700; color:#fff; display:block; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">Proyectos En Curso (${list.length})</span>
-                  ${list.length === 0 ? `
-                    <span style="font-size:11px; color:var(--text-muted); italic; padding: 12px 0; text-align:center;">Sin proyectos asignados.</span>
-                  ` : list.map(p => `
-                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:4px; border:1px solid rgba(255,255,255,0.03);">
-                      <div style="display:flex; flex-direction:column;">
-                        <strong style="font-size:11px; color:#fff;">${p.cliente}</strong>
-                        <span style="font-size:10px; font-family:var(--font-mono); color:var(--text-muted);">${p.id} · ${p.magn}</span>
-                      </div>
-                      <button onclick="openProjectDetails('${p.id}')" style="background:none; border:none; cursor:pointer; color:var(--blue); font-size:11px;" title="Ver expediente">📂</button>
-                    </div>
-                  `).join('')}
-                </div>
-
-                <!-- Vacation Switcher -->
-                <div style="margin-top:auto; padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
-                  <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Modo Vacaciones (MWM)</span>
-                  <input type="checkbox" style="cursor:pointer;" disabled>
-                </div>
-              </div>
-            `;
-          })()}
-
-          <!-- Oscar Rodriguez (Strictly simulated as vacant) -->
-          <div class="card" style="padding:20px; border:1px solid rgba(255,255,255,0.05); display:flex; flex-direction:column; gap:16px; background:rgba(18,22,30,0.3); opacity: 0.65;">
-            <div style="display:flex; justify-content:space-between; align-items:start;">
-              <div style="display:flex; gap:10px; align-items:center;">
-                <div style="width:36px; height:36px; background:rgba(248,81,73,0.1); border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--red); font-weight:bold; font-size:14px;">OR</div>
-                <div>
-                  <strong style="color:#fff; font-size:14px; display:block;">Oscar Rodríguez</strong>
-                  <span style="font-size:11px; color:var(--text-muted);">Proyectista MTY</span>
-                </div>
-              </div>
-              <div>
-                <span style="font-size:9.5px; background:rgba(248,81,73,0.12); color:#ff8585; font-weight:bold; padding:2px 8px; border-radius:12px; border:1px solid rgba(248,81,73,0.3);">VACACIONES</span>
-              </div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:6px;">
-              <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px;">
-                <span style="color:var(--text-secondary); font-weight:500;">Puntos de Trabajo:</span>
-                <span style="font-family:var(--font-mono); font-weight:bold; color:var(--green);">0 de 6 pts (0%)</span>
-              </div>
-              <div style="width:100%; height:8px; background:rgba(255,255,255,0.05); border-radius:4px; overflow:hidden;">
-                <div style="width:0%; height:100%; background:var(--green); border-radius:4px;"></div>
-              </div>
-            </div>
-
-            <div style="display:flex; flex-direction:column; gap:8px;">
-              <span style="font-size:11px; font-weight:700; color:#fff; display:block; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:4px;">Proyectos En Curso (0)</span>
-              <span style="font-size:11.5px; color:var(--text-muted); text-align:center; padding: 20px 0;">Bloqueado por MWM Vacaciones Activo</span>
-            </div>
-
-            <div style="margin-top:auto; padding-top:12px; display:flex; justify-content:space-between; align-items:center;">
-              <span style="font-size:11px; color:var(--text-muted); font-weight:600;">Modo Vacaciones (MWM)</span>
-              <input type="checkbox" style="cursor:pointer;" checked disabled>
-            </div>
-          </div>
+          }).join('')}
         </div>
 
         <!-- Dynamic Balancer Form -->
@@ -11985,9 +13804,10 @@ window.renderMasterWorkspace = function() {
             <div>
               <label style="display:block; font-size:11px; color:var(--text-muted); font-weight:700; margin-bottom:8px; text-transform:uppercase;">2. Transferir a responsable:</label>
               <select id="balance-target-select" style="width:100%; padding:10px; background:var(--surface-2); border:1px solid var(--border); border-radius:4px; color:#fff; font-size:12px; outline:none; height:40px;">
-                <option value="Rodrigo Vergara">Rodrigo Vergara (DISPONIBLE - Laguna)</option>
-                <option value="Karen Tovar">Karen Tovar (CDMX Escritorio)</option>
+                <option value="Karen Tovar">Karen Tovar (CDMX / Centro)</option>
+                <option value="Rodrigo Vergara">Rodrigo Vergara (Laguna Layouts)</option>
                 <option value="Oscar Rodríguez">Oscar Rodríguez (Monterrey)</option>
+                <option value="Karla Cerón">Karla Cerón (Gómez Palacio)</option>
               </select>
             </div>
 
@@ -11997,13 +13817,14 @@ window.renderMasterWorkspace = function() {
                 const targetName = document.getElementById('balance-target-select').value;
                 window.masterReassignProject(pId, targetName);
               " class="btn-solid-proy" style="width:100%; height:40px; border-radius:4px; font-weight:bold; font-size:12px;">
-                Re-direccionar Proyecto ➡️
+                Re-direccionar Proyecto S.O.D ➡️
               </button>
             </div>
           </div>
         </div>
       </div>
     `;
+
   } else if (window.activeMasterSection === 'kanban') {
     // --- III. CONNECTED DRAG-LIKE KANBAN VIEW ---
     activeHTML = `

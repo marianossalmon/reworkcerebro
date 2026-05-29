@@ -98,11 +98,13 @@ export function GebesaShell({
         } else if (env === 'Direccion' && currentView !== 'Direccion') {
           onViewChange('Direccion');
         }
+      } else if (event.data.type === 'VENTAS_SUBNAV_CHANGE') {
+        setVentasActiveSubNav(event.data.subNav);
       }
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [currentView, onViewChange]);
+  }, [currentView, onViewChange, setVentasActiveSubNav]);
 
   const handleIframeLoad = () => {
     setIsIframeLoaded(true);
@@ -239,6 +241,16 @@ export function GebesaShell({
                     onClick={() => setDireccionSubView('dashboard')} 
                   />
                   <SubNavItem 
+                    label="🌐 Dashboard Nacional" 
+                    active={direccionSubView === 'dashboard_nacional'} 
+                    onClick={() => setDireccionSubView('dashboard_nacional')} 
+                  />
+                  <SubNavItem 
+                    label="📊 Reportes y Rendimiento" 
+                    active={direccionSubView === 'reportes'} 
+                    onClick={() => setDireccionSubView('reportes')} 
+                  />
+                  <SubNavItem 
                     label="📈 Semáforo de Ocupación" 
                     active={direccionSubView === 'semaforo'} 
                     onClick={() => setDireccionSubView('semaforo')} 
@@ -270,15 +282,15 @@ export function GebesaShell({
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-[#f0f2f5]">
-        {/* Inner layout wrapper (Embedded Iframe pointing to fully styled cerebro.html) */}
+        {/* Inner layout wrapper */}
         <div className="flex-1 overflow-hidden relative flex bg-bg text-text-main m-4 rounded-b-xl border border-border shadow-2xl rounded-t-lg">
-           <iframe 
-             ref={iframeRef} 
-             src="/cerebro.html" 
-             className="w-full h-full border-none bg-[#0d1117]" 
-             title="Cerebro App" 
-             onLoad={handleIframeLoad}
-           />
+          <iframe 
+            ref={iframeRef} 
+            src={currentView === 'Ventas' && ventasActiveSubNav === 'Agenda de Proyectos' ? '/cerebro-calendar.html' : '/cerebro.html'} 
+            className="w-full h-full border-none bg-[#0d1117]" 
+            title="Cerebro App" 
+            onLoad={handleIframeLoad}
+          />
         </div>
       </div>
     </div>
